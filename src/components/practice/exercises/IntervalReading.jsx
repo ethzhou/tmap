@@ -22,8 +22,7 @@ export default function IntervalReading() {
   }, []);
 
   function createNewExercise () {
-    // const newIntervalSize = randInt(1, 8);
-    const newIntervalSize = 2;
+    const newIntervalSize = randInt(1, 8);
     const newLowerNote = Pitch.fromInt(
       randInt(
         -12,  // E2
@@ -32,8 +31,7 @@ export default function IntervalReading() {
       randInt(-1,1)
     );
     const newUpperNote = newLowerNote.scaleTone(newIntervalSize);
-    // const newIntervalQuality = Interval.randomQuality(newIntervalSize, newUpperNote.accidental);
-    const newIntervalQuality = "A";
+    const newIntervalQuality = Interval.randomQuality(newIntervalSize, newUpperNote.accidental);
     newUpperNote.accidental += Interval.qualityToAccidentalChange(newIntervalQuality, newIntervalSize);
     const newNotes = [newLowerNote, newUpperNote];
 
