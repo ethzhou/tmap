@@ -1,13 +1,13 @@
 import { useState } from "react";
 import SingleChord from "../../music/SingleChord";
-import AbstractNote, { Accidentals } from "../../../classes/AbstractNote";
+import Pitch, { Accidentals } from "../../../classes/Pitch";
 
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function randNoteAccidental(integer) {
-  return AbstractNote.fromInt(
+  return Pitch.fromInt(
     integer,
     [Accidentals.FLAT, Accidentals.NATURAL, Accidentals.SHARP][randInt(0,2)]
   );
@@ -20,7 +20,7 @@ export default function IntervalReading() {
   const [notes, setNotes] = useState(() => {
     const lowerNoteInteger = randInt(
       -11,  // F2
-      12 - (intervalSize - 1)  // A5, but leave room for the interval
+      12 - (intervalSize - 1)  // A5, but leave room for the upper note of the interval
     );
     const lowerNote = randNoteAccidental(lowerNoteInteger);
     const upperNote = randNoteAccidental(lowerNoteInteger + intervalSize - 1);

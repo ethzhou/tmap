@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Vex } from "vexflow";
 import SingleChord from "../../music/SingleChord";
-import AbstractNote from "../../../classes/AbstractNote";
+import Pitch from "../../../classes/Pitch";
 
 export default function SheetMusicTest() {
   useEffect(() => {
@@ -40,18 +40,18 @@ export default function SheetMusicTest() {
         name="chord1"
         clef="treble"
         notes={[
-          AbstractNote.fromString('c4'),
-          AbstractNote.fromString('e4'),
-          AbstractNote.fromString('g4')
+          Pitch.fromString('c4'),
+          Pitch.fromString('e4'),
+          Pitch.fromString('g4')
         ]}
       />
       <SingleChord
         name="chord2"
         clef="bass"
         notes={[
-          AbstractNote.fromString('f4'),
-          AbstractNote.fromString('a4'),
-          AbstractNote.fromString('c4')
+          Pitch.fromString('f4'),
+          Pitch.fromString('a4'),
+          Pitch.fromString('c4')
         ]}
       />
     </>
