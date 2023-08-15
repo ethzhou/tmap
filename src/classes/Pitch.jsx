@@ -1,24 +1,13 @@
 import Interval from "./Interval";
 
-export const Accidentals = Object.freeze({
-  toString: (accidental) => {
-    return accidental === Accidentals.DOUBLE_FLAT ? "bb"
-      : accidental === Accidentals.FLAT ? "b"
-      : accidental === Accidentals.NATURAL ? ""
-      : accidental === Accidentals.SHARP ? "#"
-      : "##";
-  },
-  DOUBLE_FLAT: -2,
-  FLAT: -1,
-  NATURAL: 0,
-  SHARP: 1,
-  DOUBLE_SHARP: 2,
-})
+export function accidentalString(accidental) {
+  return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
+}
 
 export default class Pitch {
   /**
    * @param {string} letter Converted to upper case if not already.
-   * @param {Accidentals} accidental
+   * @param {number} accidental
    * @param {number} octave
    */
   constructor(letter, accidental, octave) {
@@ -31,20 +20,14 @@ export default class Pitch {
    *  Constructs a pitch from an integer representing spacing away from middle C.
    * 
    * @param {number} spacesFromC4 The number of spaces away from middle C.
-   * @param {Accidentals} accidental An accidental to be tacked onto the note.
+   * @param {number} accidental An accidental to be tacked onto the note.
    * @returns {Pitch}
    */
-  static fromInt(spacesFromC4, accidental=Accidentals.NATURAL) {
+  static fromInt(spacesFromC4, accidental = 0) {
     const octave = 4 + Math.floor(spacesFromC4 / 7);
-    let i = 2;
     const letter = "ABCDEFG"[(((2 + spacesFromC4) % 7) + 7) % 7];
-    console.log(
-      spacesFromC4,
-      octave,
-      (((2 + spacesFromC4) % 7) + 7) % 7,
-      letter
-    );
-
+    
+    console.log(spacesFromC4, octave, (((2 + spacesFromC4) % 7) + 7) % 7, letter);
     return new Pitch(letter, accidental, octave);
   }
 
@@ -56,16 +39,10 @@ export default class Pitch {
    */
   static fromString(strRepresentation) {
     const letter = strRepresentation[0].toUpperCase();
-    const accidental = strRepresentation[1] === "b" ? (
-        strRepresentation[2] === "b" ? Accidentals.DOUBLE_FLAT
-          : Accidentals.FLAT
-        )
-      : strRepresentation[1] === "#" ? (
-        strRepresentation[2] === "#" ? Accidentals.DOUBLE_SHARP
-          : Accidentals.SHARP
-        )
-      : strRepresentation[1] === "x" ? Accidentals.DOUBLE_SHARP
-      : Accidentals.NATURAL;
+    const accidental = strRepresentation[1] === "b" ? (strRepresentation[2] === "b" ? -2 : -1)
+      : strRepresentation[1] === "#" ? (strRepresentation[2] === "#" ? 2 : 1)
+      : strRepresentation[1] === "x" ? 2
+      : 0;
     const octave = Number(strRepresentation.slice(1 + accidental.length));
 
     return new Pitch(letter, accidental, octave);
@@ -80,14 +57,14 @@ export default class Pitch {
    */
   static fromInterval(pitch, interval) {
     const newPitch = pitch.scaleTone(interval.size);
-    newPitch.accidental += Interval.qualityToAccidentalDifference(interval.quality, interval.size);
+    newPitch.accidental += Interval.qualityToAccidentalChange(interval.quality, interval.size);
     newPitch.octave += Math.floor((interval.size - 1) / 7) + pitch.letterIsAfterInOctave(letter);
 
     return newPitch;
   }
 
   toString() {
-    return `${this.letter}${Accidentals.toString(this.accidental)}${this.octave}`;
+    return `${this.letter}${accidentalString(this.accidental)}${this.octave}`;
   }
 
   // 'key' by the terminology of VexFlow, as in `new StaveNote({keys: ['C/4', ...], ...})`
@@ -97,7 +74,7 @@ export default class Pitch {
 
   // EasyScore notation
   toVFEasy() {
-    return `${this.letter}${Accidentals.toString(this.accidental)}${this.octave}`;
+    return `${this.letter}${accidentalString(this.accidental)}${this.octave}`;
   }
 
   alter(steps) {
@@ -148,7 +125,7 @@ export default class Pitch {
    * @returns {boolean}
    */
   letterIsBeforeInOctave(other) {
-    if (typeof other !== "string")
+    if (typeof other === "object")
       other = other.letter;
     const thisIndex = "CDEFGAB".indexOf(this.letter);
     const otherIndex = "CDEFGAB".indexOf(other);
@@ -160,11 +137,11 @@ export default class Pitch {
   /**
    * Finds whether this pitch's letter falls after another's in the octave from C.
    * 
-   * @param {string, Pitch} other
+   * @param {string | Pitch} other
    * @returns {boolean}
    */
   letterIsAfterInOctave(other) {
-    if (typeof other !== "string")
+    if (typeof other === "object")
       other = other.letter;
     const thisIndex = "CDEFGAB".indexOf(this.letter);
     const otherIndex = "CDEFGAB".indexOf(other);
@@ -176,7 +153,7 @@ export default class Pitch {
   /**
    * Finds whether this pitch and another are enharmonic.
    * 
-   * @param {string, Pitch} other 
+   * @param {string | Pitch} other 
    * @returns {boolean}
    */
   isEnharmonicTo(otherPitch) {
@@ -241,8 +218,8 @@ export default class Pitch {
    */
   scaleTone(n) {
     let l = "ABCDEFG".indexOf(this.letter);
-    let newLetter = "ABCDEFG"[(l + n - 1) % 7];
-    let newAccidental = Accidentals.NATURAL;
+    const newLetter = "ABCDEFG"[(l + n - 1) % 7];
+    let newAccidental = 0;
     // When the note passes from B to C or E to F, the accidental would heighten to make a full whole step.
     for (let i = 0; i < n; i++) {
       if (Pitch.#halfstepsToNextLetter("ABCDEFG"[(l + i) % 7]) === 1) {
@@ -251,8 +228,9 @@ export default class Pitch {
     }
     // The fourth note of every tetrachord is a halfstep away, so the accidental is reduced.
     newAccidental -= Math.floor(n / 4);
-    let newOctave = Math.floor((n - 1) / 7) + this.letterIsAfterInOctave(newLetter);
+    const newOctave = this.octave + Math.floor((n - 1) / 7) + this.letterIsAfterInOctave(newLetter);
 
+    console.log("scaleTone", newLetter, newAccidental, newOctave);
     return new Pitch(newLetter, newAccidental, newOctave);
   }
 
@@ -267,8 +245,8 @@ export default class Pitch {
     intervalSize = (size === 1) ? (this.octave === otherPitch.octave ? 1 : 8) : size;
 
     const baseScaleTone = this.scaleTone(intervalSize);
-    const accidentalDifference = otherPitch.accidental - baseScaleTone.accidental;
-    const intervalQuality = Interval.accidentalDifferenceToQuality(accidentalDifference, intervalSize);
+    const accidentalChange = otherPitch.accidental - baseScaleTone.accidental;
+    const intervalQuality = Interval.accidentalChangeToQuality(accidentalChange, intervalSize);
 
     return new Interval(intervalQuality, intervalSize);
   }

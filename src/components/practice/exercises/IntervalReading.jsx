@@ -1,42 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SingleChord from "../../music/SingleChord";
-import Pitch, { Accidentals } from "../../../classes/Pitch";
-
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function randNoteAccidental(integer) {
-  return Pitch.fromInt(
-    integer,
-    [Accidentals.FLAT, Accidentals.NATURAL, Accidentals.SHARP][randInt(0,2)]
-  );
-}
+import Pitch from "../../../classes/Pitch";
+import { randInt } from "../../../utils/utils";
+import Interval from "../../../classes/Interval";
 
 export default function IntervalReading() {
   const [answerRecord, setAnswerRecord] = useState([]);
 
-  const [intervalSize, setIntervalSize] = useState(() => randInt(1, 8));
-  const [notes, setNotes] = useState(() => {
-    const lowerNoteInteger = randInt(
-      -11,  // F2
-      12 - (intervalSize - 1)  // A5, but leave room for the upper note of the interval
-    );
-    const lowerNote = randNoteAccidental(lowerNoteInteger);
-    const upperNote = randNoteAccidental(lowerNoteInteger + intervalSize - 1);
-    
-    return [lowerNote, upperNote];
-  });
-  const [clef, setClef] = useState(() => (notes[0].octave <= 2 
-      || (notes[1].octave === 3 && "CDE".indexOf(notes[1].letter) > -1)) ? "bass" 
-    : (notes[1].octave >= 5
-      || (notes[0].octave === 4 && "B".indexOf(notes[0].letter) > -1)) ? "treble"
-    : (Math.random() < .5) ? "bass" : "treble"
-  );
+  const [intervalSize, setIntervalSize] = useState();
+  const [intervalQuality, setIntervalQuality] = useState();
 
-  const [inputValue, setInputValue] = useState("");
+  const [notes, setNotes] = useState([]);
+  const [clef, setClef] = useState();
+
+  const [inputValue, setInputValue] = useState(() => createNewExercise());
 
   const handleInput = event => setInputValue(() => event.target.value);
+
+  useEffect(() => {
+    createNewExercise();
+  }, []);
+
+  function createNewExercise () {
+    const newIntervalSize = randInt(1, 8);
+    const newLowerNote = Pitch.fromInt(
+      randInt(
+        -12,  // E2
+        12 - (newIntervalSize - 1)  // A5, but leave room for the upper note of the interval
+      ),
+      randInt(-1,1)
+    );
+    const newUpperNote = newLowerNote.scaleTone(newIntervalSize);
+    const newIntervalQuality = Interval.randomQuality(newIntervalSize, newUpperNote.accidental);
+    newUpperNote.accidental += Interval.qualityToAccidentalChange(newIntervalQuality, newIntervalSize);
+    const newNotes = [newLowerNote, newUpperNote];
+
+    console.log(newNotes.map(note => note.toString()), newIntervalQuality + newIntervalSize);
+    
+    setIntervalSize(() => newIntervalSize);
+    setIntervalQuality(() => newIntervalQuality);
+
+    setNotes(() => newNotes);
+    setClef(() =>
+      (newNotes[0].octave <= 2
+        || (newNotes[1].octave === 3 && "CDE".includes(newNotes[1].letter))) ? "bass"
+      : (newNotes[1].octave >= 5
+        || (newNotes[0].octave === 4 && "B".includes(newNotes[0].letter))) ? "treble"
+      : (Math.random() < .5) ? "bass" : "treble"
+    );
+
+    return "";
+  }
 
   return (
     <>
