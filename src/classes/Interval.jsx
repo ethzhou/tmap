@@ -1,4 +1,4 @@
-import { randInt } from "../utils/utils";
+import { clamp, randInt } from "../utils/utils";
 
 export default class Interval {
   /**
@@ -41,8 +41,8 @@ export default class Interval {
       )
     ] : "dmMA"[
       randInt(
-        baseAccidental === -1 ? 1 : 0,
-        3
+        clamp(-baseAccidental, 0, 3),
+        clamp(4 - baseAccidental, 0, 3)
       )
     ];
   }

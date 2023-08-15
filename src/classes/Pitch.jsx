@@ -27,7 +27,7 @@ export default class Pitch {
     const octave = 4 + Math.floor(spacesFromC4 / 7);
     const letter = "ABCDEFG"[(((2 + spacesFromC4) % 7) + 7) % 7];
     
-    console.log(spacesFromC4, octave, (((2 + spacesFromC4) % 7) + 7) % 7, letter);
+    // console.log(spacesFromC4, octave, (((2 + spacesFromC4) % 7) + 7) % 7, letter);
     return new Pitch(letter, accidental, octave);
   }
 
@@ -219,18 +219,20 @@ export default class Pitch {
   scaleTone(n) {
     let l = "ABCDEFG".indexOf(this.letter);
     const newLetter = "ABCDEFG"[(l + n - 1) % 7];
-    let newAccidental = 0;
-    // When the note passes from B to C or E to F, the accidental would heighten to make a full whole step.
-    for (let i = 0; i < n; i++) {
+    console.log(" scaleTone", this.letter, n, newLetter);
+    let newAccidental = this.accidental;
+    for (let i = 0; i < n - 1; i++) {
+      console.log("ABCDEFG"[(l + i) % 7], Pitch.#halfstepsToNextLetter("ABCDEFG"[(l + i) % 7]));
+      // When the note passes from B to C or E to F, the accidental would heighten to make a full whole step.
       if (Pitch.#halfstepsToNextLetter("ABCDEFG"[(l + i) % 7]) === 1) {
         newAccidental++;
       }
     }
-    // The fourth note of every tetrachord is a halfstep away, so the accidental is reduced.
+    // The fourth note of every tetrachord is only a halfstep away, so the accidental is reduced.
     newAccidental -= Math.floor(n / 4);
     const newOctave = this.octave + Math.floor((n - 1) / 7) + this.letterIsAfterInOctave(newLetter);
 
-    console.log("scaleTone", newLetter, newAccidental, newOctave);
+    console.log("/scaleTone", this.toString(), `M${n}`, new Pitch(newLetter, newAccidental, newOctave).toString());
     return new Pitch(newLetter, newAccidental, newOctave);
   }
 

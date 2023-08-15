@@ -22,7 +22,8 @@ export default function IntervalReading() {
   }, []);
 
   function createNewExercise () {
-    const newIntervalSize = randInt(1, 8);
+    // const newIntervalSize = randInt(1, 8);
+    const newIntervalSize = 2;
     const newLowerNote = Pitch.fromInt(
       randInt(
         -12,  // E2
@@ -31,7 +32,8 @@ export default function IntervalReading() {
       randInt(-1,1)
     );
     const newUpperNote = newLowerNote.scaleTone(newIntervalSize);
-    const newIntervalQuality = Interval.randomQuality(newIntervalSize, newUpperNote.accidental);
+    // const newIntervalQuality = Interval.randomQuality(newIntervalSize, newUpperNote.accidental);
+    const newIntervalQuality = "A";
     newUpperNote.accidental += Interval.qualityToAccidentalChange(newIntervalQuality, newIntervalSize);
     const newNotes = [newLowerNote, newUpperNote];
 
@@ -43,9 +45,9 @@ export default function IntervalReading() {
     setNotes(() => newNotes);
     setClef(() =>
       (newNotes[0].octave <= 2
-        || (newNotes[1].octave === 3 && "CDE".includes(newNotes[1].letter))) ? "bass"
+        || (newNotes[0].octave === 3 && "CD".includes(newNotes[0].letter))) ? "bass"
       : (newNotes[1].octave >= 5
-        || (newNotes[0].octave === 4 && "B".includes(newNotes[0].letter))) ? "treble"
+        || (newNotes[1].octave === 4 && "B".includes(newNotes[1].letter))) ? "treble"
       : (Math.random() < .5) ? "bass" : "treble"
     );
 
