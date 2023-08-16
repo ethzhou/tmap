@@ -9,15 +9,27 @@ export default function IntervalReading() {
   const [record, setRecord] = useState([]);
   const [cummulativeScore, setCummulativeScore] = useState(0);
 
-  const interval = useRef();
+  const [interval, setInterval] = useState();
   const [notes, setNotes] = useState();
   const [clef, setClef] = useState();
 
+  const renderCount = useRef(0);
+
   useEffect(() => {
     createNewExercise();
+
+    document.addEventListener("charbycharfieldenter", handleResponse);
+
+    return () =>
+      document.removeEventListener("charbycharfieldenter", handleResponse);
   }, []);
 
+  useEffect(() => {
+    renderCount.current++;
+  }, [interval, notes, clef, record]);
+
   function createNewExercise () {
+    console.log("wow!", interval, renderCount.current);
     const newIntervalSize = randInt(1, 8);
     const newLowerNote = Pitch.fromInt(
       randInt(
@@ -39,13 +51,20 @@ export default function IntervalReading() {
 
     console.log(newNotes.map(note => note.toString()), newIntervalQuality + newIntervalSize);
     
-    interval.current = new Interval(newIntervalQuality, newIntervalSize);
+    setInterval(() => new Interval(newIntervalQuality, newIntervalSize));
+    console.log("wow!!", interval, renderCount.current);
     setNotes(() => newNotes);
     setClef(() => newClef);
   }
 
-  function handleResponse(responseStr, interval, notes) {
+  // function handleResponse(responseStr, interval, notes) {
+  function handleResponse(event) {
     console.log("entered handleResponse function");
+    console.log(interval);
+    // if (!interval) return;
+    // if (!notes) return;
+    
+    const responseStr = event.detail.text;
     console.assert(responseStr.length === 2);
     console.log("passed handleResponse assert");
 
@@ -53,17 +72,17 @@ export default function IntervalReading() {
     const responseIntervalSize = parseInt(responseStr[1]);
 
     console.log("response", responseIntervalQuality, responseIntervalSize);
-    console.log("answer  ", interval.current.quality, interval.current.size);
+    console.log("answer  ", interval.quality, interval.size);
 
     const score = .5 * (
-      responseIntervalQuality === interval.current.quality
-        + responseIntervalSize === interval.current.size
+      responseIntervalQuality === interval.quality
+        + responseIntervalSize === interval.size
     );
 
     console.log("notes", notes);
     setRecord(record => [...record, {
       notes: [...notes],
-      answer: interval.current.toString(),
+      answer: interval.toString(),
       response: responseStr,
       score: score,
     }]);
@@ -74,12 +93,13 @@ export default function IntervalReading() {
   return (
     <>
       <p>asjdlfkasd</p>
+      {interval?.toString()}
       {notes && <SingleChord clef={clef} notes={notes} />}
-      {notes && notes.map(item => item.toString())}
-      <CharByCharField length={2} onEnter={handleResponse} onEnterArgs={[interval, notes]}/>
+      {notes && notes.map(item => item.toString() + " ")}
+      <CharByCharField length={2} />
       {record.map((item, index) => 
         <p key={index}>
-          {notes[0].toString()} {notes[1].toString()} {item.answer} {item.response} {item.score}
+          {item.notes[0].toString()} {item.notes[1].toString()} {item.answer} {item.response} {item.score}
         </p>
       )}
     </>
