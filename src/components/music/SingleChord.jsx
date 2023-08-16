@@ -8,7 +8,7 @@ export default function SingleChord({ name, clef, notes }) {
     const div = document.getElementById(name ? `vf-${name}` : "vf-output");
 
     const renderer = new Renderer(div, Renderer.Backends.SVG);
-    renderer.resize(122, 600);
+    renderer.resize(122, 150);
     const context = renderer.getContext();
 
     const stave = new Stave(0, 0, 120, {

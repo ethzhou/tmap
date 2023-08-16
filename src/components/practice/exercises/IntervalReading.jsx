@@ -3,6 +3,7 @@ import SingleChord from "../../music/SingleChord";
 import Pitch from "../../../classes/Pitch";
 import { randInt } from "../../../utils/utils";
 import Interval from "../../../classes/Interval";
+import CharByCharField from "../../general/CharByCharField";
 
 export default function IntervalReading() {
   const [answerRecord, setAnswerRecord] = useState([]);
@@ -10,16 +11,16 @@ export default function IntervalReading() {
   const [intervalSize, setIntervalSize] = useState();
   const [intervalQuality, setIntervalQuality] = useState();
 
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState();
   const [clef, setClef] = useState();
 
-  const [inputValue, setInputValue] = useState(() => createNewExercise());
-
-  const handleInput = event => setInputValue(() => event.target.value);
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     createNewExercise();
   }, []);
+
+  const handleInput = event => setInputValue(() => event.target.value);
 
   function createNewExercise () {
     const newIntervalSize = randInt(1, 8);
@@ -33,7 +34,13 @@ export default function IntervalReading() {
     const newUpperNote = newLowerNote.scaleTone(newIntervalSize);
     const newIntervalQuality = Interval.randomQuality(newIntervalSize, newUpperNote.accidental);
     newUpperNote.accidental += Interval.qualityToAccidentalChange(newIntervalQuality, newIntervalSize);
+
     const newNotes = [newLowerNote, newUpperNote];
+    const newClef = (newNotes[0].octave <= 2
+      || (newNotes[0].octave === 3 && "CD".includes(newNotes[0].letter))) ? "bass"
+    : (newNotes[1].octave >= 5
+      || (newNotes[1].octave === 4 && "B".includes(newNotes[1].letter))) ? "treble"
+    : (Math.random() < .5) ? "bass" : "treble";
 
     console.log(newNotes.map(note => note.toString()), newIntervalQuality + newIntervalSize);
     
@@ -41,13 +48,7 @@ export default function IntervalReading() {
     setIntervalQuality(() => newIntervalQuality);
 
     setNotes(() => newNotes);
-    setClef(() =>
-      (newNotes[0].octave <= 2
-        || (newNotes[0].octave === 3 && "CD".includes(newNotes[0].letter))) ? "bass"
-      : (newNotes[1].octave >= 5
-        || (newNotes[1].octave === 4 && "B".includes(newNotes[1].letter))) ? "treble"
-      : (Math.random() < .5) ? "bass" : "treble"
-    );
+    setClef(() => newClef);
 
     return "";
   }
@@ -55,10 +56,11 @@ export default function IntervalReading() {
   return (
     <>
       <p>asjdlfkasd</p>
-      <SingleChord clef={clef} notes={notes} />
+      {notes && <SingleChord clef={clef} notes={notes} />}
       <input type="text" onChange={handleInput} />
       <button>check</button>
       {inputValue}
+      <CharByCharField length={5} />
     </>
   );
 }

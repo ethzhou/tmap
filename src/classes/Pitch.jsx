@@ -219,10 +219,9 @@ export default class Pitch {
   scaleTone(n) {
     let l = "ABCDEFG".indexOf(this.letter);
     const newLetter = "ABCDEFG"[(l + n - 1) % 7];
-    console.log(" scaleTone", this.letter, n, newLetter);
     let newAccidental = this.accidental;
     for (let i = 0; i < n - 1; i++) {
-      console.log("ABCDEFG"[(l + i) % 7], Pitch.#halfstepsToNextLetter("ABCDEFG"[(l + i) % 7]));
+      // console.log("ABCDEFG"[(l + i) % 7], Pitch.#halfstepsToNextLetter("ABCDEFG"[(l + i) % 7]));
       // When the note passes from B to C or E to F, the accidental would heighten to make a full whole step.
       if (Pitch.#halfstepsToNextLetter("ABCDEFG"[(l + i) % 7]) === 1) {
         newAccidental++;
@@ -232,7 +231,7 @@ export default class Pitch {
     newAccidental -= Math.floor(n / 4);
     const newOctave = this.octave + Math.floor((n - 1) / 7) + this.letterIsAfterInOctave(newLetter);
 
-    console.log("/scaleTone", this.toString(), `M${n}`, new Pitch(newLetter, newAccidental, newOctave).toString());
+    console.log("scaleTone", this.toString(), `${Interval.isPerfect(n) ? "P" : "M"}${n}`, new Pitch(newLetter, newAccidental, newOctave).toString());
     return new Pitch(newLetter, newAccidental, newOctave);
   }
 
