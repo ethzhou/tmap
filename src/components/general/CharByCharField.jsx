@@ -1,18 +1,28 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-export default function CharByCharField({length}) {
-  const [fields, setFields] = useState(() => {
-    let i = 0;
-    return Array(length).fill().map((_, index) =>
+export default function CharByCharField({length, onEnter, onEnterArgs}) {
+  const divRef = useRef();
+  const [fields, setFields] = useState(() => Array(length).fill().map(
+    (_, index) =>
       <input key={index} type="text" maxLength={1}
         onKeyDown={handleInputKeyDown}
         onChange={handleInputChange}
       />
-    );
-  });
+  ));
+
+  function getString() {
+    return [...divRef.current.children].map(inputElement => inputElement.value).join("");
+  }
 
   function handleInputKeyDown(event) {
     // console.log("keydown", event.key, event.target.value.length);
+    // Pressing Enter
+    if (event.key === "Enter") {
+      console.log("entereddd", getString(), onEnter, onEnterArgs);
+      if (onEnter)
+        onEnter(getString(), ...onEnterArgs);
+      return;
+    }
 
     // Pressing Backspace 
     if (event.target.value.length === 0 && event.key === "Backspace") {
@@ -43,7 +53,7 @@ export default function CharByCharField({length}) {
       event.target.previousElementSibling?.focus();
       return;
     }
-    
+
     // New character
     if (event.target.value.length === 1) {
       event.target.nextElementSibling?.focus();
@@ -51,13 +61,9 @@ export default function CharByCharField({length}) {
     }
   }
 
-  function getString() {
-    return chars.join("");
-  }
-
   return (
     <>
-      <div>
+      <div ref={divRef}>
         {fields}
       </div>
     </>
