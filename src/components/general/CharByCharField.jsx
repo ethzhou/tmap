@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-export default function CharByCharField({length, onEnter}) {
+export default function CharByCharField({length, onEnter, doClearOnEnter}) {
   const divRef = useRef();
   const [fields, setFields] = useState(() => Array(length).fill().map(
     (_, index) =>
@@ -30,6 +30,14 @@ export default function CharByCharField({length, onEnter}) {
       // Callback version
       // if (onEnter)
       //   onEnter(getString(), ...onEnterArgs);
+
+      console.log("g");
+      if (doClearOnEnter) {
+        [...divRef.current.children].forEach(element => {
+          element.value = "";
+        });
+        divRef.current.children[0].focus();
+      }
       return;
     }
 

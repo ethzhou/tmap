@@ -158,7 +158,7 @@ export default function IntervalReading() {
       {interval && (
         <>
           <SingleChord clef={clef} notes={notes} />
-          <CharByCharField length={2} />
+          <CharByCharField length={2} doClearOnEnter={true} />
         </>
       )}
       {record.map((item, index) => 
