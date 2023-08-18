@@ -6,11 +6,15 @@ import Interval from "../../../classes/Interval";
 import CharByCharField from "../../general/CharByCharField";
 import { useCallback } from "react";
 
-function useNewExercise() {
+function useExercise() {
+  const [record, setRecord] = useState([]);
+  const [cummulativeScore, setCummulativeScore] = useState(0);
+
   const [interval, setInterval] = useState();
   const [notes, setNotes] = useState();
   const [clef, setClef] = useState();
-  //#region 
+
+  const [handleResponse, setHandleResponse] = useState();
   // const [interval, setInterval] = useState(() => {
   //   console.log("interval usestate");
   //   return new Interval("M", 2);
@@ -53,65 +57,67 @@ function useNewExercise() {
     setClef(_ => newClef);
     
     console.log("/createnewexercise");
-  }, []);
+  }, [record]);
 
-  return { interval, notes, clef };
+  useEffect(() => {
+    document.removeEventListener("charbycharfieldenter", handleResponse);
+    (interval && notes && clef) &&
+      setHandleResponse(() => (event) => {
+        console.log("entered handleResponse function");
+        console.log(`data:  ${interval}${notes}${clef}`);
+        // if (!interval) return;
+        // if (!notes) return;
+        
+        const responseStr = event.detail.text;
+        if (responseStr.length !== 2) return;
+        console.log("passed handleResponse assert");
+    
+        const responseIntervalQuality = responseStr[0];
+        const responseIntervalSize = parseInt(responseStr[1]);
+    
+        console.log("response", responseIntervalQuality, responseIntervalSize);
+        console.log("answer  ", interval.quality, interval.size);
+    
+        const score = .5 * (
+          (responseIntervalQuality === interval.quality)
+            + (responseIntervalSize === interval.size)
+        );
+        setCummulativeScore(cummulativeScore => cummulativeScore + score);
+    
+        console.log("notes", notes);
+        setRecord(record => [...record, {
+          notes: [...notes],
+          answer: interval.toString(),
+          response: responseStr,
+          score: score,
+        }]);
+    });
+  }, [interval, notes, clef]);
+
+  useEffect(() => {
+    document.addEventListener("charbycharfieldenter", handleResponse);
+
+    // return () =>
+    //   document.removeEventListener("charbycharfieldenter", handleResponse);
+  }, [handleResponse]);
+
+  return { record, cummulativeScore, interval, notes, clef, handleResponse };
 }
 
 export default function IntervalReading() {
 
-  const [record, setRecord] = useState([]);
-  const [cummulativeScore, setCummulativeScore] = useState(0);
+  // const [record, setRecord] = useState([]);
+  // const [cummulativeScore, setCummulativeScore] = useState(0);
 
-  const { interval, notes, clef } = useNewExercise();
-  const { handleResponse, setHandleResponse } = useState(() => {});
+  const { record, cummulativeScore, interval, notes, clef, handleResponse } = useExercise();
+  // const { handleResponse, setHandleResponse } = useState(() => {});
 
-  const { test, setTest } = useState(0);
+  // const { test, setTest } = useState(0);
 
-  // initial effect
-  useEffect(() => {
-    document.addEventListener("charbycharfieldenter", handleResponse);
-
-    return () =>
-      document.removeEventListener("charbycharfieldenter", handleResponse);
-  }, []);
 
   // useEffect(() => {
   //   setTest && setTest(() => 1);
   // }, [interval, notes, clef]);
-
-  useEffect(() => {
-    setHandleResponse && setHandleResponse(() => (event) => {
-      console.log("entered handleResponse function");
-      console.log(`data:  ${interval}${notes}${clef}`);
-      // if (!interval) return;
-      // if (!notes) return;
-      
-      const responseStr = event.detail.text;
-      if (responseStr.length !== 2) return;
-      console.log("passed handleResponse assert");
-  
-      const responseIntervalQuality = responseStr[0];
-      const responseIntervalSize = parseInt(responseStr[1]);
-  
-      console.log("response", responseIntervalQuality, responseIntervalSize);
-      console.log("answer  ", interval.quality, interval.size);
-  
-      const score = .5 * (
-        (responseIntervalQuality === interval.quality)
-          + (responseIntervalSize === interval.size)
-      );
-      setCummulativeScore(cummulativeScore => cummulativeScore + score);
-  
-      console.log("notes", notes);
-      setRecord(record => [...record, {
-        notes: [...notes],
-        answer: interval.toString(),
-        response: responseStr,
-        score: score,
-      }]);
-    });
-  }, [interval, notes, clef])
 
   // function handleResponse(responseStr, interval, notes) {
   // function handleResponse(event) {
@@ -147,7 +153,7 @@ export default function IntervalReading() {
 
   return (
     <>
-      <p>asjdlfkasd</p>
+      <div>{cummulativeScore ?? 0}</div>
       {interval && `${interval?.toString()} ${notes[0]?.toString()} ${notes[1]?.toString()} ${clef}`}
       {interval && (
         <>

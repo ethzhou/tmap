@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-export default function CharByCharField({length}) {
+export default function CharByCharField({length, onEnter}) {
   const divRef = useRef();
   const [fields, setFields] = useState(() => Array(length).fill().map(
     (_, index) =>
@@ -19,12 +19,15 @@ export default function CharByCharField({length}) {
     // Pressing Enter
     if (event.key === "Enter") {
       // console.log("entereddd", getString(), onEnter, onEnterArgs);
+      // Event
       const enterPressed = new CustomEvent("charbycharfieldenter", {
         detail: {
           text: getString(),
         },
       });
       document.dispatchEvent(enterPressed);
+
+      // Callback version
       // if (onEnter)
       //   onEnter(getString(), ...onEnterArgs);
       return;
