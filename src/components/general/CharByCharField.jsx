@@ -40,7 +40,7 @@ export default function CharByCharField({length, doClearOnSubmit, submitEventTyp
       return;
     }
 
-    // Check that nothing is selected before continuing
+    // Before continuing, check that nothing is selected
     if (document.getSelection()?.type === "Range")
       return;
 
