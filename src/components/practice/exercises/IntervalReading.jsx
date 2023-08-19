@@ -35,7 +35,7 @@ export default function IntervalReading() {
       const responseStr = event.detail.text;
       if (responseStr.length !== 2) return;
 
-      const { interval, notes } = parameters;
+      const { interval, notes, clef } = parameters;
   
       const responseIntervalQuality = responseStr[0];
       const responseIntervalSize = Number(responseStr[1]);
@@ -47,9 +47,11 @@ export default function IntervalReading() {
 
       return {
         score: score,
-        notes: [...notes],
-        answer: interval.toString(),
         response: responseStr,
+        answer: interval.toString(),
+        interval: interval,
+        notes: [...notes],
+        clef: clef,
       };
     },
   );
