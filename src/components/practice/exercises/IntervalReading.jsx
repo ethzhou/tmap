@@ -1,9 +1,9 @@
+import useExercise from "../../../hooks/useExercise";
 import SingleChord from "../../music/SingleChord";
 import Pitch from "../../../classes/Pitch";
 import { randInt } from "../../../utils/utils";
 import Interval from "../../../classes/Interval";
 import CharByCharField from "../../general/CharByCharField";
-import useExercise from "../../../hooks/useExercise";
 
 export default function IntervalReading() {
   const { parameters, totalSeconds, record } = useExercise(
