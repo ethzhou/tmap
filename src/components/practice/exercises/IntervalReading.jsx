@@ -1,98 +1,70 @@
-import { useEffect, useState } from "react";
 import SingleChord from "../../music/SingleChord";
 import Pitch from "../../../classes/Pitch";
 import { randInt } from "../../../utils/utils";
 import Interval from "../../../classes/Interval";
 import CharByCharField from "../../general/CharByCharField";
-import { useStopwatch } from "react-timer-hook";
+import useExercise from "../../../hooks/useExercise";
 
 export default function IntervalReading() {
-  const [record, setRecord] = useState([]);
-  const [cummulativeScore, setCummulativeScore] = useState(0);
+  const { parameters, totalSeconds, record } = useExercise(
+    () => {
+      const intervalSize = randInt(1, 8);
+      const lowerNote = Pitch.fromInt(
+        randInt(
+          -12,  // E2
+          12 - (intervalSize - 1)  // A5, but leave room for the upper note of the interval
+        ),
+        randInt(-1,1)
+      );
+      const upperNote = lowerNote.scaleTone(intervalSize);
+      const intervalQuality = Interval.randomQuality(intervalSize, upperNote.accidental);
+      upperNote.accidental += Interval.qualityToAccidentalChange(intervalQuality, intervalSize);
 
-  const { totalSeconds } = useStopwatch({
-    autoStart: true,
-  });
+      const interval = new Interval(intervalQuality, intervalSize);
+      const notes = [lowerNote, upperNote];
+      const clef = (notes[0].octave <= 2
+        || (notes[0].octave === 3 && "CD".includes(notes[0].letter))) ? "bass"
+      : (notes[1].octave >= 5
+        || (notes[1].octave === 4 && "B".includes(notes[1].letter))) ? "treble"
+      : (Math.random() < .5) ? "bass" : "treble";
 
-  const [interval, setInterval] = useState();
-  const [notes, setNotes] = useState();
-  const [clef, setClef] = useState();
+      return { interval, notes, clef };
+    },
+    "IntervalReadingSubmit",
+    (event, parameters) => {
+      const responseStr = event.detail.text;
+      if (responseStr.length !== 2) return;
 
-  const [handleResponse, setHandleResponse] = useState();
+      const { interval, notes } = parameters;
+  
+      const responseIntervalQuality = responseStr[0];
+      const responseIntervalSize = Number(responseStr[1]);
+  
+      const score = .5 * (
+        (responseIntervalQuality === interval.quality)
+          + (responseIntervalSize === interval.size)
+      );
 
-  // Create a new exercise
-  useEffect(() => {
-    const newIntervalSize = randInt(1, 8);
-    const newLowerNote = Pitch.fromInt(
-      randInt(
-        -12,  // E2
-        12 - (newIntervalSize - 1)  // A5, but leave room for the upper note of the interval
-      ),
-      randInt(-1,1)
-    );
-    const newUpperNote = newLowerNote.scaleTone(newIntervalSize);
-    const newIntervalQuality = Interval.randomQuality(newIntervalSize, newUpperNote.accidental);
-    newUpperNote.accidental += Interval.qualityToAccidentalChange(newIntervalQuality, newIntervalSize);
-
-    const newInterval = new Interval(newIntervalQuality, newIntervalSize);
-    const newNotes = [newLowerNote, newUpperNote];
-    const newClef = (newNotes[0].octave <= 2
-      || (newNotes[0].octave === 3 && "CD".includes(newNotes[0].letter))) ? "bass"
-    : (newNotes[1].octave >= 5
-      || (newNotes[1].octave === 4 && "B".includes(newNotes[1].letter))) ? "treble"
-    : (Math.random() < .5) ? "bass" : "treble";
-
-    setInterval(_ => newInterval);
-    setNotes(_ => newNotes);
-    setClef(_ => newClef);
-  }, [record]);
-
-  // Create a new response submit handler
-  useEffect(() => {
-    document.removeEventListener("IntervalReadingSubmit", handleResponse);
-    (interval && notes && clef) &&
-      setHandleResponse(() => (event) => {
-
-        const responseStr = event.detail.text;
-        if (responseStr.length !== 2) return;
-    
-        const responseIntervalQuality = responseStr[0];
-        const responseIntervalSize = Number(responseStr[1]);
-    
-        const score = .5 * (
-          (responseIntervalQuality === interval.quality)
-            + (responseIntervalSize === interval.size)
-        );
-
-        setCummulativeScore(cummulativeScore => cummulativeScore + score);
-        setRecord(record => [...record, {
-          notes: [...notes],
-          answer: interval.toString(),
-          response: responseStr,
-          score: score,
-        }]);
-    });
-  }, [interval, notes, clef]);
-
-  useEffect(() => {
-    document.addEventListener("IntervalReadingSubmit", handleResponse);
-
-    return () =>
-      document.removeEventListener("IntervalReadingSubmit", handleResponse);
-  }, [handleResponse]);
-
+      return {
+        score: score,
+        notes: [...notes],
+        answer: interval.toString(),
+        response: responseStr,
+      };
+    },
+  );
 
   return (
     <>
-      <div>{`${cummulativeScore} of ${record.length}; ${totalSeconds}`}</div>
-      {interval && (
+      <div>{`${record.score} of ${record.history.length}; ${totalSeconds}`}</div>
+      {parameters && (
         <>
-          {`${interval?.toString()} ${notes[0]?.toString()} ${notes[1]?.toString()} ${clef}`}
-          <SingleChord clef={clef} notes={notes} />
+          {`${parameters.interval?.toString()} ${parameters.notes[0]?.toString()} ${parameters.notes[1]?.toString()} ${parameters.clef}`}
+          <SingleChord clef={parameters.clef} notes={parameters.notes} />
           <CharByCharField length={2} doClearOnSubmit={true} submitEventType={"IntervalReadingSubmit"} />
         </>
       )}
-      {record.map((item, index) => 
+      {record.history.map((item, index) => 
         <p key={index}>
           {item.notes[0].toString()} {item.notes[1].toString()} {item.answer} {item.response} {item.score}
         </p>
