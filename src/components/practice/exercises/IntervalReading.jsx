@@ -46,7 +46,7 @@ export default function IntervalReading() {
 
   // Create a new response submit handler
   useEffect(() => {
-    document.removeEventListener("charbycharfieldenter", handleResponse);
+    document.removeEventListener("IntervalReadingSubmit", handleResponse);
     (interval && notes && clef) &&
       setHandleResponse(() => (event) => {
 
@@ -71,10 +71,10 @@ export default function IntervalReading() {
   }, [interval, notes, clef]);
 
   useEffect(() => {
-    document.addEventListener("charbycharfieldenter", handleResponse);
+    document.addEventListener("IntervalReadingSubmit", handleResponse);
 
-    // return () =>
-    //   document.removeEventListener("charbycharfieldenter", handleResponse);
+    return () =>
+      document.removeEventListener("IntervalReadingSubmit", handleResponse);
   }, [handleResponse]);
 
 
@@ -85,7 +85,7 @@ export default function IntervalReading() {
         <>
           {`${interval?.toString()} ${notes[0]?.toString()} ${notes[1]?.toString()} ${clef}`}
           <SingleChord clef={clef} notes={notes} />
-          <CharByCharField length={2} doClearOnEnter={true} />
+          <CharByCharField length={2} doClearOnSubmit={true} submitEventType={"IntervalReadingSubmit"} />
         </>
       )}
       {record.map((item, index) => 

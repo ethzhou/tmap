@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-export default function CharByCharField({length, onEnter, doClearOnEnter}) {
+export default function CharByCharField({length, doClearOnSubmit, submitEventType}) {
   const divRef = useRef();
   const [fields, setFields] = useState(() => Array(length).fill().map(
     (_, index) =>
@@ -20,7 +20,7 @@ export default function CharByCharField({length, onEnter, doClearOnEnter}) {
     if (event.key === "Enter") {
       // console.log("entereddd", getString(), onEnter, onEnterArgs);
       // Event
-      const enterPressed = new CustomEvent("charbycharfieldenter", {
+      const enterPressed = new CustomEvent(submitEventType, {
         detail: {
           text: getString(),
         },
@@ -31,7 +31,7 @@ export default function CharByCharField({length, onEnter, doClearOnEnter}) {
       // if (onEnter)
       //   onEnter(getString(), ...onEnterArgs);
 
-      if (doClearOnEnter) {
+      if (doClearOnSubmit) {
         [...divRef.current.children].forEach(element => {
           element.value = "";
         });
