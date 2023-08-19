@@ -27,17 +27,17 @@ export default class Interval {
   }
 
   /**
-   * Generates a random interval quality given an interval size.
+   * Generates a random interval quality given an interval size, avoiding triple accidentals and beyond.
    * 
    * @param {number} size
-   * @param {number} baseAccidental The accidental of the major interval whose specification avoids triple accidentals. For instance, a diminished third above Gb would be Bbbb; specifying baseAccidental = 1 in this case disallows the random selection of the diminished quality.
+   * @param {number} baseAccidental The accidental of the major interval whose specification avoids excessive accidentals. For instance, a diminished third above Gb would be Bbbb; specifying baseAccidental = 1 in this case disallows the random selection of the diminished quality.
    * @returns {string}
    */
   static randomQuality(size, baseAccidental = 0) {
     return Interval.isPerfect(size) ? "dPA"[
       randInt(
-        size === 1 ? 1 : 0,
-        2
+        clamp(-1 - baseAccidental, size === 1 ? 1 : 0, 2),
+        clamp(3 - baseAccidental, 0, 2)
       )
     ] : "dmMA"[
       randInt(

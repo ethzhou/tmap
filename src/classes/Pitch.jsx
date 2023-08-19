@@ -43,7 +43,7 @@ export default class Pitch {
       : strRepresentation[1] === "#" ? (strRepresentation[2] === "#" ? 2 : 1)
       : strRepresentation[1] === "x" ? 2
       : 0;
-    const octave = Number(strRepresentation.slice(1 + accidental.length));
+    const octave = Number(strRepresentation.slice(1 + Math.abs(accidental)));
 
     return new Pitch(letter, accidental, octave);
   }
