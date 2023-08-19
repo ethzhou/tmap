@@ -31,7 +31,6 @@ export default function CharByCharField({length, onEnter, doClearOnEnter}) {
       // if (onEnter)
       //   onEnter(getString(), ...onEnterArgs);
 
-      console.log("g");
       if (doClearOnEnter) {
         [...divRef.current.children].forEach(element => {
           element.value = "";

@@ -34,9 +34,9 @@ export default function SingleChord({ name, clef, notes }) {
     new Formatter().joinVoices([voice]).format([voice], 350);
 
     voice.draw(context, stave);
-  }, [])
+  }, [clef, notes])
   
   return (
-    <div id={name ? `vf-${name}` : "vf-output"}></div>
+    <div key={notes} id={name ? `vf-${name}` : "vf-output"}></div>
   );
 }

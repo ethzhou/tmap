@@ -231,7 +231,7 @@ export default class Pitch {
     newAccidental -= Math.floor(n / 4);
     const newOctave = this.octave + Math.floor((n - 1) / 7) + this.letterIsAfterInOctave(newLetter);
 
-    console.log("scaleTone", this.toString(), `${Interval.isPerfect(n) ? "P" : "M"}${n}`, new Pitch(newLetter, newAccidental, newOctave).toString());
+    // console.log("scaleTone", this.toString(), `${Interval.isPerfect(n) ? "P" : "M"}${n}`, new Pitch(newLetter, newAccidental, newOctave).toString());
     return new Pitch(newLetter, newAccidental, newOctave);
   }
 
