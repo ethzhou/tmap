@@ -15,21 +15,14 @@ export default function CharByCharField({length, doClearOnSubmit, submitEventTyp
   }
 
   function handleInputKeyDown(event) {
-    // console.log("keydown", event.key, event.target.value.length);
     // Pressing Enter
     if (event.key === "Enter") {
-      // console.log("entereddd", getString(), onEnter, onEnterArgs);
-      // Event
       const enterPressed = new CustomEvent(submitEventType, {
         detail: {
           text: getString(),
         },
       });
       document.dispatchEvent(enterPressed);
-
-      // Callback version
-      // if (onEnter)
-      //   onEnter(getString(), ...onEnterArgs);
 
       if (doClearOnSubmit) {
         [...divRef.current.children].forEach(element => {
