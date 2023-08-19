@@ -4,10 +4,15 @@ import Pitch from "../../../classes/Pitch";
 import { randInt } from "../../../utils/utils";
 import Interval from "../../../classes/Interval";
 import CharByCharField from "../../general/CharByCharField";
+import { useStopwatch } from "react-timer-hook";
 
 export default function IntervalReading() {
   const [record, setRecord] = useState([]);
   const [cummulativeScore, setCummulativeScore] = useState(0);
+
+  const { totalSeconds } = useStopwatch({
+    autoStart: true,
+  });
 
   const [interval, setInterval] = useState();
   const [notes, setNotes] = useState();
@@ -15,6 +20,7 @@ export default function IntervalReading() {
 
   const [handleResponse, setHandleResponse] = useState();
 
+  // Create a new exercise
   useEffect(() => {
     const newIntervalSize = randInt(1, 8);
     const newLowerNote = Pitch.fromInt(
@@ -36,12 +42,9 @@ export default function IntervalReading() {
       || (newNotes[1].octave === 4 && "B".includes(newNotes[1].letter))) ? "treble"
     : (Math.random() < .5) ? "bass" : "treble";
 
-    // console.log(newNotes.map(note => note.toString()), newIntervalQuality + newIntervalSize);
-    
     setInterval(_ => newInterval);
     setNotes(_ => newNotes);
     setClef(_ => newClef);
-    
   }, [record]);
 
   // Create a new response submit handler
@@ -60,6 +63,7 @@ export default function IntervalReading() {
           (responseIntervalQuality === interval.quality)
             + (responseIntervalSize === interval.size)
         );
+
         setCummulativeScore(cummulativeScore => cummulativeScore + score);
         setRecord(record => [...record, {
           notes: [...notes],
@@ -80,7 +84,7 @@ export default function IntervalReading() {
 
   return (
     <>
-      <div>{`${cummulativeScore ?? 0}`}</div>
+      <div>{`${cummulativeScore} of ${record.length}; ${totalSeconds}`}</div>
       {interval && (
         <>
           {`${interval?.toString()} ${notes[0]?.toString()} ${notes[1]?.toString()} ${clef}`}
