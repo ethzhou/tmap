@@ -23,6 +23,7 @@ export default function CharByCharField({length, doClearOnSubmit, submitEventTyp
         },
       });
       document.dispatchEvent(enterPressed);
+      // console.log(`${submitEventType} event dispatched`)
 
       if (doClearOnSubmit) {
         [...divRef.current.children].forEach(element => {

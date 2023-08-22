@@ -26,7 +26,7 @@ export default function useExercise(generateParameters, submissionEventType, gen
   }, [record]);
 
   useEffect(() => {
-    document.removeEventListener("IntervalReadingSubmit", submissionCallback);
+    document.removeEventListener(submissionEventType, submissionCallback);
     setSubmissionCallback(() => (event) => {
       const update = generateRecordUpdate(event, parameters);
       update && setRecord(record => {
@@ -39,10 +39,10 @@ export default function useExercise(generateParameters, submissionEventType, gen
   }, [parameters]);
 
   useEffect(() => {
-    document.addEventListener("IntervalReadingSubmit", submissionCallback);
+    document.addEventListener(submissionEventType, submissionCallback);
 
     return () =>
-      document.removeEventListener("IntervalReadingSubmit", submissionCallback);
+      document.removeEventListener(submissionEventType, submissionCallback);
   }, [submissionCallback]);
 
   return { parameters, totalSeconds, record };

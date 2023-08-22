@@ -1,5 +1,7 @@
 import { clamp, randInt } from "../utils/utils";
 
+const majorIntervalHalfstepCounts = [0, 2, 4, 5, 7, 9, 11, 12];
+
 export default class Interval {
   /**
    * @param {string} quality
@@ -8,6 +10,19 @@ export default class Interval {
   constructor(quality, size) {
     this.quality = quality;
     this.size = size;
+  }
+
+  /**
+   * Constructs a interval from string notation.
+   * 
+   * @param {string} strRepresentation For example, "m7" or "A4".
+   * @returns {Interval}
+   */
+  static fromString(strRepresentation) {
+    const quality = strRepresentation[0];
+    const size = strRepresentation[1];
+
+    return new Interval(quality, size);
   }
 
   toString() {
@@ -91,7 +106,32 @@ export default class Interval {
     );
   }
 
+  /**
+   * Counts the halfsteps lept by the interval.
+   * 
+   * @returns {number}
+   */
+  halfsteps() {
+    return majorIntervalHalfstepCounts[this.size - 1] + Interval.qualityToAccidentalChange(this.quality, this.size);
+  }
+
+  /**
+   * Finds the difference in the number of halfsteps of each interval.
+   * 
+   * @param {Interval} otherInterval
+   * @returns {number}
+   */
+  halfstepDifference(otherInterval) {
+    return otherInterval.halfsteps() - this.halfsteps();
+  }
+
+  /**
+   * Finds whether the other interval is enharmonic.
+   * 
+   * @param {Interval} otherInterval
+   * @returns {boolean}
+   */
   isEnharmonicTo(otherInterval) {
-    // TODO
+    return this.halfstepDifference(otherInterval) === 0;
   }
 }
