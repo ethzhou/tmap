@@ -33,14 +33,19 @@ export default class PianoPlayer {
    * @param {Array<Pitch>} pitches
    * @param {number} durations Duration in seconds.
    * @param {number} spacing Time between the start of each pitch. Measured in seconds.
+   * @param {boolean} doStop Whether to first stop other audio from this player.
    */
-  playNotes(pitches, duration, spacing = 0) {
-    const currentTime = this.context.currentTime;
-    pitches.forEach((pitch, i) => {
-      this.piano.start({
-        note: pitch.toString(),
-        duration,
-        time: currentTime + i * spacing,
+  playNotes(pitches, duration, spacing = 0, doStop = true) {
+    if (doStop)
+      this.piano.stop();
+    this.piano.loaded().then(piano => {
+      const currentTime = this.context.currentTime;
+      pitches.forEach((pitch, i) => {
+        piano.start({
+          note: pitch.toString(),
+          duration,
+          time: currentTime + i * spacing,
+        });
       });
     });
   }

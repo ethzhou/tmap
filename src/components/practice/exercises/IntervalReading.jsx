@@ -28,6 +28,7 @@ export default function IntervalReading() {
         || (notes[1].octave === 4 && "B".includes(notes[1].letter))) ? "treble"
       : (Math.random() < .5) ? "bass" : "treble";
 
+      console.log(notes.map(note => note.toString()));
       return { interval, notes, clef };
     },
     "IntervalReadingSubmit",

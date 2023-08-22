@@ -9,6 +9,9 @@ import CharByCharField from "../../general/CharByCharField";
 const pianoPlayer = new PianoPlayer();
 
 export default function IntervalDictation() {
+  const playAudio = useRef(() => {
+    console.log("Playback not yet setup");
+  });
   const { parameters, totalSeconds, record } = useExercise(
     () => {
       const intervalSize = randInt(1, 8);
@@ -26,12 +29,22 @@ export default function IntervalDictation() {
       const interval = new Interval(intervalQuality, intervalSize);
       const notes = [lowerNote, upperNote];
 
+      console.log(notes.map(note => note.toString()));
+      playAudio.current = () => {
+        pianoPlayer.stop();
+        pianoPlayer.playNotes(notes, 2, .5);
+      };
+      playAudio.current();
+
       return { interval, notes };
     },
     "IntervalDictationSubmit",
     (event, parameters) => {
       const responseStr = event.detail.text;
-      if (responseStr.length !== 2) return;
+      if (responseStr.length !== 2) {
+        playAudio.current();
+        return;
+      }
 
       const { interval, notes } = parameters;
   
@@ -52,16 +65,12 @@ export default function IntervalDictation() {
     },
   );
 
-  const playAudio = useRef(() => {
-    console.log("Playback not yet setup");
-  });
-
-  useEffect(() => {
-    playAudio.current = () => {
-      pianoPlayer.stop();
-      pianoPlayer.playNotes(parameters.notes, 2, .5);
-    };
-  }, [parameters]);
+  // useEffect(() => {
+  //   playAudio.current = () => {
+  //     pianoPlayer.stop();
+  //     pianoPlayer.playNotes(parameters.notes, 2, .5);
+  //   };
+  // }, [parameters]);
 
   return (
     <>
