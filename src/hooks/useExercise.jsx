@@ -25,6 +25,7 @@ export default function useExercise(generateParameters, submissionEventType, gen
     setParameters(generateParameters);
   }, [record]);
 
+  // Update the record and record updater
   useEffect(() => {
     document.removeEventListener(submissionEventType, submissionCallback);
     setSubmissionCallback(() => (event) => {
@@ -38,6 +39,7 @@ export default function useExercise(generateParameters, submissionEventType, gen
     });
   }, [parameters]);
 
+  // Manage event listeners
   useEffect(() => {
     document.addEventListener(submissionEventType, submissionCallback);
 
