@@ -65,13 +65,6 @@ export default function IntervalDictation() {
     },
   );
 
-  // useEffect(() => {
-  //   playAudio.current = () => {
-  //     pianoPlayer.stop();
-  //     pianoPlayer.playNotes(parameters.notes, 2, .5);
-  //   };
-  // }, [parameters]);
-
   return (
     <>
       <div>{`${record.score} of ${record.history.length}; ${totalSeconds}`}</div>
