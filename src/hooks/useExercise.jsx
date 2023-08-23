@@ -12,7 +12,7 @@ export default function useExercise(generateParameters, submissionEventType, gen
   const [record, setRecord] = useState({ score: 0, history: [] });
   
   const { totalSeconds } = useStopwatch({
-    autoStart: true,
+    autoStart: false,  // TODO change when ready for it
   });
 
   const [parameters, setParameters] = useState();
