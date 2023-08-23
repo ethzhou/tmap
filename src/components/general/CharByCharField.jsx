@@ -20,6 +20,7 @@ export default function CharByCharField({length, doClearOnSubmit, submitEventTyp
       const enterPressed = new CustomEvent(submitEventType, {
         detail: {
           text: getString(),
+          keyDownEvent: event,
         },
       });
       document.dispatchEvent(enterPressed);
