@@ -39,7 +39,7 @@ export default function SheetMusicTest() {
       <SingleChord
         name="chord1"
         clef="treble"
-        notes={[
+        pitches={[
           Pitch.fromString('c4'),
           Pitch.fromString('e4'),
           Pitch.fromString('g4')
@@ -48,7 +48,7 @@ export default function SheetMusicTest() {
       <SingleChord
         name="chord2"
         clef="bass"
-        notes={[
+        pitches={[
           Pitch.fromString('f4'),
           Pitch.fromString('a4'),
           Pitch.fromString('c4')

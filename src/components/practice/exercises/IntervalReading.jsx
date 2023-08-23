@@ -9,34 +9,34 @@ export default function IntervalReading() {
   const { parameters, totalSeconds, record } = useExercise(
     () => {
       const intervalSize = randInt(1, 8);
-      const lowerNote = Pitch.fromInt(
+      const lowerPitch = Pitch.fromInt(
         randInt(
           -12,  // E2
           12 - (intervalSize - 1)  // A5, but leave room for the upper note of the interval
         ),
         randInt(-1,1)
       );
-      const upperNote = lowerNote.scaleTone(intervalSize);
-      const intervalQuality = Interval.randomQuality(intervalSize, upperNote.accidental);
-      upperNote.accidental += Interval.qualityToAccidentalChange(intervalQuality, intervalSize);
+      const upperPitch = lowerPitch.scaleTone(intervalSize);
+      const intervalQuality = Interval.randomQuality(intervalSize, upperPitch.accidental);
+      upperPitch.accidental += Interval.qualityToAccidentalChange(intervalQuality, intervalSize);
 
       const interval = new Interval(intervalQuality, intervalSize);
-      const notes = [lowerNote, upperNote];
-      const clef = (notes[0].octave <= 2
-        || (notes[0].octave === 3 && "CD".includes(notes[0].letter))) ? "bass"
-      : (notes[1].octave >= 5
-        || (notes[1].octave === 4 && "B".includes(notes[1].letter))) ? "treble"
+      const pitches = [lowerPitch, upperPitch];
+      const clef = (pitches[0].octave <= 2
+        || (pitches[0].octave === 3 && "CD".includes(pitches[0].letter))) ? "bass"
+      : (pitches[1].octave >= 5
+        || (pitches[1].octave === 4 && "B".includes(pitches[1].letter))) ? "treble"
       : (Math.random() < .5) ? "bass" : "treble";
 
-      console.log(notes.map(note => note.toString()));
-      return { interval, notes, clef };
+      console.log(pitches.map(pitch => pitch.toString()));
+      return { interval, pitches, clef };
     },
     "IntervalReadingSubmit",
     (event, parameters) => {
       const responseStr = event.detail.text;
       if (responseStr.length !== 2) return;
 
-      const { interval, notes, clef } = parameters;
+      const { interval, pitches, clef } = parameters;
   
       const responseIntervalQuality = responseStr[0];
       const responseIntervalSize = Number(responseStr[1]);
@@ -51,7 +51,7 @@ export default function IntervalReading() {
         response: responseStr,
         answer: interval.toString(),
         interval: interval,
-        notes: [...notes],
+        pitches: [...pitches],
         clef: clef,
       };
     },
@@ -62,14 +62,14 @@ export default function IntervalReading() {
       <div>{`${record.score} of ${record.history.length}; ${totalSeconds}`}</div>
       {parameters && (
         <>
-          {`${parameters.interval?.toString()} ${parameters.notes[0]?.toString()} ${parameters.notes[1]?.toString()} ${parameters.clef}`}
-          <SingleChord clef={parameters.clef} notes={parameters.notes} />
+          {`${parameters.interval?.toString()} ${parameters.pitches[0]?.toString()} ${parameters.pitches[1]?.toString()} ${parameters.clef}`}
+          <SingleChord clef={parameters.clef} pitches={parameters.pitches} />
           <CharByCharField length={2} doClearOnSubmit={true} submitEventType={"IntervalReadingSubmit"} />
         </>
       )}
       {record.history.map((item, index) => 
         <p key={index}>
-          {item.notes[0].toString()} {item.notes[1].toString()} {item.answer} {item.response} {item.score}
+          {item.pitches[0].toString()} {item.pitches[1].toString()} {item.answer} {item.response} {item.score}
         </p>
       )}
     </>
