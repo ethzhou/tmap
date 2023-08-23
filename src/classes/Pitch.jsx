@@ -1,6 +1,7 @@
 import Interval from "./Interval";
 
-export function accidentalString(accidental) {
+export function accidentalToString(accidental) {
+  // Returns "" for naturals
   return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
 }
 
@@ -63,8 +64,12 @@ export default class Pitch {
     return newPitch;
   }
 
-  toString() {
-    return `${this.letter}${accidentalString(this.accidental)}${this.octave}`;
+  /**
+   * @param {boolean} includeAccidental Whether to keep the accidental.
+   * @returns {string}
+   */
+  toString(includeAccidental = true) {
+    return `${this.letter}${includeAccidental ? accidentalToString(this.accidental) : ""}${this.octave}`;
   }
 
   // 'key' by the terminology of VexFlow, as in `new StaveNote({keys: ['C/4', ...], ...})`
@@ -74,7 +79,7 @@ export default class Pitch {
 
   // EasyScore notation
   toVFEasy() {
-    return `${this.letter}${accidentalString(this.accidental)}${this.octave}`;
+    return `${this.letter}${accidentalToString(this.accidental)}${this.octave}`;
   }
 
   alter(steps) {

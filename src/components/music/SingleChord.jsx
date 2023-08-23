@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Accidental, Factory, Formatter, Renderer, Stave, StaveNote, Vex, Voice } from "vexflow";
-import { accidentalString } from "../../classes/Pitch";
+import { accidentalToString } from "../../classes/Pitch";
 
 export default function SingleChord({ name, clef, pitches }) {
   useEffect(() => {
@@ -24,10 +24,30 @@ export default function SingleChord({ name, clef, pitches }) {
     const printedNotes = [
       new StaveNote({ keys: pitches.map(pitch => pitch.toVFKey()), duration: "w", clef: clef }),
     ];
-    const accidentals = { };
+    // Include accidentals where appropriate
+    const accidentalRecord = { };  // { "C4": [-1, 0] }
     for (let i = 0; i < pitches.length; i++) {
-      if (pitches[i].accidental) {
-        printedNotes[0].addModifier(new Accidental(accidentalString(pitches[i].accidental)), i);
+      if (!accidentalRecord[pitches[i].toString(false)])
+        accidentalRecord[pitches[i].toString(false)] = [];
+      accidentalRecord[pitches[i].toString(false)].push({
+        index: i,
+        accidental: pitches[i].accidental
+      });
+    }
+    console.log(accidentalRecord);
+    for (const basePitch in accidentalRecord) {
+      if (accidentalRecord[basePitch].some(item => item.accidental)) {
+        let last = null;
+        for (const item of accidentalRecord[basePitch]) {
+          if (item.accidental !== last) {
+            const accidentalString = accidentalToString(item.accidental);
+            printedNotes[0].addModifier(
+              new Accidental(accidentalString === "" ? "n" : accidentalString),
+              item.index
+            );
+            last = item.accidental;
+          }
+        }
       }
     }
     const voice = new Voice();
