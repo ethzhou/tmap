@@ -67,7 +67,7 @@ export default function IntervalReading() {
           <CharByCharField length={2} doClearOnSubmit={true} submitEventType={"IntervalReadingSubmit"} />
         </>
       )}
-      {record.history.map((item, index) => 
+      {record.history.toReversed().map((item, index) => 
         <p key={index}>
           {item.pitches[0].toString()} {item.pitches[1].toString()} {item.answer} {item.response} {item.score}
         </p>

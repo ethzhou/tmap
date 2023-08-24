@@ -90,7 +90,7 @@ export default function IntervalDictation() {
           <CharByCharField length={2} doClearOnSubmit={true} submitEventType={"IntervalDictationSubmit"} />
         </>
       )}
-      {record.history.map((item, index) => 
+      {record.history.toReversed().map((item, index) => 
         <p key={index}>
           {item.notes[0].toString()} {item.notes[1].toString()} {item.answer} {item.response} {item.score}
         </p>
