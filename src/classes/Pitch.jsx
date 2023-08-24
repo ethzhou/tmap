@@ -74,7 +74,7 @@ export default class Pitch {
 
   // 'key' by the terminology of VexFlow, as in `new StaveNote({keys: ['C/4', ...], ...})`
   toVFKey() {
-    return `${this.letter}/${this.octave}`;
+    return `${this.letter}${accidentalToString(this.accidental)}/${this.octave}`;
   }
 
   // EasyScore notation
