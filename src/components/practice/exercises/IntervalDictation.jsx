@@ -68,7 +68,7 @@ export default function IntervalDictation() {
   const playAudio = useCallback(() => {
     if (!parameters) return;
     pianoPlayer.stop();
-    pianoPlayer.playNotes(parameters.notes, 2, playType === "harmonic" ? 0 : .5);
+    pianoPlayer.playNotes(parameters.notes, 4, playType === "harmonic" ? 0 : .5);
   }, [parameters, playType]);
 
   useEffect(() => {
