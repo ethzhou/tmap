@@ -30,7 +30,7 @@ export default class PianoPlayer {
   /**
    * Plays notes.
    * 
-   * @param {Array<Pitch>} pitches
+   * @param {Pitch[]]} pitches
    * @param {number} durations Duration in seconds.
    * @param {number} spacing Time between the start of each pitch. Measured in seconds.
    * @param {boolean} doStop Whether to first stop other audio from this player.
