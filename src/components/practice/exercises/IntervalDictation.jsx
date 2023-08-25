@@ -80,7 +80,7 @@ export default function IntervalDictation() {
       <div>{`${record.score} of ${record.history.length}; ${totalSeconds}`}</div>
       {parameters && (
         <>
-          {`${parameters.interval?.toString()} ${parameters.notes[0]?.toString()} ${parameters.notes[1]?.toString()}`}<br />
+          {/* {`${parameters.interval?.toString()} ${parameters.notes[0]?.toString()} ${parameters.notes[1]?.toString()}`}<br /> */}
           <button type="button" onClick={playAudio}>play audio</button>
           <button type="button" 
             onClick={() => setPlayType(nextPlayType)}
