@@ -1,3 +1,4 @@
+import { A_OCTAVE, C_OCTAVE } from "../utils/musicUtils";
 import Interval from "./Interval";
 
 export function accidentalToString(accidental) {
@@ -26,7 +27,7 @@ export default class Pitch {
    */
   static fromInt(spacesFromC4, accidental = 0) {
     const octave = 4 + Math.floor(spacesFromC4 / 7);
-    const letter = "ABCDEFG"[(((2 + spacesFromC4) % 7) + 7) % 7];
+    const letter = A_OCTAVE[(((2 + spacesFromC4) % 7) + 7) % 7];
     
     // console.log(spacesFromC4, octave, (((2 + spacesFromC4) % 7) + 7) % 7, letter);
     return new Pitch(letter, accidental, octave);
@@ -113,9 +114,9 @@ export default class Pitch {
   #countToLetter(otherPitch) {
     let halfsteps = 0;
     let intervalSize = 0;
-    let i = "ABCDEFG".indexOf(this.letter);
-    while ("ABCDEFG"[i] !== otherPitch.letter) {
-      halfsteps += Pitch.#halfstepsToNextLetter("ABCDEFG"[i]);
+    let i = A_OCTAVE.indexOf(this.letter);
+    while (A_OCTAVE[i] !== otherPitch.letter) {
+      halfsteps += Pitch.#halfstepsToNextLetter(A_OCTAVE[i]);
       intervalSize += 1;
       i = (i + 1) % 7;
     }
@@ -124,16 +125,27 @@ export default class Pitch {
   }
 
   /**
+   * 
+   * @param {string | Pitch} letter
+   * @returns {boolean} 
+   */
+  static nextLetterInOctave(letter) {
+    if (typeof letter === "object") 
+      other = other.letter;
+    return letter === "G" ? "A" : String.fromCharCode(letter.charCodeAt(0) + 1);
+  }
+
+  /**
    * Finds whether this pitch's letter falls before another's in the octave from C.
    * 
-   * @param {string, Pitch} other
+   * @param {string | Pitch} other
    * @returns {boolean}
    */
   letterIsBeforeInOctave(other) {
     if (typeof other === "object")
       other = other.letter;
-    const thisIndex = "CDEFGAB".indexOf(this.letter);
-    const otherIndex = "CDEFGAB".indexOf(other);
+    const thisIndex = C_OCTAVE.indexOf(this.letter);
+    const otherIndex = C_OCTAVE.indexOf(other);
     console.assert(thisIndex > -1 && otherIndex > -1);
 
     return thisIndex < otherIndex;
@@ -148,8 +160,8 @@ export default class Pitch {
   letterIsAfterInOctave(other) {
     if (typeof other === "object")
       other = other.letter;
-    const thisIndex = "CDEFGAB".indexOf(this.letter);
-    const otherIndex = "CDEFGAB".indexOf(other);
+    const thisIndex = C_OCTAVE.indexOf(this.letter);
+    const otherIndex = C_OCTAVE.indexOf(other);
     console.assert(thisIndex > -1 && otherIndex > -1);
 
     return thisIndex > otherIndex;
@@ -158,7 +170,7 @@ export default class Pitch {
   /**
    * Finds whether this pitch and another are enharmonic.
    * 
-   * @param {string | Pitch} other 
+   * @param {Pitch} otherPitch
    * @returns {boolean}
    */
   isEnharmonicTo(otherPitch) {
@@ -222,13 +234,13 @@ export default class Pitch {
    * @returns {Pitch}
    */
   scaleTone(n) {
-    let l = "ABCDEFG".indexOf(this.letter);
-    const newLetter = "ABCDEFG"[(l + n - 1) % 7];
+    let l = A_OCTAVE.indexOf(this.letter);
+    const newLetter = A_OCTAVE[(l + n - 1) % 7];
     let newAccidental = this.accidental;
     for (let i = 0; i < n - 1; i++) {
-      // console.log("ABCDEFG"[(l + i) % 7], Pitch.#halfstepsToNextLetter("ABCDEFG"[(l + i) % 7]));
+      // console.log(aOctave[(l + i) % 7], Pitch.#halfstepsToNextLetter(aOctave[(l + i) % 7]));
       // When the note passes from B to C or E to F, the accidental would heighten to make a full whole step.
-      if (Pitch.#halfstepsToNextLetter("ABCDEFG"[(l + i) % 7]) === 1) {
+      if (Pitch.#halfstepsToNextLetter(A_OCTAVE[(l + i) % 7]) === 1) {
         newAccidental++;
       }
     }
