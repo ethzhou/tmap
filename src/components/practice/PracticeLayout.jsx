@@ -8,8 +8,7 @@ export default function PracticeLayout() {
         <Link to='interval-dictation'>interval-dictation</Link><br />
       </nav>
       <nav>
-        <Link to='four-part-figured-bass'>four-part-figured-bass</Link><br />
-        <Link to='four-part-numerals'>four-part-numerals</Link><br />
+        <Link to='four-part-harmony'>four-part-harmony</Link><br />
       </nav>
       <Outlet context={{foo: 'some outlet context for exercises'}} />
     </>
