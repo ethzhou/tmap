@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Accidental, Formatter, Renderer, Stave, StaveConnector, StaveNote, Stem, Voice } from "vexflow";
+import { Accidental, Beam, Formatter, Renderer, Stave, StaveConnector, StaveNote, Stem, Voice } from "vexflow";
 import { A_OCTAVE, FOUR_PARTS, GRAND_STAFF_STAVES, accidentalToCode, keyAccidentalType, keyAffectedLetters } from "../../utils/musicUtils";
 
 export default function FourPartProgression({
@@ -7,6 +7,7 @@ export default function FourPartProgression({
   parts,
   keySignature,
   timeSignature,
+  chordCount,
   chordsPerMeasure,
 }) {
   const divId = name ? `vf-${name}` : "vf-output";
@@ -17,10 +18,10 @@ export default function FourPartProgression({
     const staveY = 60;
 
     const [beatsPerMeasure, valuePerBeat] = timeSignature.split("/").map(item => Number(item));
-    const noteDuration = `${chordsPerMeasure * valuePerBeat / beatsPerMeasure}`;
+    const noteDuration = chordsPerMeasure * valuePerBeat / beatsPerMeasure;
     console.log(`noteDuration ${noteDuration}`);
 
-    const chordCount = parts.soprano.length;
+    // const chordCount = parts.soprano.length;
     const measureCount = Math.ceil(chordCount / chordsPerMeasure);
 
     const staveDistance = 115;
@@ -39,7 +40,11 @@ export default function FourPartProgression({
     for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
       const currentMeasureAccidentalStates = { };
       GRAND_STAFF_STAVES.forEach(stave => currentMeasureAccidentalStates[stave] = { });
-      for (let iChord = iMeasure * chordsPerMeasure; iChord < (iMeasure + 1) * chordsPerMeasure; iChord++) {
+      for (
+        let iChord = iMeasure * chordsPerMeasure;
+        iChord < Math.min((iMeasure + 1) * chordsPerMeasure, chordCount);
+        iChord++
+      ) {
         for (let iStave = 0; iStave < 2; iStave++) {
           const iLowerPart = iStave * 2;
           const iUpperPart = iLowerPart + 1;
@@ -93,6 +98,7 @@ export default function FourPartProgression({
 
     const measureStaves = [];
 
+    // The first measure is special, since it holds the clef, key signature, and time signature; it is created separately.
     const firstTrebleStave = new Stave(staveX, staveY, measureWidth);
     const firstBassStave = new Stave(staveX, staveY + staveDistance, measureWidth);
 
@@ -131,23 +137,31 @@ export default function FourPartProgression({
     // Extend the last measures by just a bit
     measureStaves.at(-1).trebleStave.setWidth(measureWidth + 14);
     measureStaves.at(-1).bassStave.setWidth(measureWidth + 14);
+    // Brace for the first measure (the rest of the barlines are added later)
     const brace = new StaveConnector(
       measureStaves[0].trebleStave,
       measureStaves[0].bassStave,
     ).setType("brace");
+    // Double barline for the last measure
     const doubleBarline = new StaveConnector(
       measureStaves.at(-1).trebleStave,
       measureStaves.at(-1).bassStave
     ).setType("boldDoubleRight");
 
-    const measureStavesAndConnectors = measureStaves.map(({ trebleStave, bassStave }) => {
-      const staveConnector = new StaveConnector(trebleStave, bassStave).setType("singleLeft");
+    const measureStavesAndConnectors = measureStaves.map(measure => {
+      const { trebleStave, bassStave } = measure;
+      const staveConnectorLeft = new StaveConnector(trebleStave, bassStave).setType("singleLeft");
+      const staveConnectorRight = new StaveConnector(trebleStave, bassStave).setType("singleRight");  // Not necessary
 
-      return { trebleStave, bassStave, staveConnector };
+      return { ...measure, staveConnectorLeft, staveConnectorRight };
     })
 
-    const music = measureStavesAndConnectors.map(({ trebleStave, bassStave, staveConnector }, iMeasure) => {
+    const music = measureStavesAndConnectors.map((measure, iMeasure) => {
+      const { trebleStave, bassStave } = measure;
+
       const voices = [];
+      const beams = [];
+
       for (let iPart = 0; iPart < 4; iPart++) {
         const part = FOUR_PARTS[iPart];
         const clef = iPart < 2 ? "bass" : "treble";
@@ -156,7 +170,11 @@ export default function FourPartProgression({
         voices[iPart].setStave(clef === "bass" ? bassStave : trebleStave);
 
         const staveNotes = [];
-        for (let iChord = iMeasure * chordsPerMeasure; iChord < (iMeasure + 1) * chordsPerMeasure; iChord++) {
+        for (
+          let iChord = iMeasure * chordsPerMeasure;
+          iChord < Math.min((iMeasure + 1) * chordsPerMeasure, chordCount);
+          iChord++
+        ) {
           const pitch = parts[part][iChord];
 
           const staveNote = new StaveNote({
@@ -171,25 +189,44 @@ export default function FourPartProgression({
           
           staveNotes.push(staveNote);
         }
-        
+
         voices[iPart].addTickables(staveNotes);
+        beams.push(...Beam.generateBeams(staveNotes, { maintain_stem_directions: true }));
         // console.log("after", parts[part], voices[iPart]);
       }
 
-      return { trebleStave, bassStave, staveConnector, voices };
+      return { ...measure, voices, beams };
     });
     
-    // if (chordCount % chordsPerMeasure) {
-    //   const lastVoices = music.at(-1).voices;
-    //   for (const voice of lastVoices) {
-    //     for (let i = 0; i < chordsPerMeasure - chordCount % chordsPerMeasure; i++) {
-    //       voice.addTickable(new StaveNote({
-    //         keys: ["R/4"],
-    //         duration: `${noteDuration}r`,
-    //       }));
-    //     }
-    //   };
-    // }
+    // Append rests
+    if (chordCount % chordsPerMeasure) {
+      const trailing = chordsPerMeasure - chordCount % chordsPerMeasure;
+      let remaining = trailing;
+      let restDuration = noteDuration;
+      const restDurations = [];
+      do {
+        console.log(remaining, restDuration, restDurations);
+        if (remaining & 1) {
+          restDurations.push(restDuration);
+        }
+        remaining >>= 1;
+        restDuration >>= 1;
+      } while (remaining && restDuration >= 1);
+      // Once the rest duration exceeds that of a whole note, instead fill the remainder of the measure with whole notes.
+      restDurations.push(...Array(remaining / noteDuration).fill(1));
+
+      console.log(restDurations);
+
+      const lastVoices = music.at(-1).voices;
+      for (const voice of lastVoices) {
+        for (const restDuration of restDurations) {
+          voice.addTickable(new StaveNote({
+            keys: ["R/4"],
+            duration: `${restDuration}r`,
+          }));
+        }
+      };
+    }
 
     console.log("music", music);
 
@@ -204,11 +241,12 @@ export default function FourPartProgression({
     const context = renderer.getContext();
     const formatter = new Formatter();
     
-    music.forEach(({ trebleStave, bassStave, staveConnector, voices }) => {
+    music.forEach(({ trebleStave, bassStave, staveConnectorLeft, staveConnectorRight, voices, beams }) => {
       trebleStave.setContext(context).draw();
       bassStave.setContext(context).draw();
 
-      staveConnector.setContext(context).draw();
+      staveConnectorLeft.setContext(context).draw();
+      staveConnectorRight.setContext(context).draw();
 
       formatter.joinVoices([voices[0], voices[1]]);
       formatter.joinVoices([voices[2], voices[3]]);
@@ -222,6 +260,10 @@ export default function FourPartProgression({
       for (const voice of voices) {
         voice.draw(context);
       }
+
+      beams.forEach(beam => {
+        beam.setContext(context).draw();
+      })
     })
     brace.setContext(context).draw();
     doubleBarline.setContext(context).draw();
