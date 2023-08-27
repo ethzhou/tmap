@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Accidental, Beam, Formatter, Renderer, Stave, StaveConnector, StaveNote, Stem, Voice } from "vexflow";
+import { Accidental, Beam, Formatter, Fraction, Renderer, Stave, StaveConnector, StaveNote, Stem, Voice } from "vexflow";
 import { A_OCTAVE, FOUR_PARTS, GRAND_STAFF_STAVES, accidentalToCode, keyAccidentalType, keyAffectedLetters } from "../../utils/musicUtils";
 
 export default function FourPartProgression({
@@ -191,7 +191,14 @@ export default function FourPartProgression({
         }
 
         voices[iPart].addTickables(staveNotes);
-        beams.push(...Beam.generateBeams(staveNotes, { maintain_stem_directions: true }));
+        beams.push(...Beam.generateBeams(staveNotes, {
+          groups: [
+            new Fraction(1, valuePerBeat),
+          ],
+          maintain_stem_directions: true,
+          beam_rests: true,
+          beam_middle_only: true,
+        }));
         // console.log("after", parts[part], voices[iPart]);
       }
 
@@ -204,14 +211,13 @@ export default function FourPartProgression({
       let remaining = trailing;
       let restDuration = noteDuration;
       const restDurations = [];
-      do {
-        console.log(remaining, restDuration, restDurations);
+      while (remaining && restDuration >= 1) {
         if (remaining & 1) {
           restDurations.push(restDuration);
         }
         remaining >>= 1;
         restDuration >>= 1;
-      } while (remaining && restDuration >= 1);
+      }
       // Once the rest duration exceeds that of a whole note, instead fill the remainder of the measure with whole notes.
       restDurations.push(...Array(remaining / noteDuration).fill(1));
 
