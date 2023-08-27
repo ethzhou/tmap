@@ -5,7 +5,15 @@ export const A_OCTAVE = "ABCDEFG";
 export const C_OCTAVE = "CDEFGAB";
 
 export const F_CIRCLE_OF_FIFTHS = "FCGDAEBF";
-export const B_CIRCLE_OF_FOURTHS = "BEADGCF";  // fCircleOfFifths in reverse
+
+export const FOUR_PARTS = ["bass", "tenor", "alto", "soprano"];
+export const GRAND_STAFF_STAVES = ["bass", "treble"];
+
+export function keyAccidentalType(keySignature) {
+  return keySignature === "F" || keySignature[1] === "b" ? -1
+    : keySignature === "C" ? 0
+    : 1;
+}
 
 /**
  * Returns the letters of the notes affected by the key.
@@ -13,30 +21,19 @@ export const B_CIRCLE_OF_FOURTHS = "BEADGCF";  // fCircleOfFifths in reverse
  * @param {string} keySignature A standard key.
  * @returns {string}
  */
-export function keyAccidentals(keySignature) {
-  if (keySignature === "F" || keySignature[1] === "b")
-    return F_CIRCLE_OF_FIFTHS.slice(F_CIRCLE_OF_FIFTHS.indexOf(keySignature[0] - 1, 1), -1);
+export function keyAffectedLetters(keySignature) {
+  if (keyAccidentalType(keySignature) === -1)
+    return F_CIRCLE_OF_FIFTHS.slice(F_CIRCLE_OF_FIFTHS.indexOf(keySignature[0], 1) - 1, -1);
   else
     return F_CIRCLE_OF_FIFTHS.slice(F_CIRCLE_OF_FIFTHS.indexOf(Pitch.nextLetterInOctave(keySignature[0])));
 }
 
-/**
- * Apply accidentals well. VexFlow's Accidental.applyAccidentals does not handle unisons well.
- * 
- * @param {Voice[]} voices
- * @param {string} keySignature  
- */
-function applyAccidentalsWell(voices, keySignature) {
-  Accidental.applyAccidentals(voices, keySignature ?? undefined);
-  
-  const keyAccidentals = keyAccidentals(keySignature);
-  // vfAccidentals : _Accidental[][]
-  const vfAccidentals = voices.tickables[0].map(
-    // tickable : _Tickable
-    tickable =>
-      tickable.modifiers.filter(modifier =>
-        modifier.constructor.name === "_Accidental")
-  );
+export function accidentalToString(accidental) {
+  // Returns "" for naturals
+  return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
+}
 
-  
+export function accidentalToCode(accidental) {
+  const accidentalString = accidentalToString(accidental);
+  return accidentalString === "" ? "n" : accidentalString;
 }

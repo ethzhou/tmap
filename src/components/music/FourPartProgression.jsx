@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Accidental, Factory, Formatter, Renderer, Stave, StaveConnector, StaveNote, Stem, System, Vex, Voice, VoiceMode } from "vexflow";
+import { Accidental, Formatter, Renderer, Stave, StaveConnector, StaveNote, Stem, Voice } from "vexflow";
+import { A_OCTAVE, FOUR_PARTS, GRAND_STAFF_STAVES, accidentalToCode, keyAccidentalType, keyAffectedLetters } from "../../utils/musicUtils";
 
 export default function FourPartProgression({
   name,
@@ -23,7 +24,70 @@ export default function FourPartProgression({
     const measureCount = Math.ceil(chordCount / chordsPerMeasure);
 
     const staveDistance = 115;
-    const measureWidth = chordsPerMeasure * 60;
+    const measureWidth = (chordsPerMeasure + 1) * 60;
+
+    // Determine accidentals
+
+    const affectedLetters = keyAffectedLetters(keySignature);
+    const keyAccidental = keyAccidentalType(keySignature);
+    const baseDisplayedKeyAccidentals = { };
+    for (const letter of A_OCTAVE) {
+      baseDisplayedKeyAccidentals[letter] = affectedLetters.includes(letter) ? keyAccidental : 0;
+    }
+
+    const displayedAccidentals = Array(chordCount).fill().map(_ => []);
+    for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
+      const currentMeasureAccidentalStates = { };
+      GRAND_STAFF_STAVES.forEach(stave => currentMeasureAccidentalStates[stave] = { });
+      for (let iChord = iMeasure * chordsPerMeasure; iChord < (iMeasure + 1) * chordsPerMeasure; iChord++) {
+        for (let iStave = 0; iStave < 2; iStave++) {
+          const iLowerPart = iStave * 2;
+          const iUpperPart = iLowerPart + 1;
+
+          const stave = GRAND_STAFF_STAVES[iStave];
+          const lowerPitch = parts[FOUR_PARTS[iLowerPart]][iChord];
+          const upperPitch = parts[FOUR_PARTS[iUpperPart]][iChord];
+
+          const addAccidental = (pitch, iPart, doCarryAccidentals = true) => {
+            const space = pitch.toSpace();
+            if (doCarryAccidentals
+              && pitch.accidental
+                === (currentMeasureAccidentalStates[stave][space] ?? baseDisplayedKeyAccidentals[pitch.letter]))
+              return;
+            currentMeasureAccidentalStates[stave][space]
+              = displayedAccidentals[iChord][iPart]
+              = pitch.accidental;
+          }
+
+          // If not both pitches exist
+          if (!lowerPitch || !upperPitch) {
+            if (lowerPitch)
+              addAccidental(lowerPitch, iLowerPart);
+            if (upperPitch)
+              addAccidental(upperPitch, iUpperPart);
+            continue;
+          }
+          
+          const isSameSpace = lowerPitch.isSameSpaceAs(upperPitch);
+          const isSameAccidental = lowerPitch.accidental === upperPitch.accidental;
+
+          // If the pitches are in different spaces
+          if (!isSameSpace) {
+            addAccidental(upperPitch, iUpperPart);
+            addAccidental(lowerPitch, iLowerPart);
+            continue;
+          }
+
+          // If the pitches are in the same space
+          // Add the first accidental
+          addAccidental(upperPitch, iUpperPart, false);
+          // If the pitches do not have the same accidental, add the second accidental
+          if (!isSameAccidental) {
+            addAccidental(lowerPitch, iLowerPart);
+          }
+        }
+      }
+    }
     
     // Create symbols
 
@@ -64,6 +128,7 @@ export default function FourPartProgression({
       measureStaves.push({ trebleStave, bassStave });
     }
     
+    // Extend the last measures by just a bit
     measureStaves.at(-1).trebleStave.setWidth(measureWidth + 14);
     measureStaves.at(-1).bassStave.setWidth(measureWidth + 14);
     const brace = new StaveConnector(
@@ -81,42 +146,52 @@ export default function FourPartProgression({
       return { trebleStave, bassStave, staveConnector };
     })
 
-    const music = measureStavesAndConnectors.map(({ trebleStave, bassStave, staveConnector }, i) => {
-      const voices = { };
-      for (const part in parts) {
-        const clef = (part === "bass" || part === "tenor") ? "bass" : "treble";
-        voices[part] = new Voice({ num_beats: beatsPerMeasure, beat_value: valuePerBeat });
-        voices[part].setStave(clef === "bass" ? bassStave : trebleStave);
-        const staveNotes = parts[part].slice(i * chordsPerMeasure, (i + 1) * chordsPerMeasure).map(
-          pitch => new StaveNote({
+    const music = measureStavesAndConnectors.map(({ trebleStave, bassStave, staveConnector }, iMeasure) => {
+      const voices = [];
+      for (let iPart = 0; iPart < 4; iPart++) {
+        const part = FOUR_PARTS[iPart];
+        const clef = iPart < 2 ? "bass" : "treble";
+
+        voices[iPart] = new Voice({ num_beats: beatsPerMeasure, beat_value: valuePerBeat });
+        voices[iPart].setStave(clef === "bass" ? bassStave : trebleStave);
+
+        const staveNotes = [];
+        for (let iChord = iMeasure * chordsPerMeasure; iChord < (iMeasure + 1) * chordsPerMeasure; iChord++) {
+          const pitch = parts[part][iChord];
+
+          const staveNote = new StaveNote({
             clef: clef,
             keys: [!pitch ? "R/4" : pitch.toVFKey()],
             duration: `${noteDuration}${!pitch ? "r" : ""}`,
-            stem_direction: (part === "bass" || part === "alto") ? Stem.DOWN : Stem.UP,
-          })
-        );
-        // console.log("after", parts[part], voices[part]);
-        voices[part].addTickables(staveNotes);
+            stem_direction: (iPart % 2) ? Stem.UP : Stem.DOWN,
+          });
+          // Add accidental if needed
+          if (iChord < chordCount && displayedAccidentals[iChord][iPart] !== undefined)
+            staveNote.addModifier(new Accidental(accidentalToCode(pitch.accidental)));
+          
+          staveNotes.push(staveNote);
+        }
+        
+        voices[iPart].addTickables(staveNotes);
+        // console.log("after", parts[part], voices[iPart]);
       }
-
-      // TODO accidentals
 
       return { trebleStave, bassStave, staveConnector, voices };
     });
     
-    if (chordCount % chordsPerMeasure) {
-      const lastVoices = music.at(-1).voices;
-      for (const part in lastVoices) {
-        for (let i = 0; i < chordsPerMeasure - chordCount % chordsPerMeasure; i++) {
-          lastVoices[part].addTickable(new StaveNote({
-            keys: ["R/4"],
-            duration: `${noteDuration}r`,
-          }));
-        }
-      };
-    }
-      
-    console.log(music);
+    // if (chordCount % chordsPerMeasure) {
+    //   const lastVoices = music.at(-1).voices;
+    //   for (const voice of lastVoices) {
+    //     for (let i = 0; i < chordsPerMeasure - chordCount % chordsPerMeasure; i++) {
+    //       voice.addTickable(new StaveNote({
+    //         keys: ["R/4"],
+    //         duration: `${noteDuration}r`,
+    //       }));
+    //     }
+    //   };
+    // }
+
+    console.log("music", music);
 
     // Draw
 
@@ -129,23 +204,23 @@ export default function FourPartProgression({
     const context = renderer.getContext();
     const formatter = new Formatter();
     
-    music.forEach(({ trebleStave, bassStave, staveConnector, voices }, i) => {
+    music.forEach(({ trebleStave, bassStave, staveConnector, voices }) => {
       trebleStave.setContext(context).draw();
       bassStave.setContext(context).draw();
 
       staveConnector.setContext(context).draw();
 
-      formatter.joinVoices([voices.bass, voices.tenor]);
-      formatter.joinVoices([voices.alto, voices.soprano]);
-      // formatter.alignRests(Object.values(voices));
+      formatter.joinVoices([voices[0], voices[1]]);
+      formatter.joinVoices([voices[2], voices[3]]);
+      // formatter.alignRests(voices);
       formatter.format(
-        Object.values(voices),
+        voices,
         measureWidth,
         // { auto_beam: true, autobeam: true }
       );
 
-      for (const voice in voices) {
-        voices[voice].draw(context);
+      for (const voice of voices) {
+        voice.draw(context);
       }
     })
     brace.setContext(context).draw();

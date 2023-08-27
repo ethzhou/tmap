@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { Accidental, Factory, Formatter, Renderer, Stave, StaveNote, Vex, Voice } from "vexflow";
-import { accidentalToString } from "../../classes/Pitch";
+import { Accidental, Formatter, Renderer, Stave, StaveNote, Voice } from "vexflow";
+import { accidentalToCode } from "../../utils/musicUtils";
 
 export default function SingleChord({ name, clef, pitches }) {
   useEffect(() => {
@@ -24,9 +24,9 @@ export default function SingleChord({ name, clef, pitches }) {
     //#region Own accidental application method. Slightly different from VexFlow's Accidental.applyAccidentals: A unison with natural and sharp (like F F#) is rendered with no natural symbol via VexFlow Accidental.applyAccidentals, while this region's code would render a natural symbol. Something a unison with two sharp notes (like F# F#) would be rendered with two sharp symbols via VexFlow and one sharp symbol with this code. For some reason, in the case of flats, one flat note does render the natural symbol, but two flat notes still renders two flat symbols.
     const accidentalRecord = { };  // { "C4": [-1, 0] }
     for (let i = 0; i < pitches.length; i++) {
-      if (!accidentalRecord[pitches[i].toString(false)])
-        accidentalRecord[pitches[i].toString(false)] = [];
-      accidentalRecord[pitches[i].toString(false)].push({
+      if (!accidentalRecord[pitches[i].toSpace()])
+        accidentalRecord[pitches[i].toSpace()] = [];
+      accidentalRecord[pitches[i].toSpace()].push({
         index: i,
         accidental: pitches[i].accidental
       });
@@ -36,9 +36,8 @@ export default function SingleChord({ name, clef, pitches }) {
         let last = null;
         for (const item of accidentalRecord[basePitch]) {
           if (item.accidental !== last) {
-            const accidentalString = accidentalToString(item.accidental);
             printedNotes[0].addModifier(
-              new Accidental(accidentalString === "" ? "n" : accidentalString),
+              new Accidental(accidentalToCode(item.accidental)),
               item.index
             );
             last = item.accidental;
@@ -49,6 +48,7 @@ export default function SingleChord({ name, clef, pitches }) {
     //#endregion
     const voice = new Voice();
     voice.addTickables(printedNotes);
+    console.log(voice);
 
     new Formatter().joinVoices([voice]).format([voice], 350);
 

@@ -8,7 +8,7 @@ import CharByCharField from "../../general/CharByCharField";
 export default function IntervalReading() {
   const { parameters, totalSeconds, record } = useExercise(
     () => {
-      const intervalSize = randInt(1, 8);
+      const intervalSize = randInt(1, 1);
       const lowerPitch = Pitch.fromInt(
         randInt(
           -12,  // E2

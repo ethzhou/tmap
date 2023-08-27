@@ -1,10 +1,5 @@
-import { A_OCTAVE, C_OCTAVE } from "../utils/musicUtils";
+import { A_OCTAVE, C_OCTAVE, accidentalToString } from "../utils/musicUtils";
 import Interval from "./Interval";
-
-export function accidentalToString(accidental) {
-  // Returns "" for naturals
-  return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
-}
 
 export default class Pitch {
   /**
@@ -69,8 +64,17 @@ export default class Pitch {
    * @param {boolean} includeAccidental Whether to keep the accidental.
    * @returns {string}
    */
-  toString(includeAccidental = true) {
-    return `${this.letter}${includeAccidental ? accidentalToString(this.accidental) : ""}${this.octave}`;
+  toString() {
+    return `${this.letter}${accidentalToString(this.accidental)}${this.octave}`;
+  }
+
+  /**
+   * Returns the letter and octave of the pitch as a string.
+   * 
+   * @returns {string}
+   */
+  toSpace() {
+    return `${this.letter}${this.octave}`;
   }
 
   // 'key' by the terminology of VexFlow, as in `new StaveNote({keys: ['C/4', ...], ...})`
@@ -168,12 +172,24 @@ export default class Pitch {
   }
 
   /**
+   * Finds whether this pitch and another share the same letter and octave.
+   * 
+   * @param {Pitch} otherPitch
+   * @returns {boolean}
+   */
+  isSameSpaceAs(otherPitch) {
+    if (!otherPitch) return;
+    return this.letter === otherPitch.letter && this.octave === otherPitch.octave;
+  }
+
+  /**
    * Finds whether this pitch and another are enharmonic.
    * 
    * @param {Pitch} otherPitch
    * @returns {boolean}
    */
   isEnharmonicTo(otherPitch) {
+    if (!otherPitch) return;
     return this.#countToLetter(otherPitch).halfsteps === this.accidental - otherPitch.accidental;
   }
   
