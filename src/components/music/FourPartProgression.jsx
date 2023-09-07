@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Accidental, Beam, Formatter, Fraction, Renderer, Stave, StaveConnector, StaveNote, Stem, Voice } from "vexflow";
 import { A_OCTAVE, FOUR_PARTS, GRAND_STAFF_STAVES, accidentalToCode, keyAccidentalType, keyAffectedLetters } from "../../utils/musicUtils";
+import { COLOR_CHORD_SELECT } from "../../utils/utils";
 
 export default function FourPartProgression({
   name,
@@ -9,6 +10,7 @@ export default function FourPartProgression({
   timeSignature,
   chordCount,
   chordsPerMeasure,
+  selection,
 }) {
   const divId = name ? `vf-${name}` : "vf-output";
   useEffect(() => {
@@ -53,6 +55,7 @@ export default function FourPartProgression({
           const lowerPitch = parts[FOUR_PARTS[iLowerPart]][iChord];
           const upperPitch = parts[FOUR_PARTS[iUpperPart]][iChord];
 
+          // Helper function
           const addAccidental = (pitch, iPart, doCarryAccidentals = true) => {
             const space = pitch.toSpace();
             if (doCarryAccidentals
@@ -117,9 +120,10 @@ export default function FourPartProgression({
     firstTrebleStave.setWidth(firstTrebleStave.getWidth() + relativeNoteStartX);
     firstBassStave.setWidth(firstBassStave.getWidth() + relativeNoteStartX);
     
+    // Add staves to array
     measureStaves.push({ trebleStave: firstTrebleStave, bassStave: firstBassStave });
-    // Create more staves, one per measure, each starting where the last ended
     for (let i = 1; i < measureCount; i++) {
+      // Create more staves, one per measure, each starting where the last ended
       const trebleStave = new Stave(
         noteStartX + i * measureWidth,
         staveY,
@@ -137,7 +141,7 @@ export default function FourPartProgression({
     // Extend the last measures by just a bit
     measureStaves.at(-1).trebleStave.setWidth(measureWidth + 14);
     measureStaves.at(-1).bassStave.setWidth(measureWidth + 14);
-    // Brace for the first measure (the rest of the barlines are added later)
+    // Brace for the first measure (the rest of the barlines are set later)
     const brace = new StaveConnector(
       measureStaves[0].trebleStave,
       measureStaves[0].bassStave,
@@ -148,6 +152,7 @@ export default function FourPartProgression({
       measureStaves.at(-1).bassStave
     ).setType("boldDoubleRight");
 
+    // Add stave connectors
     const measureStavesAndConnectors = measureStaves.map(measure => {
       const { trebleStave, bassStave } = measure;
       const staveConnectorLeft = new StaveConnector(trebleStave, bassStave).setType("singleLeft");
@@ -156,6 +161,7 @@ export default function FourPartProgression({
       return { ...measure, staveConnectorLeft, staveConnectorRight };
     })
 
+    // Add notes
     const music = measureStavesAndConnectors.map((measure, iMeasure) => {
       const { trebleStave, bassStave } = measure;
 
@@ -204,6 +210,18 @@ export default function FourPartProgression({
 
       return { ...measure, voices, beams };
     });
+
+    // Highlight the selected notes
+    if (selection) {
+      for (const voice of selection.voices) {
+        console.log(selection.measure, voice, selection.chord);
+        music[selection.measure - 1].voices[voice].tickables[selection.chord - 1].setStyle({
+          fillStyle: COLOR_CHORD_SELECT,
+          strokeStyle: COLOR_CHORD_SELECT,
+          shadowColor: COLOR_CHORD_SELECT,
+        })
+      }
+    }
     
     // Append rests
     if (chordCount % chordsPerMeasure) {
@@ -220,8 +238,7 @@ export default function FourPartProgression({
       }
       // Once the rest duration exceeds that of a whole note, instead fill the remainder of the measure with whole notes.
       restDurations.push(...Array(remaining / noteDuration).fill(1));
-
-      console.log(restDurations);
+      // console.log(restDurations);
 
       const lastVoices = music.at(-1).voices;
       for (const voice of lastVoices) {
@@ -273,7 +290,7 @@ export default function FourPartProgression({
     })
     brace.setContext(context).draw();
     doubleBarline.setContext(context).draw();
-  }, [parts, keySignature, timeSignature, chordsPerMeasure])
+  }, [parts, keySignature, timeSignature, chordCount, chordsPerMeasure, selection])
   
   return (
     <div key={parts} id={divId}></div>
