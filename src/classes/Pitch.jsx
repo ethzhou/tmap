@@ -35,7 +35,7 @@ export default class Pitch {
    * @returns {Pitch | undefined}
    */
   static fromString(strRepresentation) {
-    const letter = strRepresentation[0].toUpperCase();
+    const letter = strRepresentation[0]?.toUpperCase();
     const accidental = strRepresentation[1] === "b" ? (strRepresentation[2] === "b" ? -2 : -1)
       : strRepresentation[1] === "#" ? (strRepresentation[2] === "#" ? 2 : 1)
       : strRepresentation[1] === "x" ? 2
