@@ -29,10 +29,10 @@ export default class Pitch {
   }
 
   /**
-   * Constructs a pitch from string notation.
+   * Constructs a pitch from string notation. Returns `undefined` if invalid.
    * 
    * @param {string} strRepresentation For example, "C#4" or "D5".
-   * @returns {Pitch}
+   * @returns {Pitch | undefined}
    */
   static fromString(strRepresentation) {
     const letter = strRepresentation[0].toUpperCase();
@@ -41,6 +41,12 @@ export default class Pitch {
       : strRepresentation[1] === "x" ? 2
       : 0;
     const octave = Number(strRepresentation.slice(1 + Math.abs(accidental)));
+
+    // Check validity
+    if (!C_OCTAVE.includes(letter))
+      return;
+    if (!octave)  // octave is NaN; either accidental was invalid or octave was invalid
+      return;
 
     return new Pitch(letter, accidental, octave);
   }
