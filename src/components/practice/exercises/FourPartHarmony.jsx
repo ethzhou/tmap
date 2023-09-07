@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { clamp, randInt } from "../../../utils/utils";
-import { FOUR_VOICES } from "../../../utils/musicUtils";
+import { FOUR_VOICES, conformToVFKey, isValidKey, isValidTime } from "../../../utils/musicUtils";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -24,7 +24,7 @@ function constructSelection(measure, chord, voices = [...Array(4).keys()]) {
  * 
  * @param {*} selection 
  * @param {*} chordsPerMeasure 
- * @returns 
+ * @returns {number}
  */
 function selectedChord(selection, chordsPerMeasure) {
   return chordsPerMeasure * (selection.measure - 1) + (selection.chord);
@@ -140,6 +140,16 @@ export default function FourPartHarmony() {
 
       return;
     }
+
+    // Key signature
+    if (inputStr[0] === "!") {
+      parseKeySignature(inputStr);
+    }
+
+    // Time signature
+    if (inputStr[0] === "@") {
+      parseTimeSignature(inputStr);
+    }
   }
 
   /**
@@ -193,7 +203,6 @@ export default function FourPartHarmony() {
       // Increment by one measure if the chords carried over
       newSelection.measure += newSelection.chord < selection.chord;
       
-      console.log("A", selection, delta, newSelection);
       return newSelection;
     });
   }
@@ -271,6 +280,45 @@ export default function FourPartHarmony() {
 
       return newParts;
     });
+  }
+
+  function parseKeySignature(inputStr) {
+    const keySignature = inputStr.slice(1).trim();
+
+    // Validate pitch
+    if (!isValidKey(keySignature)) {
+      console.log(`${keySignature} is not a valid key.`);
+      return;
+    }
+
+    setKeySignature(() => conformToVFKey(keySignature));
+  }
+
+  function parseTimeSignature(inputStr) {
+    const args = inputStr.slice(1).split(" ");
+
+    const timeSignature = args[0];
+    const force = args[1] === "force";
+
+    // Validate time
+    if (!isValidTime(timeSignature)) {
+      console.log(`${timeSignature} is not a valid time.`);
+      return;
+    }
+    
+    // Validate resulting duration
+    const [beatsPerMeasure, valuePerBeat] = timeSignature.split("/").map(item => Number(item));
+    const noteDuration = chordsPerMeasure * valuePerBeat / beatsPerMeasure;
+    if (!Number.isInteger(noteDuration)) {
+      console.log(`The resulting note duration (${noteDuration}) is not an integer.`)
+      if (!force)
+        return;
+      else {
+        // TODO clear score
+      }
+    }
+
+    setTimeSignature(timeSignature);
   }
 
   return (
