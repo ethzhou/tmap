@@ -1,7 +1,7 @@
 export const COLOR_CHORD_SELECT = "#f00";
 
-export function clamp(x, a, b) {
-  return Math.max(a, Math.min(x, b));
+export function clamp(x, lower, upper) {
+  return Math.max(lower, Math.min(x, upper));
 }
 
 export function randInt(min, max) {
