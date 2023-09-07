@@ -119,6 +119,7 @@ export default function FourPartHarmony() {
 
     // Navigation
     if (inputStr[0] === "`") {
+      // TODO move this logic into parseSelection
       const newSelection = parseSelection(inputStr);
       if (newSelection)
         setSelection(() => newSelection);
@@ -236,7 +237,7 @@ export default function FourPartHarmony() {
         newParts[
           FOUR_VOICES[selection.voices[i]]
         ][
-          selectedChord(selection, chordsPerMeasure)
+          selectedChord(selection, chordsPerMeasure) - 1
         ] = pitch;
       });
 
@@ -259,8 +260,10 @@ export default function FourPartHarmony() {
         0,
         pitches.length
       );
-      console.log("iterationCount", iterationCount);
       for (let iPitch = 0; iPitch < iterationCount; iPitch++) {
+        // Filter the undefined pitches
+        if (pitches[iPitch] === undefined)
+          continue;
         newParts[FOUR_VOICES[voice]][startChord - 1 + iPitch] = pitches[iPitch];
       }
       // Move the selection the same amount
@@ -269,9 +272,6 @@ export default function FourPartHarmony() {
       return newParts;
     });
   }
-
-  console.log("chordCount", chordCount, "chordsPerMeasure", chordsPerMeasure);
-  console.log("selection", selection);
 
   return (
     <>
