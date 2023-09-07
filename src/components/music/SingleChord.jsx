@@ -3,9 +3,11 @@ import { Accidental, Formatter, Renderer, Stave, StaveNote, Voice } from "vexflo
 import { accidentalToCode } from "../../utils/musicUtils";
 
 export default function SingleChord({ name, clef, pitches }) {
+  const divId = name ? `vf-${name}` : "vf-output";
+
   useEffect(() => {
     // Get the div returned by SingleChord
-    const div = document.getElementById(name ? `vf-${name}` : "vf-output");
+    const div = document.getElementById(divId);
 
     const renderer = new Renderer(div, Renderer.Backends.SVG);
     renderer.resize(122, 150);
@@ -54,8 +56,17 @@ export default function SingleChord({ name, clef, pitches }) {
 
     voice.draw(context, stave);
   }, [clef, pitches])
+
+  useEffect(() => {
+    console.log("mounting");
+  }, []);
+  useEffect(() => {
+    console.log("rerun due to dependency");
+  }, [pitches]);
+  console.log("component call");
+  console.log("pitches", pitches);
   
   return (
-    <div key={pitches} id={name ? `vf-${name}` : "vf-output"}></div>
+    <div key={pitches} id={divId}></div>
   );
 }
