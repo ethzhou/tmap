@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
-import { randInt } from "../../../utils/utils";
-import { FOUR_PARTS } from "../../../utils/musicUtils";
+import { clamp, randInt } from "../../../utils/utils";
+import { FOUR_VOICES } from "../../../utils/musicUtils";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -19,6 +19,13 @@ function constructSelection(measure, chord, voices = [...Array(4).keys()]) {
   return { measure, chord, voices };
 }
 
+/**
+ * Returns the 1-based index of the chord given a measure, chord of the measure, and chords per measure.
+ * 
+ * @param {*} selection 
+ * @param {*} chordsPerMeasure 
+ * @returns 
+ */
 function selectedChord(selection, chordsPerMeasure) {
   return chordsPerMeasure * (selection.measure - 1) + (selection.chord);
 }
@@ -47,6 +54,7 @@ export default function FourPartHarmony() {
 
   useEffect(() => {
     generateParameters();
+    inputRef.current.focus();
   }, []);
 
   function generateParameters() {
@@ -95,14 +103,16 @@ export default function FourPartHarmony() {
   function parseInput(inputStr) {
     // Chord before
     if (inputStr[0] === ",") {
-      selectBefore();
+      const delta = Number(inputStr.slice(1));
+      selectBefore(delta && delta > -1 ? delta : undefined);
 
       return;
     }
 
     // Chord after
     if (inputStr[0] === ".") {
-      selectAfter();      
+      const delta = Number(inputStr.slice(1));
+      selectAfter(delta && delta > -1 ? delta : undefined);      
 
       return;
     }
@@ -122,40 +132,67 @@ export default function FourPartHarmony() {
       
       return;
     }
+
+    // Melodic
+    if ("btas".includes(inputStr[0])) {
+      parseMelodic(inputStr);
+
+      return;
+    }
   }
 
-  function selectBefore() {
+  /**
+   * Select the previous chord.
+   * 
+   * @param {number} delta The size of the selection shift.
+   */
+  function selectBefore(delta = 1) {
     setSelection(selection => {
-      if (selectedChord(selection, chordsPerMeasure) === 1)
-        return selection;
+      if (delta < 0)
+        selectAfter(-delta);
 
       const newSelection = {...selection};
-      if (newSelection.chord === 1) {
-        newSelection.measure--;
-        newSelection.chord = chordsPerMeasure;
+
+      if (selectedChord(selection, chordsPerMeasure) <= delta) {
+        newSelection.measure = newSelection.chord = 1;
+
+        return newSelection;
       }
-      else {
-        newSelection.chord--;
-      }
+
+      newSelection.measure -= Math.floor(delta / chordsPerMeasure);
+      newSelection.chord = (selection.chord - 1 - delta + chordsPerMeasure) % chordsPerMeasure + 1;
+      // Decrement by one measure if the chords carried over
+      newSelection.measure -= newSelection.chord > selection.chord;
 
       return newSelection;
     });
   }
 
-  function selectAfter() {
+  /**
+   * Select the next chord.
+   * 
+   * @param {number} delta The size of the selection shift.
+   */
+  function selectAfter(delta = 1) {
     setSelection(selection => {
-      if (selectedChord(selection, chordsPerMeasure) === chordCount)
-        return selection;
+      if (delta < 0)
+        selectBefore(-delta);
 
       const newSelection = {...selection};
-      if (newSelection.chord === chordsPerMeasure) {
-        newSelection.measure++;
-        newSelection.chord = 1;
-      }
-      else {
-        newSelection.chord++;
+      
+      if (selectedChord(selection, chordsPerMeasure) > chordCount - delta) {
+        newSelection.measure = Math.ceil(chordCount / chordsPerMeasure);
+        newSelection.chord = chordCount % chordsPerMeasure;
+
+        return newSelection;
       }
 
+      newSelection.measure += Math.floor(delta / chordsPerMeasure);
+      newSelection.chord = (selection.chord - 1 + delta) % chordsPerMeasure + 1;
+      // Increment by one measure if the chords carried over
+      newSelection.measure += newSelection.chord < selection.chord;
+      
+      console.log("A", selection, delta, newSelection);
       return newSelection;
     });
   }
@@ -197,9 +234,9 @@ export default function FourPartHarmony() {
           return;
 
         newParts[
-          FOUR_PARTS[selection.voices[i]]
+          FOUR_VOICES[selection.voices[i]]
         ][
-          chordsPerMeasure * (selection.measure - 1) + (selection.chord - 1)
+          selectedChord(selection, chordsPerMeasure)
         ] = pitch;
       });
 
@@ -207,6 +244,34 @@ export default function FourPartHarmony() {
     });
   }
 
+  function parseMelodic(inputStr) {
+    const args = inputStr.slice(2).split(" ");
+    const voice = "btas".indexOf(inputStr[0]);
+    
+    const pitches = args.map(pitchStr => pitchStr === "%" ? null : Pitch.fromString(pitchStr));
+    setParts(parts => {
+      const newParts = {...parts};
+
+      const startChord = selectedChord(selection, chordsPerMeasure);
+      // Iterate the number of pitches, but only up to the last chord
+      const iterationCount = clamp(
+        chordCount - startChord + 1,
+        0,
+        pitches.length
+      );
+      console.log("iterationCount", iterationCount);
+      for (let iPitch = 0; iPitch < iterationCount; iPitch++) {
+        newParts[FOUR_VOICES[voice]][startChord - 1 + iPitch] = pitches[iPitch];
+      }
+      // Move the selection the same amount
+      selectAfter(iterationCount);
+
+      return newParts;
+    });
+  }
+
+  console.log("chordCount", chordCount, "chordsPerMeasure", chordsPerMeasure);
+  console.log("selection", selection);
 
   return (
     <>
