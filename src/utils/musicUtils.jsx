@@ -6,7 +6,7 @@ export const C_OCTAVE = "CDEFGAB";
 
 export const F_CIRCLE_OF_FIFTHS = "FCGDAEBF";
 
-export const FOUR_PARTS = ["bass", "tenor", "alto", "soprano"];
+export const FOUR_VOICES = ["bass", "tenor", "alto", "soprano"];
 export const GRAND_STAFF_STAVES = ["bass", "treble"];
 
 export function keyAccidentalType(keySignature) {

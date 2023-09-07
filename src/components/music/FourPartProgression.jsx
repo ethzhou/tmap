@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Accidental, Beam, Formatter, Fraction, Renderer, Stave, StaveConnector, StaveNote, Stem, Voice } from "vexflow";
-import { A_OCTAVE, FOUR_PARTS, GRAND_STAFF_STAVES, accidentalToCode, keyAccidentalType, keyAffectedLetters } from "../../utils/musicUtils";
+import { A_OCTAVE, FOUR_VOICES, GRAND_STAFF_STAVES, accidentalToCode, keyAccidentalType, keyAffectedLetters } from "../../utils/musicUtils";
 import { COLOR_CHORD_SELECT } from "../../utils/utils";
 
 export default function FourPartProgression({
@@ -48,31 +48,31 @@ export default function FourPartProgression({
         iChord++
       ) {
         for (let iStave = 0; iStave < 2; iStave++) {
-          const iLowerPart = iStave * 2;
-          const iUpperPart = iLowerPart + 1;
+          const iLowerVoice = iStave * 2;
+          const iUpperVoice = iLowerVoice + 1;
 
           const stave = GRAND_STAFF_STAVES[iStave];
-          const lowerPitch = parts[FOUR_PARTS[iLowerPart]][iChord];
-          const upperPitch = parts[FOUR_PARTS[iUpperPart]][iChord];
+          const lowerPitch = parts[FOUR_VOICES[iLowerVoice]][iChord];
+          const upperPitch = parts[FOUR_VOICES[iUpperVoice]][iChord];
 
           // Helper function
-          const addAccidental = (pitch, iPart, doCarryAccidentals = true) => {
+          const addAccidental = (pitch, iVoice, doCarryAccidentals = true) => {
             const space = pitch.toSpace();
             if (doCarryAccidentals
               && pitch.accidental
                 === (currentMeasureAccidentalStates[stave][space] ?? baseDisplayedKeyAccidentals[pitch.letter]))
               return;
             currentMeasureAccidentalStates[stave][space]
-              = displayedAccidentals[iChord][iPart]
+              = displayedAccidentals[iChord][iVoice]
               = pitch.accidental;
           }
 
           // If not both pitches exist
           if (!lowerPitch || !upperPitch) {
             if (lowerPitch)
-              addAccidental(lowerPitch, iLowerPart);
+              addAccidental(lowerPitch, iLowerVoice);
             if (upperPitch)
-              addAccidental(upperPitch, iUpperPart);
+              addAccidental(upperPitch, iUpperVoice);
             continue;
           }
           
@@ -81,17 +81,17 @@ export default function FourPartProgression({
 
           // If the pitches are in different spaces
           if (!isSameSpace) {
-            addAccidental(upperPitch, iUpperPart);
-            addAccidental(lowerPitch, iLowerPart);
+            addAccidental(upperPitch, iUpperVoice);
+            addAccidental(lowerPitch, iLowerVoice);
             continue;
           }
 
           // If the pitches are in the same space
           // Add the first accidental
-          addAccidental(upperPitch, iUpperPart, false);
+          addAccidental(upperPitch, iUpperVoice, false);
           // If the pitches do not have the same accidental, add the second accidental
           if (!isSameAccidental) {
-            addAccidental(lowerPitch, iLowerPart);
+            addAccidental(lowerPitch, iLowerVoice);
           }
         }
       }
@@ -168,12 +168,12 @@ export default function FourPartProgression({
       const voices = [];
       const beams = [];
 
-      for (let iPart = 0; iPart < 4; iPart++) {
-        const part = FOUR_PARTS[iPart];
-        const clef = iPart < 2 ? "bass" : "treble";
+      for (let iVoice = 0; iVoice < 4; iVoice++) {
+        const part = FOUR_VOICES[iVoice];
+        const clef = iVoice < 2 ? "bass" : "treble";
 
-        voices[iPart] = new Voice({ num_beats: beatsPerMeasure, beat_value: valuePerBeat });
-        voices[iPart].setStave(clef === "bass" ? bassStave : trebleStave);
+        voices[iVoice] = new Voice({ num_beats: beatsPerMeasure, beat_value: valuePerBeat });
+        voices[iVoice].setStave(clef === "bass" ? bassStave : trebleStave);
 
         const staveNotes = [];
         for (
@@ -187,16 +187,16 @@ export default function FourPartProgression({
             clef: clef,
             keys: [!pitch ? "R/4" : pitch.toVFKey()],
             duration: `${noteDuration}${!pitch ? "r" : ""}`,
-            stem_direction: (iPart % 2) ? Stem.UP : Stem.DOWN,
+            stem_direction: (iVoice % 2) ? Stem.UP : Stem.DOWN,
           });
           // Add accidental if needed
-          if (iChord < chordCount && displayedAccidentals[iChord][iPart] !== undefined)
+          if (iChord < chordCount && displayedAccidentals[iChord][iVoice] !== undefined)
             staveNote.addModifier(new Accidental(accidentalToCode(pitch.accidental)));
           
           staveNotes.push(staveNote);
         }
 
-        voices[iPart].addTickables(staveNotes);
+        voices[iVoice].addTickables(staveNotes);
         beams.push(...Beam.generateBeams(staveNotes, {
           groups: [
             new Fraction(1, valuePerBeat),
@@ -205,7 +205,7 @@ export default function FourPartProgression({
           beam_rests: true,
           beam_middle_only: true,
         }));
-        // console.log("after", parts[part], voices[iPart]);
+        // console.log("after", parts[part], voices[iVoice]);
       }
 
       return { ...measure, voices, beams };
