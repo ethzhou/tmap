@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { randInt } from "../../../utils/utils";
+import { FOUR_PARTS } from "../../../utils/musicUtils";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -14,15 +15,23 @@ const testParts = {
   bass:    f("C2  F2  F2  G1  E2  F2  C2  F2  F2  C2  F2  F2  G1  E2  F2  C2  F2  F2 F2"),
 };
 
+function constructSelection(measure, chord, voices = [...Array(4).keys()]) {
+  return { measure, chord, voices };
+}
 
+function selectedChord(selection, chordsPerMeasure) {
+  return chordsPerMeasure * (selection.measure - 1) + (selection.chord);
+}
 
 export default function FourPartHarmony() {
   const inputRef = useRef();
 
-  const [sopranoPart, setSopranoPart] = useState([]);
-  const [altoPart, setAltoPart] = useState([]);
-  const [tenorPart, setTenorPart] = useState([]);
-  const [bassPart, setBassPart] = useState([]);
+  const [parts, setParts] = useState({
+    soprano: [],
+    alto: [],
+    tenor: [],
+    bass: []
+  });
 
   const [keySignature, setKeySignature] = useState("C");
   const [timeSignature, setTimeSignature] = useState();
@@ -48,10 +57,13 @@ export default function FourPartHarmony() {
     const chordCount = 2 * randInt(2, 6) + 1;
     const chordsPerMeasure = [2, 4, 8][randInt(0, 1)];
 
-    setSopranoPart(() => Array(chordCount).fill(null));  // null represents a rest
-    setAltoPart(() => Array(chordCount).fill(null));
-    setTenorPart(() => Array(chordCount).fill(null));
-    setBassPart(() => Array(chordCount).fill(null));
+    setParts(() => ({
+      // null represents a rest
+      soprano: Array(chordCount).fill(null),
+      alto: Array(chordCount).fill(null),
+      tenor: Array(chordCount).fill(null),
+      bass: Array(chordCount).fill(null)
+    }));
 
     setTimeSignature(() => timeSignature);
     setChordCount(() => chordCount);
@@ -62,61 +74,156 @@ export default function FourPartHarmony() {
     if (event.key === "Enter") {
       parseInput(inputRef.current.value);
       inputRef.current.value = "";
+
+      return;
+    }
+    if (inputRef.current.value === "") {
+      if (event.key === "ArrowLeft") {
+        selectBefore();
+      }
+      if (event.key === "ArrowRight") {
+        selectAfter();
+      }
     }
   };
 
   /**
-   * Handles input.
+   * Parses input.
    * 
    * @param {string} inputStr
    */
   function parseInput(inputStr) {
-    // Navigation
-    if (inputStr[0] === "'") {
-      const newSelection = { };
-      [newSelection.measure, newSelection.chord] = inputStr.slice(1).split(" ").map(n => Number(n));
-      
-      // Run checks
-      // Check that measure and chord are numbers
-      if (!newSelection.measure || !newSelection.chord)
-        return;
-      // Check that there is the indicated chord of the measure
-      if (newSelection.chord > chordsPerMeasure)
-        return;
-      // Check that the chord is within range
-      if (chordsPerMeasure * (newSelection.measure - 1) + (newSelection.chord) > chordCount)
-        return;
+    // Chord before
+    if (inputStr[0] === ",") {
+      selectBefore();
 
-      newSelection.voices = [...Array(4).keys()];
+      return;
+    }
+
+    // Chord after
+    if (inputStr[0] === ".") {
+      selectAfter();      
+
+      return;
+    }
+
+    // Navigation
+    if (inputStr[0] === "`") {
+      const newSelection = parseSelection(inputStr);
+      if (newSelection)
+        setSelection(() => newSelection);
       
-      setSelection(() => {
-        console.log(newSelection);
-        return newSelection;
-      });
+      return;
+    }
+
+    // Chordal
+    if (inputStr[0] === "/") {
+      parseChordal(inputStr);
+      
+      return;
     }
   }
 
-  const parts = {
-    soprano: sopranoPart,
-    alto: altoPart,
-    tenor: tenorPart,
-    bass: bassPart
-  };
+  function selectBefore() {
+    setSelection(selection => {
+      if (selectedChord(selection, chordsPerMeasure) === 1)
+        return selection;
+
+      const newSelection = {...selection};
+      if (newSelection.chord === 1) {
+        newSelection.measure--;
+        newSelection.chord = chordsPerMeasure;
+      }
+      else {
+        newSelection.chord--;
+      }
+
+      return newSelection;
+    });
+  }
+
+  function selectAfter() {
+    setSelection(selection => {
+      if (selectedChord(selection, chordsPerMeasure) === chordCount)
+        return selection;
+
+      const newSelection = {...selection};
+      if (newSelection.chord === chordsPerMeasure) {
+        newSelection.measure++;
+        newSelection.chord = 1;
+      }
+      else {
+        newSelection.chord++;
+      }
+
+      return newSelection;
+    });
+  }
+
+  function parseSelection(inputStr) {
+    const args = inputStr.slice(1).split(" ");
+
+    const measure = Number(args[0]);
+    const chord = Number(args[1]);
+    const voices = args[2]?.split("").map(v => "btas".indexOf(v)).filter(v => v > -1).sort();
+    
+    // Run checks
+    // Check that measure and chord are numbers
+    if (!measure || !chord)
+      return;
+    // Check that the measure access is valid
+    if (measure < 1) {
+      return;
+    }
+    // Check that the chord access is valid
+    if (chord > chordsPerMeasure || chord < 1)
+      return;
+    // Check that the chord is within range
+    if (selectedChord({ measure, chord }, chordsPerMeasure) > chordCount)
+      return;
+  
+    return constructSelection(measure, chord, voices);
+  }
+
+  function parseChordal(inputStr) {
+    const args = inputStr.slice(1).split("/");
+
+    const pitches = args.map(pitchStr => pitchStr === "%" ? null : Pitch.fromString(pitchStr));
+    setParts(parts => {
+      const newParts = {...parts};
+      pitches.forEach((pitch, i) => {
+        // Filter the undefined pitches
+        if (pitch === undefined)
+          return;
+
+        console.log(i, selection.voices[i], FOUR_PARTS[selection.voices[i]], newParts[FOUR_PARTS[selection.voices[i]]]);
+        newParts[
+          FOUR_PARTS[selection.voices[i]]
+        ][
+          chordsPerMeasure * (selection.measure - 1) + (selection.chord - 1)
+        ] = pitch;
+      });
+
+      console.log(newParts);
+      return newParts;
+    });
+  }
+
 
   return (
     <>
-      {
-        chordCount
-        &&
+      {chordCount && (
         <FourPartProgression
-          parts={testParts}
-          keySignature={keySignature}
-          timeSignature={timeSignature}
-          chordCount={chordCount}
-          chordsPerMeasure={chordsPerMeasure}
-          selection={selection}
+          {...{
+            parts,
+            keySignature,
+            timeSignature,
+            chordCount,
+            chordsPerMeasure,
+            selection
+          }}
         />
-      }
+      )}
       <input ref={inputRef} type="text" onKeyDown={handleKeyDown} />
     </>
   )

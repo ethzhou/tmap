@@ -21,7 +21,7 @@ export default function FourPartProgression({
 
     const [beatsPerMeasure, valuePerBeat] = timeSignature.split("/").map(item => Number(item));
     const noteDuration = chordsPerMeasure * valuePerBeat / beatsPerMeasure;
-    console.log(`noteDuration ${noteDuration}`);
+    // console.log(`noteDuration ${noteDuration}`);
 
     // const chordCount = parts.soprano.length;
     const measureCount = Math.ceil(chordCount / chordsPerMeasure);
@@ -256,11 +256,12 @@ export default function FourPartProgression({
     // Draw
 
     const div = document.getElementById(divId);
-    const renderer = new Renderer(div, Renderer.Backends.SVG);
 
+    const renderer = new Renderer(div, Renderer.Backends.SVG);
     const rendererWidth = 40 + noteStartX + measureCount * measureWidth;
     const rendererHeight = 360;
     renderer.resize(rendererWidth, rendererHeight);
+
     const context = renderer.getContext();
     const formatter = new Formatter();
     
@@ -290,9 +291,9 @@ export default function FourPartProgression({
     })
     brace.setContext(context).draw();
     doubleBarline.setContext(context).draw();
-  }, [parts, keySignature, timeSignature, chordCount, chordsPerMeasure, selection])
+  }, [parts, keySignature, timeSignature, chordCount, chordsPerMeasure, selection]);
   
   return (
-    <div key={parts} id={divId}></div>
+    <div key={crypto.randomUUID()} id={name ? `vf-${name}` : "vf-output"}></div>
   );
 }
