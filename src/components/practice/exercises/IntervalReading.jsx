@@ -63,7 +63,7 @@ export default function IntervalReading() {
       {parameters && (
         <>
           {/* {`${parameters.interval?.toString()} ${parameters.pitches[0]?.toString()} ${parameters.pitches[1]?.toString()} ${parameters.clef}`} */}
-          <SingleChord clef={parameters.clef} pitches={parameters.pitches} />
+          <SingleChord {...parameters} />
           <CharByCharField length={2} doClearOnSubmit={true} submitEventType={"IntervalReadingSubmit"} />
         </>
       )}
