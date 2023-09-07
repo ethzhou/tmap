@@ -214,7 +214,6 @@ export default function FourPartProgression({
     // Highlight the selected notes
     if (selection) {
       for (const voice of selection.voices) {
-        console.log(selection.measure, voice, selection.chord);
         music[selection.measure - 1].voices[voice].tickables[selection.chord - 1].setStyle({
           fillStyle: COLOR_CHORD_SELECT,
           strokeStyle: COLOR_CHORD_SELECT,
@@ -251,7 +250,7 @@ export default function FourPartProgression({
       };
     }
 
-    console.log("music", music);
+    // console.log("music", music);
 
     // Draw
 

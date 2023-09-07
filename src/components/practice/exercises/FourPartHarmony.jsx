@@ -196,7 +196,6 @@ export default function FourPartHarmony() {
         if (pitch === undefined)
           return;
 
-        console.log(i, selection.voices[i], FOUR_PARTS[selection.voices[i]], newParts[FOUR_PARTS[selection.voices[i]]]);
         newParts[
           FOUR_PARTS[selection.voices[i]]
         ][
@@ -204,7 +203,6 @@ export default function FourPartHarmony() {
         ] = pitch;
       });
 
-      console.log(newParts);
       return newParts;
     });
   }
