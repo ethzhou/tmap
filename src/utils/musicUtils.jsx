@@ -9,6 +9,16 @@ export const F_CIRCLE_OF_FIFTHS = "FCGDAEBF";
 export const FOUR_VOICES = ["bass", "tenor", "alto", "soprano"];
 export const GRAND_STAFF_STAVES = ["bass", "treble"];
 
+export function accidentalToString(accidental) {
+  // Returns "" for naturals
+  return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
+}
+
+export function accidentalToCode(accidental) {
+  const accidentalString = accidentalToString(accidental);
+  return accidentalString === "" ? "n" : accidentalString;
+}
+
 /**
  * Determines whether the key is valid and practical. To pass, the letter must be capitalized, and a flat must be lowercase b.
  * 
@@ -89,7 +99,7 @@ export function isValidTime(timeSignature) {
   }
 
   const params = timeSignature.split("/");
-  
+
   // No "/"
   if (params.length === 1)
     return false;
@@ -102,12 +112,23 @@ export function isValidTime(timeSignature) {
   return true;
 }
 
-export function accidentalToString(accidental) {
-  // Returns "" for naturals
-  return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
-}
+/**
+ * Determines whether the resulting note duration is valid, i.e. a power of two.
+ * 
+ * @param {string} timeSignature
+ * @param {number} chordsPerMeasure
+ * @returns {boolean}
+ */
+export function isValidNoteDuration(timeSignature, chordsPerMeasure) {
+  // Validate resulting duration
+  const [beatsPerMeasure, valuePerBeat] = timeSignature.split("/").map(item => Number(item));
+  const noteDuration = chordsPerMeasure * valuePerBeat / beatsPerMeasure;
 
-export function accidentalToCode(accidental) {
-  const accidentalString = accidentalToString(accidental);
-  return accidentalString === "" ? "n" : accidentalString;
+  const log2 = Math.log2(noteDuration);
+  const isValid = log2 >= 0 && Number.isInteger(log2);
+  if (!isValid) {
+    console.log(`The resulting note duration (${noteDuration}) is not an integer power of two.`)
+  }
+
+  return isValid;
 }

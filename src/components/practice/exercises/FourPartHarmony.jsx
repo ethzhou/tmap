@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { clamp, randInt } from "../../../utils/utils";
-import { FOUR_VOICES, conformToVFKey, isValidKey, isValidTime } from "../../../utils/musicUtils";
+import { FOUR_VOICES, conformToVFKey, isValidKey, isValidNoteDuration, isValidTime } from "../../../utils/musicUtils";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -35,6 +35,7 @@ export default function FourPartHarmony() {
   const [chordCount, setChordCount] = useState();
   const [chordsPerMeasure, setChordsPerMeasure] = useState();
 
+  // TODO change selection to a single chord index instead of measure-chord
   const [selection, setSelection] = useState({
     measure: 1,
     chord: 1,
@@ -317,7 +318,7 @@ export default function FourPartHarmony() {
     const args = inputStr.slice(1).split(" ");
 
     const timeSignature = args[0];
-    const force = args[1] === "force";
+    const force = args[1] === "force" || args[1] === "f";
 
     // Validate time
     if (!isValidTime(timeSignature)) {
@@ -326,15 +327,17 @@ export default function FourPartHarmony() {
     }
     
     // Validate resulting duration
-    const [beatsPerMeasure, valuePerBeat] = timeSignature.split("/").map(item => Number(item));
-    const noteDuration = chordsPerMeasure * valuePerBeat / beatsPerMeasure;
-    if (!Number.isInteger(Math.log2(noteDuration))) {
-      console.log(`The resulting note duration (${noteDuration}) is not a power of two.`)
+    if (!isValidNoteDuration(timeSignature, chordsPerMeasure)) {
       if (!force)
         return;
-      else {
-        // TODO clear score
-      }
+      
+      // TODO clear parts
+
+      // Conform the chords per measure for a valid note duration (chordsPerMeasure = beatsPerMeasure)
+      setChordsPerMeasure(Number(timeSignature.slice(0, timeSignature.indexOf("/"))));
+      select(
+        clamp(selectedChord(selection), 1, chordCount)
+      );
     }
 
     setTimeSignature(timeSignature);
@@ -345,34 +348,49 @@ export default function FourPartHarmony() {
 
     const newChordCount = Number(args[0]);
     const newChordsPerMeasure = Number(args[1]);
+    const force = args[2] === "force" || args[2] === "f";
 
+    // Change chord count
     if (newChordCount) {
       setChordCount(() => newChordCount);
+      // Trim or extend the part arrays to have so many chords.
       setParts(parts => {
         const newParts = {...parts};
-        // If there are more chords now, fill the array to have so many chords.
-        if (newChordCount > chordCount) {
+        
+        // Trim if fewer
+        if (newChordCount < chordCount) {
+          for (const voice in newParts) {
+            newParts[voice] = newParts[voice].slice(0, newChordCount);
+          }
+        }
+        // Extend if more
+        else if (newChordCount > chordCount) {
           for (const voice in newParts) {
             newParts[voice] = newParts[voice].concat(
               Array(newChordCount - newParts[voice].length).fill(null)
             );
           }
         }
-        else if (newChordCount < chordCount) {
-          for (const voice in newParts) {
-            newParts[voice] = newParts[voice].slice(0, newChordCount);
-          }
-        }
-
+        
         return newParts;
       })
     }
 
+    // Change chords per measure
     if (newChordsPerMeasure) {
-      setChordsPerMeasure(() => newChordsPerMeasure);
+      // Validate resulting duration
+      if (!isValidNoteDuration(timeSignature, newChordsPerMeasure)) {
+        if (force) {
+          // Conform the time signature for a valid note duration (beatsPerMeasure = chordsPerMeasure)
+          setTimeSignature(timeSignature => `${newChordsPerMeasure}/${timeSignature.split("/")[1]}`)
+          setChordsPerMeasure(() => newChordsPerMeasure);
+        }
+      }
+      // Set if valid
+      else
+        setChordsPerMeasure(() => newChordsPerMeasure);
     }
 
-    console.log("selecting", clamp(selectedChord(selection), 1, newChordCount));
     select(
       clamp(selectedChord(selection), 1, newChordCount)
     );
