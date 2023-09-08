@@ -89,7 +89,7 @@ export function isValidTime(timeSignature) {
   }
 
   const params = timeSignature.split("/");
-  console.log(params);
+  
   // No "/"
   if (params.length === 1)
     return false;
