@@ -228,9 +228,12 @@ export default function FourPartProgression({
     // Append rests
     if (chordCount % chordsPerMeasure) {
       const trailing = chordsPerMeasure - chordCount % chordsPerMeasure;
-      let remaining = trailing;
-      let restDuration = noteDuration;
+
       const restDurations = [];
+      
+      // Add other rests, doubling duration until that of a semibreve
+      let remaining = trailing % noteDuration;
+      let restDuration = noteDuration;
       while (remaining && restDuration >= 1) {
         if (remaining & 1) {
           restDurations.push(restDuration);
@@ -238,9 +241,14 @@ export default function FourPartProgression({
         remaining >>= 1;
         restDuration >>= 1;
       }
-      // Once the rest duration exceeds that of a whole note, instead fill the remainder of the measure with whole notes.
-      restDurations.push(...Array(remaining / noteDuration).fill(1));
-      // console.log(restDurations);
+      
+      // Longest note permitted is a semibreve, which is duration 1
+      // Add as many semibreves as possible
+      const semibreveCount = Math.floor(trailing / noteDuration);
+      restDurations.push(
+        ...Array(semibreveCount).fill(1)
+      );
+      console.log(trailing, remaining, noteDuration);
 
       const lastVoices = music.at(-1).voices;
       for (const voice of lastVoices) {
