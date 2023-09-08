@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { clamp, randInt } from "../../../utils/utils";
@@ -17,17 +17,6 @@ const testParts = {
 
 function constructSelection(measure, chord, voices = [...Array(4).keys()]) {
   return { measure, chord, voices };
-}
-
-/**
- * Returns the 1-based index of the chord given a measure, chord of the measure, and chords per measure.
- * 
- * @param {*} selection 
- * @param {*} chordsPerMeasure 
- * @returns {number}
- */
-function selectedChord(selection, chordsPerMeasure) {
-  return chordsPerMeasure * (selection.measure - 1) + (selection.chord);
 }
 
 export default function FourPartHarmony() {
@@ -150,10 +139,40 @@ export default function FourPartHarmony() {
     if (inputStr[0] === "@") {
       parseTimeSignature(inputStr);
     }
+
+    // Chord count
+    if (inputStr[0] === "#") {
+      parseChordCount(inputStr);
+    }
   }
 
   /**
-   * Select the previous chord.
+   * Returns the 1-based index of the chord given a measure, chord of the measure, and chords per measure.
+   * 
+   * @param {*} selection
+   * @returns {number}
+   */
+  function selectedChord(selection) {
+    return chordsPerMeasure * (selection.measure - 1) + (selection.chord);
+  }
+
+  /**
+   * Select a chord by 1-based index. First clamps between 0 and `chordCount`.
+   * 
+   * @param {number} chord The 1-based index of the chord.
+   */
+  function select(chord, voices) {
+    const selection = constructSelection(
+      Math.ceil(chord / chordsPerMeasure),
+      (chord + chordsPerMeasure - 1) % chordsPerMeasure + 1,
+      voices
+    )
+
+    setSelection(() => selection);
+  }
+
+  /**
+   * Make a selection before the current chord.
    * 
    * @param {number} delta The size of the selection shift.
    */
@@ -164,14 +183,14 @@ export default function FourPartHarmony() {
 
       const newSelection = {...selection};
 
-      if (selectedChord(selection, chordsPerMeasure) <= delta) {
+      if (selectedChord(selection) <= delta) {
         newSelection.measure = newSelection.chord = 1;
 
         return newSelection;
       }
 
       newSelection.measure -= Math.floor(delta / chordsPerMeasure);
-      newSelection.chord = (selection.chord - 1 - delta + chordsPerMeasure) % chordsPerMeasure + 1;
+      newSelection.chord = (selection.chord - delta + chordsPerMeasure - 1) % chordsPerMeasure + 1;
       // Decrement by one measure if the chords carried over
       newSelection.measure -= newSelection.chord > selection.chord;
 
@@ -180,7 +199,7 @@ export default function FourPartHarmony() {
   }
 
   /**
-   * Select the next chord.
+   * Make a selection after the current chord.
    * 
    * @param {number} delta The size of the selection shift.
    */
@@ -191,15 +210,15 @@ export default function FourPartHarmony() {
 
       const newSelection = {...selection};
       
-      if (selectedChord(selection, chordsPerMeasure) > chordCount - delta) {
+      if (selectedChord(selection) > chordCount - delta) {
         newSelection.measure = Math.ceil(chordCount / chordsPerMeasure);
-        newSelection.chord = chordCount % chordsPerMeasure;
+        newSelection.chord = (chordCount - 1) % chordsPerMeasure + 1;
 
         return newSelection;
       }
 
       newSelection.measure += Math.floor(delta / chordsPerMeasure);
-      newSelection.chord = (selection.chord - 1 + delta) % chordsPerMeasure + 1;
+      newSelection.chord = (selection.chord + delta - 1) % chordsPerMeasure + 1;
       // Increment by one measure if the chords carried over
       newSelection.measure += newSelection.chord < selection.chord;
       
@@ -226,7 +245,7 @@ export default function FourPartHarmony() {
     if (chord > chordsPerMeasure || chord < 1)
       return;
     // Check that the chord is within range
-    if (selectedChord({ measure, chord }, chordsPerMeasure) > chordCount)
+    if (selectedChord({ measure, chord }) > chordCount)
       return;
   
     return constructSelection(measure, chord, voices);
@@ -246,7 +265,7 @@ export default function FourPartHarmony() {
         newParts[
           FOUR_VOICES[selection.voices[i]]
         ][
-          selectedChord(selection, chordsPerMeasure) - 1
+          selectedChord(selection) - 1
         ] = pitch;
       });
 
@@ -262,7 +281,7 @@ export default function FourPartHarmony() {
     setParts(parts => {
       const newParts = {...parts};
 
-      const startChord = selectedChord(selection, chordsPerMeasure);
+      const startChord = selectedChord(selection);
       // Iterate the number of pitches, but only up to the last chord
       const iterationCount = clamp(
         chordCount - startChord + 1,
@@ -309,8 +328,8 @@ export default function FourPartHarmony() {
     // Validate resulting duration
     const [beatsPerMeasure, valuePerBeat] = timeSignature.split("/").map(item => Number(item));
     const noteDuration = chordsPerMeasure * valuePerBeat / beatsPerMeasure;
-    if (!Number.isInteger(noteDuration)) {
-      console.log(`The resulting note duration (${noteDuration}) is not an integer.`)
+    if (!Number.isInteger(Math.log2(noteDuration))) {
+      console.log(`The resulting note duration (${noteDuration}) is not a power of two.`)
       if (!force)
         return;
       else {
@@ -319,6 +338,44 @@ export default function FourPartHarmony() {
     }
 
     setTimeSignature(timeSignature);
+  }
+
+  function parseChordCount(inputStr) {
+    const args = inputStr.slice(1).trim().split(" ");
+
+    const newChordCount = Number(args[0]);
+    const newChordsPerMeasure = Number(args[1]);
+
+    if (newChordCount) {
+      setChordCount(() => newChordCount);
+      setParts(parts => {
+        const newParts = {...parts};
+        // If there are more chords now, fill the array to have so many chords.
+        if (newChordCount > chordCount) {
+          for (const voice in newParts) {
+            newParts[voice] = newParts[voice].concat(
+              Array(newChordCount - newParts[voice].length).fill(null)
+            );
+          }
+        }
+        else if (newChordCount < chordCount) {
+          for (const voice in newParts) {
+            newParts[voice] = newParts[voice].slice(0, newChordCount);
+          }
+        }
+
+        return newParts;
+      })
+    }
+
+    if (newChordsPerMeasure) {
+      setChordsPerMeasure(() => newChordsPerMeasure);
+    }
+
+    console.log("selecting", clamp(selectedChord(selection), 1, newChordCount));
+    select(
+      clamp(selectedChord(selection), 1, newChordCount)
+    );
   }
 
   return (

@@ -67,7 +67,7 @@ export default function FourPartProgression({
               = pitch.accidental;
           }
 
-          // If not both pitches exist
+          // If not both pitches exist, add an accidental to the right one.
           if (!lowerPitch || !upperPitch) {
             if (lowerPitch)
               addAccidental(lowerPitch, iLowerVoice);
@@ -213,6 +213,9 @@ export default function FourPartProgression({
 
     // Highlight the selected notes
     if (selection) {
+      if (chordsPerMeasure * (selection.measure - 1) + (selection.chord) > chordCount) {
+        console.warn(`Warning: The attempted selection (${selection.measure} ${selection.chord}) is out of range (${chordsPerMeasure * (selection.measure - 1) + (selection.chord)} > ${chordCount}).`);
+      }
       for (const voice of selection.voices) {
         music[selection.measure - 1].voices[voice].tickables[selection.chord - 1].setStyle({
           fillStyle: COLOR_CHORD_SELECT,
