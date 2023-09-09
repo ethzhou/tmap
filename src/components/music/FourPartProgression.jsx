@@ -223,6 +223,7 @@ export default function FourPartProgression({
           fillStyle: COLOR_CHORD_SELECT,
           strokeStyle: COLOR_CHORD_SELECT,
           shadowColor: COLOR_CHORD_SELECT,
+          shadowBlur: 24,
         })
       }
     }
