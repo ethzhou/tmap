@@ -89,23 +89,26 @@ export function keyAffectedLetters(keySignature) {
 /**
  * Determines whether the time is valid.
  * 
- * @param {string} timeSignature
+ * @param {string | object} timeSignature
+ * @param {undefined} chordsPerMeasure
  * @returns {boolean}
  */
 export function isValidTime(timeSignature) {
+  const isString = typeof timeSignature === "string";
+
   // Common time or cut time
   if (timeSignature === "C" || timeSignature === "C|") {
     return true;
   }
 
-  const params = timeSignature.split("/");
+  const values = isString ? timeSignature.split("/") : [timeSignature.beatsPerMeasure, timeSignature.valuePerBeat];
 
   // No "/"
-  if (params.length === 1)
+  if (values.length === 1)
     return false;
 
   // Some not numbers
-  if (params.some(item => !Number(item))) {
+  if (values.some(item => !Number(item))) {
     return false;
   }
 
@@ -113,22 +116,26 @@ export function isValidTime(timeSignature) {
 }
 
 /**
- * Determines whether the resulting note duration is valid, i.e. a power of two.
+ * Calculates the note duration.
  * 
- * @param {string} timeSignature
+ * @param {object} timeSignature
  * @param {number} chordsPerMeasure
+ * @returns {number}
+ */
+export function calculateNoteDuration(timeSignature, chordsPerMeasure) {
+  const { beatsPerMeasure, valuePerBeat } = timeSignature;
+
+  return chordsPerMeasure * valuePerBeat / beatsPerMeasure;
+}
+
+/**
+ * Determines whether the note duration is valid, i.e. an integer power of two.
+ * 
+ * @param {number} noteDuration
  * @returns {boolean}
  */
-export function isValidNoteDuration(timeSignature, chordsPerMeasure) {
-  // Validate resulting duration
-  const [beatsPerMeasure, valuePerBeat] = timeSignature.split("/").map(item => Number(item));
-  const noteDuration = chordsPerMeasure * valuePerBeat / beatsPerMeasure;
-
+export function isValidNoteDuration(noteDuration) {
   const log2 = Math.log2(noteDuration);
-  const isValid = log2 >= 0 && Number.isInteger(log2);
-  if (!isValid) {
-    console.log(`The resulting note duration (${noteDuration}) is not an integer power of two.`)
-  }
 
-  return isValid;
+  return log2 >= 0 && Number.isInteger(log2);
 }

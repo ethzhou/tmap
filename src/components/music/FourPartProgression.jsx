@@ -19,7 +19,8 @@ export default function FourPartProgression({
     const staveX = 20;
     const staveY = 60;
 
-    const [beatsPerMeasure, valuePerBeat] = timeSignature.split("/").map(item => Number(item));
+    const { beatsPerMeasure, valuePerBeat } = timeSignature;
+    const timeSignatureString = `${beatsPerMeasure}/${valuePerBeat}`;
     const noteDuration = chordsPerMeasure * valuePerBeat / beatsPerMeasure;
     // console.log(`noteDuration ${noteDuration}`);
 
@@ -107,8 +108,8 @@ export default function FourPartProgression({
 
     firstTrebleStave.addClef("treble");
     firstBassStave.addClef("bass");
-    firstTrebleStave.addKeySignature(keySignature).addTimeSignature(timeSignature);
-    firstBassStave.addKeySignature(keySignature).addTimeSignature(timeSignature);
+    firstTrebleStave.addKeySignature(keySignature).addTimeSignature(timeSignatureString);
+    firstBassStave.addKeySignature(keySignature).addTimeSignature(timeSignatureString);
 
     // Align the first notes of the staves
     // noteStartX is a value measuring from the border of the canvas

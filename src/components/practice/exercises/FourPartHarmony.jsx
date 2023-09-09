@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { clamp, randInt } from "../../../utils/utils";
-import { FOUR_VOICES, conformToVFKey, isValidKey, isValidNoteDuration, isValidTime } from "../../../utils/musicUtils";
+import { FOUR_VOICES, conformToVFKey, isValidKey, isValidNoteDuration, isValidTime, calculateNoteDuration } from "../../../utils/musicUtils";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -30,6 +30,7 @@ export default function FourPartHarmony() {
   });
 
   const [keySignature, setKeySignature] = useState("C");
+  // TODO change timeSignature to an object { beatsPerMeasure, valuePerBeat }
   const [timeSignature, setTimeSignature] = useState();
 
   const [chordCount, setChordCount] = useState();
@@ -47,10 +48,12 @@ export default function FourPartHarmony() {
     inputRef.current.focus();
   }, []);
 
+  const timeSignatureString = `${timeSignature?.beatsPerMeasure}/${timeSignature?.valuePerBeat}`;
+
   function generateParameters() {
     const beatsPerMeasure = [2, 4, 8][randInt(0, 1)];
     const valuePerBeat = 2 ** [randInt(1, 3)];
-    const timeSignature = `${beatsPerMeasure}/${valuePerBeat}`;
+    const timeSignature = { beatsPerMeasure, valuePerBeat };
 
     const chordCount = 2 * randInt(2, 6) + 1;
     const chordsPerMeasure = [2, 4, 8][randInt(0, 1)];
@@ -317,83 +320,77 @@ export default function FourPartHarmony() {
   function parseTimeSignature(inputStr) {
     const args = inputStr.slice(1).split(" ");
 
-    const timeSignature = args[0];
-    const force = args[1] === "force" || args[1] === "f";
+    const [ upper, lower ] = args[0].split("/").map(v => Number(v));
+    
+    const newTimeSignature = { beatsPerMeasure: upper, valuePerBeat: lower };
+    const newChordsPerMeasure = Number(args[1]) || chordsPerMeasure;
+    
+    const newTimeSignatureString = `${upper}/${lower}`;
 
     // Validate time
-    if (!isValidTime(timeSignature)) {
-      console.log(`${timeSignature} is not a valid time.`);
+    if (!isValidTime(newTimeSignature)) {
+      console.log(`${newTimeSignatureString} is not a valid time.`);
       return;
     }
-    
-    // Validate resulting duration
-    if (!isValidNoteDuration(timeSignature, chordsPerMeasure)) {
-      if (!force)
-        return;
-      
-      // TODO clear parts
 
-      // Conform the chords per measure for a valid note duration (chordsPerMeasure = beatsPerMeasure)
-      setChordsPerMeasure(Number(timeSignature.slice(0, timeSignature.indexOf("/"))));
-      select(
-        clamp(selectedChord(selection), 1, chordCount)
-      );
+    // Validate resulting duration
+    const noteDuration = calculateNoteDuration(newTimeSignature, newChordsPerMeasure);
+    if (!isValidNoteDuration(noteDuration)) {
+      console.log(`${noteDuration} is not a valid note duration.`);
+      return;
     }
 
-    setTimeSignature(timeSignature);
+    setTimeSignature(() => newTimeSignature);
+    setChordsPerMeasure(() => newChordsPerMeasure);
+
+    select(
+      clamp(selectedChord(selection), 1, chordCount)
+    );
   }
 
   function parseChordCount(inputStr) {
-    const args = inputStr.slice(1).trim().split(" ");
+    const newChordCount = Number(inputStr.slice(1));
 
-    const newChordCount = Number(args[0]);
-    const newChordsPerMeasure = Number(args[1]);
-    const force = args[2] === "force" || args[2] === "f";
+    if (!newChordCount)
+      return;
 
-    // Change chord count
-    if (newChordCount) {
-      setChordCount(() => newChordCount);
-      // Trim or extend the part arrays to have so many chords.
-      setParts(parts => {
-        const newParts = {...parts};
-        
-        // Trim if fewer
-        if (newChordCount < chordCount) {
-          for (const voice in newParts) {
-            newParts[voice] = newParts[voice].slice(0, newChordCount);
-          }
-        }
-        // Extend if more
-        else if (newChordCount > chordCount) {
-          for (const voice in newParts) {
-            newParts[voice] = newParts[voice].concat(
-              Array(newChordCount - newParts[voice].length).fill(null)
-            );
-          }
-        }
-        
-        return newParts;
-      })
-    }
-
-    // Change chords per measure
-    if (newChordsPerMeasure) {
-      // Validate resulting duration
-      if (!isValidNoteDuration(timeSignature, newChordsPerMeasure)) {
-        if (force) {
-          // Conform the time signature for a valid note duration (beatsPerMeasure = chordsPerMeasure)
-          setTimeSignature(timeSignature => `${newChordsPerMeasure}/${timeSignature.split("/")[1]}`)
-          setChordsPerMeasure(() => newChordsPerMeasure);
+    // Set chord count
+    setChordCount(() => newChordCount);
+    // Trim or extend the part arrays to have so many chords.
+    setParts(parts => {
+      const newParts = {...parts};
+      
+      // Trim if fewer
+      if (newChordCount < chordCount) {
+        for (const voice in newParts) {
+          newParts[voice] = newParts[voice].slice(0, newChordCount);
         }
       }
-      // Set if valid
-      else
-        setChordsPerMeasure(() => newChordsPerMeasure);
-    }
+      // Extend if more
+      else if (newChordCount > chordCount) {
+        for (const voice in newParts) {
+          newParts[voice] = newParts[voice].concat(
+            Array(newChordCount - newParts[voice].length).fill(null)
+          );
+        }
+      }
+      
+      return newParts;
+    })
 
     select(
       clamp(selectedChord(selection), 1, newChordCount)
     );
+  }
+
+  /**
+   * Processes a new time signature.
+   * 
+   * @param {object} timeSignature
+   * @param {boolean} force Whether to conform other values for a valid note duration. Namely, this may change the number of chords per measure.
+   * @returns
+   */
+  function updateTimeSignature(timeSignature, chordsPerMeasure) {
   }
 
   return (
