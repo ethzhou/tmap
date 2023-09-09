@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Accidental, Beam, Formatter, Fraction, Renderer, Stave, StaveConnector, StaveNote, Stem, Voice } from "vexflow";
 import { A_OCTAVE, FOUR_VOICES, GRAND_STAFF_STAVES, accidentalToCode, keyAccidentalType, keyAffectedLetters } from "../../utils/musicUtils";
-import { COLOR_CHORD_SELECT } from "../../utils/utils";
+import { COLOR_CHORD_SELECT, decomposeIndex } from "../../utils/utils";
 
 export default function FourPartProgression({
   name,
@@ -214,11 +214,12 @@ export default function FourPartProgression({
 
     // Highlight the selected notes
     if (selection) {
-      if (chordsPerMeasure * (selection.measure - 1) + (selection.chord) > chordCount) {
-        console.warn(`Warning: The attempted selection (${selection.measure} ${selection.chord}) is out of range (${chordsPerMeasure * (selection.measure - 1) + (selection.chord)} > ${chordCount}).`);
+      const [measure, chordM] = decomposeIndex(selection.chord, chordsPerMeasure, true);
+      if (chordsPerMeasure * (measure - 1) + (chordM) > chordCount) {
+        console.warn(`Warning: The attempted selection (${measure} ${chordM}) is out of range (${selection.chord} > ${chordCount}).`);
       }
       for (const voice of selection.voices) {
-        music[selection.measure - 1].voices[voice].tickables[selection.chord - 1].setStyle({
+        music[measure - 1].voices[voice].tickables[chordM - 1].setStyle({
           fillStyle: COLOR_CHORD_SELECT,
           strokeStyle: COLOR_CHORD_SELECT,
           shadowColor: COLOR_CHORD_SELECT,

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
-import { clamp, randInt } from "../../../utils/utils";
+import { clamp, composeIndex, decomposeIndex, randInt } from "../../../utils/utils";
 import { FOUR_VOICES, conformToVFKey, isValidKey, isValidNoteDuration, isValidTime, calculateNoteDuration } from "../../../utils/musicUtils";
 
 function f(s) {
@@ -15,8 +15,8 @@ const testParts = {
   bass:    f("C2  F2  F2  G1  E2  F2  C2  F2  F2  C2  F2  F2  G1  E2  F2  C2  F2  F2 F2"),
 };
 
-function constructSelection(measure, chord, voices = [...Array(4).keys()]) {
-  return { measure, chord, voices };
+function constructSelection(chord, voices = [...Array(4).keys()]) {
+  return { chord, voices };
 }
 
 export default function FourPartHarmony() {
@@ -30,15 +30,12 @@ export default function FourPartHarmony() {
   });
 
   const [keySignature, setKeySignature] = useState("C");
-  // TODO change timeSignature to an object { beatsPerMeasure, valuePerBeat }
   const [timeSignature, setTimeSignature] = useState();
 
   const [chordCount, setChordCount] = useState();
   const [chordsPerMeasure, setChordsPerMeasure] = useState();
 
-  // TODO change selection to a single chord index instead of measure-chord
   const [selection, setSelection] = useState({
-    measure: 1,
     chord: 1,
     voices: [0, 1, 2, 3]
   });
@@ -47,8 +44,6 @@ export default function FourPartHarmony() {
     generateParameters();
     inputRef.current.focus();
   }, []);
-
-  const timeSignatureString = `${timeSignature?.beatsPerMeasure}/${timeSignature?.valuePerBeat}`;
 
   function generateParameters() {
     const beatsPerMeasure = [2, 4, 8][randInt(0, 1)];
@@ -112,10 +107,7 @@ export default function FourPartHarmony() {
 
     // Navigation
     if (inputStr[0] === "`") {
-      // TODO move this logic into parseSelection
-      const newSelection = parseSelection(inputStr);
-      if (newSelection)
-        setSelection(() => newSelection);
+      parseSelection(inputStr);
       
       return;
     }
@@ -151,26 +143,12 @@ export default function FourPartHarmony() {
   }
 
   /**
-   * Returns the 1-based index of the chord given a measure, chord of the measure, and chords per measure.
-   * 
-   * @param {*} selection
-   * @returns {number}
-   */
-  function selectedChord(selection) {
-    return chordsPerMeasure * (selection.measure - 1) + (selection.chord);
-  }
-
-  /**
-   * Select a chord by 1-based index. First clamps between 0 and `chordCount`.
+   * Select a chord by 1-based index.
    * 
    * @param {number} chord The 1-based index of the chord.
    */
   function select(chord, voices) {
-    const selection = constructSelection(
-      Math.ceil(chord / chordsPerMeasure),
-      (chord + chordsPerMeasure - 1) % chordsPerMeasure + 1,
-      voices
-    )
+    const selection = constructSelection(chord, voices);
 
     setSelection(() => selection);
   }
@@ -181,22 +159,13 @@ export default function FourPartHarmony() {
    * @param {number} delta The size of the selection shift.
    */
   function selectBefore(delta = 1) {
-    setSelection(selection => {
-      if (delta < 0)
-        selectAfter(-delta);
+    if (delta < 0)
+      selectAfter(-delta);
 
+    setSelection(selection => {
       const newSelection = {...selection};
 
-      if (selectedChord(selection) <= delta) {
-        newSelection.measure = newSelection.chord = 1;
-
-        return newSelection;
-      }
-
-      newSelection.measure -= Math.floor(delta / chordsPerMeasure);
-      newSelection.chord = (selection.chord - delta + chordsPerMeasure - 1) % chordsPerMeasure + 1;
-      // Decrement by one measure if the chords carried over
-      newSelection.measure -= newSelection.chord > selection.chord;
+      newSelection.chord = clamp(newSelection.chord - delta, 1, chordCount);
 
       return newSelection;
     });
@@ -208,23 +177,13 @@ export default function FourPartHarmony() {
    * @param {number} delta The size of the selection shift.
    */
   function selectAfter(delta = 1) {
-    setSelection(selection => {
-      if (delta < 0)
-        selectBefore(-delta);
+    if (delta < 0)
+      selectBefore(-delta);
 
+    setSelection(selection => {
       const newSelection = {...selection};
       
-      if (selectedChord(selection) > chordCount - delta) {
-        newSelection.measure = Math.ceil(chordCount / chordsPerMeasure);
-        newSelection.chord = (chordCount - 1) % chordsPerMeasure + 1;
-
-        return newSelection;
-      }
-
-      newSelection.measure += Math.floor(delta / chordsPerMeasure);
-      newSelection.chord = (selection.chord + delta - 1) % chordsPerMeasure + 1;
-      // Increment by one measure if the chords carried over
-      newSelection.measure += newSelection.chord < selection.chord;
+      newSelection.chord = clamp(newSelection.chord + delta, 1, chordCount);
       
       return newSelection;
     });
@@ -234,25 +193,29 @@ export default function FourPartHarmony() {
     const args = inputStr.slice(1).split(" ");
 
     const measure = Number(args[0]);
-    const chord = Number(args[1]);
+    const chordM = Number(args[1]);
     const voices = args[2]?.split("").map(v => "btas".indexOf(v)).filter(v => v > -1).sort();
     
     // Run checks
     // Check that measure and chord are numbers
-    if (!measure || !chord)
+    if (!measure || !chordM)
       return;
     // Check that the measure access is valid
     if (measure < 1) {
       return;
     }
     // Check that the chord access is valid
-    if (chord > chordsPerMeasure || chord < 1)
+    if (chordM > chordsPerMeasure || chordM < 1)
       return;
+
+    const chord = composeIndex([measure, chord], chordsPerMeasure, true);
     // Check that the chord is within range
-    if (selectedChord({ measure, chord }) > chordCount)
+    if (chord > chordCount)
       return;
   
-    return constructSelection(measure, chord, voices);
+    const newSelection = constructSelection(chord, voices);
+
+    setSelection(() => newSelection);
   }
 
   function parseChordal(inputStr) {
@@ -269,7 +232,7 @@ export default function FourPartHarmony() {
         newParts[
           FOUR_VOICES[selection.voices[i]]
         ][
-          selectedChord(selection) - 1
+          selection.chord - 1
         ] = pitch;
       });
 
@@ -285,7 +248,7 @@ export default function FourPartHarmony() {
     setParts(parts => {
       const newParts = {...parts};
 
-      const startChord = selectedChord(selection);
+      const startChord = selection.chord;
       // Iterate the number of pitches, but only up to the last chord
       const iterationCount = clamp(
         chordCount - startChord + 1,
@@ -344,7 +307,7 @@ export default function FourPartHarmony() {
     setChordsPerMeasure(() => newChordsPerMeasure);
 
     select(
-      clamp(selectedChord(selection), 1, chordCount)
+      clamp(selection.chord, 1, chordCount)
     );
   }
 
@@ -379,19 +342,11 @@ export default function FourPartHarmony() {
     })
 
     select(
-      clamp(selectedChord(selection), 1, newChordCount)
+      clamp(selection.chord, 1, newChordCount)
     );
   }
 
-  /**
-   * Processes a new time signature.
-   * 
-   * @param {object} timeSignature
-   * @param {boolean} force Whether to conform other values for a valid note duration. Namely, this may change the number of chords per measure.
-   * @returns
-   */
-  function updateTimeSignature(timeSignature, chordsPerMeasure) {
-  }
+  console.log(selection);
 
   return (
     <>
