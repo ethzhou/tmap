@@ -34,6 +34,5 @@ export function decomposeIndex(i, rowLength, fromOne = false) {
   const rowIndex = Math.floor((i - fromOne) / rowLength) + fromOne;
   const columnIndex = (i + rowLength - fromOne) % rowLength + fromOne;
 
-  console.log([rowIndex, columnIndex]);
   return [rowIndex, columnIndex];
 }
