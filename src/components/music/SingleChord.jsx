@@ -3,7 +3,7 @@ import { Accidental, Formatter, Renderer, Stave, StaveNote, Voice } from "vexflo
 import { accidentalToCode } from "../../utils/musicUtils";
 
 export default function SingleChord({ name, clef, pitches }) {
-  const divId = name ? `vf-${name}` : "vf-output";
+  const divId = name ? `vf-${name}` : "vf-canvas";
 
   useEffect(() => {
     // Get the div returned by SingleChord
@@ -23,7 +23,7 @@ export default function SingleChord({ name, clef, pitches }) {
       new StaveNote({ keys: pitches.map(pitch => pitch.toVFKey()), duration: "w", clef: clef }),
     ];
     // Include accidentals where appropriate
-    //#region Own accidental application method. Slightly different from VexFlow's Accidental.applyAccidentals: A unison with natural and sharp (like F F#) is rendered with no natural symbol via VexFlow Accidental.applyAccidentals, while this region's code would render a natural symbol. Something a unison with two sharp notes (like F# F#) would be rendered with two sharp symbols via VexFlow and one sharp symbol with this code. For some reason, in the case of flats, one flat note does render the natural symbol, but two flat notes still renders two flat symbols.
+    // #region Own accidental application method. Slightly different from VexFlow's Accidental.applyAccidentals: A unison with natural and sharp (like F F#) is rendered with no natural symbol via VexFlow Accidental.applyAccidentals, while this region's code would render a natural symbol. Something a unison with two sharp notes (like F# F#) would be rendered with two sharp symbols via VexFlow and one sharp symbol with this code. For some reason, in the case of flats, one flat note does render the natural symbol, but two flat notes still renders two flat symbols.
     const accidentalRecord = { };  // { "C4": [-1, 0] }
     for (let i = 0; i < pitches.length; i++) {
       if (!accidentalRecord[pitches[i].toSpace()])
@@ -47,7 +47,7 @@ export default function SingleChord({ name, clef, pitches }) {
         }
       }
     }
-    //#endregion
+    // #endregion
     const voice = new Voice();
     voice.addTickables(printedNotes);
     // console.log(voice);
