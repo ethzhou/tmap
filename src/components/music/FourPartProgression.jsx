@@ -258,6 +258,7 @@ export default function FourPartProgression({
       voices[iVoice] = new Voice({ num_beats: beatsPerMeasure, beat_value: valuePerBeat });
       voices[iVoice].setStave(clef === "bass" ? bassStave : trebleStave);
 
+      // Add stave notes
       const staveNotes = [];
       for (
         let iChord = iMeasure * chordsPerMeasure;
@@ -280,6 +281,8 @@ export default function FourPartProgression({
       }
 
       voices[iVoice].addTickables(staveNotes);
+
+      // Add beams
       beams.push(...Beam.generateBeams(staveNotes, {
         groups: [
           new Fraction(1, valuePerBeat),
