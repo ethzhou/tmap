@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { clamp, composeIndex, decomposeIndex, randInt } from "../../../utils/utils";
-import { FOUR_VOICES, conformToVFKey, isValidKey, isValidNoteDuration, isValidTime, calculateNoteDuration } from "../../../utils/musicUtils";
+import { FOUR_VOICES, conformToVFKey, isValidKey, isValidNoteDuration, isValidTime, calculateNoteDuration, parseStringChordSymbol } from "../../../utils/musicUtils";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -29,7 +29,7 @@ export default function FourPartHarmony() {
     bass: []
   });
 
-  const [chordProgression, setChordProgression] = useState([]);
+  const [chordAnalyses, setChordAnalyses] = useState([]);
 
   const [keySignature, setKeySignature] = useState("C");
   const [timeSignature, setTimeSignature] = useState();
@@ -63,7 +63,7 @@ export default function FourPartHarmony() {
       bass: Array(chordCount).fill(null)
     }));
 
-    setChordProgression(() => Array(chordCount).fill(null));
+    setChordAnalyses(() => Array(chordCount).fill(null));
 
     setTimeSignature(() => timeSignature);
     setChordCount(() => chordCount);
@@ -146,6 +146,12 @@ export default function FourPartHarmony() {
     // Chord count
     if (inputStr[0] === "#") {
       parseChordCount(inputStr);
+    }
+
+    if (inputStr[0] === "$") {
+      parseChordAnalyses(inputStr);
+
+      return;
     }
   }
 
@@ -355,7 +361,35 @@ export default function FourPartHarmony() {
     );
   }
 
-  console.log(selection);
+  function parseChordAnalyses(inputStr) {
+    const args = inputStr.slice(1).split(" ");
+    console.log(args);
+
+    const symbols = args.map(symbol => symbol === "%" ? null : parseStringChordSymbol(symbol));
+    setChordAnalyses(chordAnalyses => {
+      const newChordAnalyses = [...chordAnalyses]
+
+      const startChord = selection.chord;
+      // Iterate the number of pitches, but only up to the last chord
+      const iterationCount = clamp(
+        chordCount - startChord + 1,
+        0,
+        symbols.length
+      );
+      for (let iSymbol = 0; iSymbol < iterationCount; iSymbol++) {
+        // Filter the undefined pitches
+        if (symbols[iSymbol] === undefined)
+          continue;
+        newChordAnalyses[startChord - 1 + iSymbol] = symbols[iSymbol];
+      }
+      // Move the selection the same amount
+      selectAfter(iterationCount);
+
+      return newChordAnalyses;
+    });
+  }
+
+  console.log("selection", selection.chord, selection.voices);
 
   return (
     <>
@@ -363,7 +397,7 @@ export default function FourPartHarmony() {
         <FourPartProgression
           {...{
             parts,
-            chordProgression,
+            chordAnalyses,
             keySignature,
             timeSignature,
             chordCount,

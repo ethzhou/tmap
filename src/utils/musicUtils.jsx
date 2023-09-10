@@ -139,3 +139,25 @@ export function isValidNoteDuration(noteDuration) {
 
   return log2 >= 0 && Number.isInteger(log2);
 }
+
+const patternAccidental = "[b#]";
+const patternRomanNumeralMajor = "I{1,3}|IV|VI{0,2}";  // From https://stackoverflow.com/questions/267399/how-do-you-match-only-valid-roman-numerals-with-a-regular-expression
+const patternRomanNumeralMinor = patternRomanNumeralMajor.toLowerCase();
+const patternRomanNumeral = `${patternRomanNumeralMajor}|${patternRomanNumeralMinor}`;
+const patternArabicNumberals = "\\d+";
+const patternSecondaryDominant = `/(${patternRomanNumeral})`;
+
+const patternChordSymbol = 
+`^\
+(?<accidental>${patternAccidental})?\
+(?<roman>${patternRomanNumeral})\
+(?<arabic>${patternArabicNumberals}){0,2}\
+(?<secondary>${patternSecondaryDominant})?\
+$`;
+
+const regexpChordSymbol = new RegExp(patternChordSymbol);
+console.log(regexpChordSymbol);
+
+export function parseStringChordSymbol(string) {
+  return string.match(regexpChordSymbol)?.groups || undefined;
+}

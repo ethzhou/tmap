@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Vex } from "vexflow";
 import SingleChord from "../../music/SingleChord";
 import Pitch from "../../../classes/Pitch";
+import ChordSymbol from "../../music/ChordSymbol";
 
 export default function SheetMusicTest() {
   useEffect(() => {
@@ -54,6 +55,11 @@ export default function SheetMusicTest() {
           Pitch.fromString('c4')
         ]}
       />
+
+      <svg width="1000" height="360">
+        <ChordSymbol symbol="I" />
+        <ChordSymbol symbol="bV65/VI" />
+      </svg>
     </>
   );
 }
