@@ -29,6 +29,8 @@ export default function FourPartHarmony() {
     bass: []
   });
 
+  const [chordProgression, setChordProgression] = useState([]);
+
   const [keySignature, setKeySignature] = useState("C");
   const [timeSignature, setTimeSignature] = useState();
 
@@ -61,23 +63,28 @@ export default function FourPartHarmony() {
       bass: Array(chordCount).fill(null)
     }));
 
+    setChordProgression(() => Array(chordCount).fill(null));
+
     setTimeSignature(() => timeSignature);
     setChordCount(() => chordCount);
     setChordsPerMeasure(() => chordsPerMeasure);
   }
 
   function handleKeyDown(event) {
+    // Submission
     if (event.key === "Enter") {
       parseInput(inputRef.current.value);
       inputRef.current.value = "";
 
       return;
     }
+
+    // Actions for an empty input field
     if (inputRef.current.value === "") {
       if (event.key === "ArrowLeft") {
         selectBefore();
       }
-      if (event.key === "ArrowRight") {
+      else if (event.key === "ArrowRight") {
         selectAfter();
       }
     }
@@ -205,15 +212,15 @@ export default function FourPartHarmony() {
       return;
     }
     // Check that the chord access is valid
-    if (chordM > chordsPerMeasure || chordM < 1)
+    if (chordM < 1 || chordM > chordsPerMeasure)
       return;
 
-    const chord = composeIndex([measure, chord], chordsPerMeasure, true);
+    const chord = composeIndex([measure, chordM], chordsPerMeasure, true);
     // Check that the chord is within range
     if (chord > chordCount)
       return;
   
-    const newSelection = constructSelection(chord, voices);
+    const newSelection = constructSelection(chord, voices?.length ? voices : undefined);
 
     setSelection(() => newSelection);
   }
@@ -222,6 +229,7 @@ export default function FourPartHarmony() {
     const args = inputStr.slice(1).split("/");
 
     const pitches = args.map(pitchStr => pitchStr === "%" ? null : Pitch.fromString(pitchStr));
+    
     setParts(parts => {
       const newParts = {...parts};
       pitches.forEach((pitch, i) => {
@@ -238,6 +246,7 @@ export default function FourPartHarmony() {
 
       return newParts;
     });
+    selectAfter();
   }
 
   function parseMelodic(inputStr) {
@@ -354,6 +363,7 @@ export default function FourPartHarmony() {
         <FourPartProgression
           {...{
             parts,
+            chordProgression,
             keySignature,
             timeSignature,
             chordCount,
@@ -362,7 +372,13 @@ export default function FourPartHarmony() {
           }}
         />
       )}
-      <input ref={inputRef} type="text" onKeyDown={handleKeyDown} />
+      <input
+        ref={inputRef}
+        type="text"
+        onKeyDown={handleKeyDown}
+        onMouseOver={event => event.target.focus()}
+        autoFocus
+        />
     </>
   )
 }

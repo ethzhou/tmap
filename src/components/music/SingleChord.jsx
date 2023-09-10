@@ -50,21 +50,12 @@ export default function SingleChord({ name, clef, pitches }) {
     //#endregion
     const voice = new Voice();
     voice.addTickables(printedNotes);
-    console.log(voice);
+    // console.log(voice);
 
     new Formatter().joinVoices([voice]).format([voice], 350);
 
     voice.draw(context, stave);
   }, [clef, pitches])
-
-  useEffect(() => {
-    console.log("mounting");
-  }, []);
-  useEffect(() => {
-    console.log("rerun due to dependency");
-  }, [pitches]);
-  console.log("component call");
-  console.log("pitches", pitches);
   
   return (
     <div key={pitches} id={divId}></div>
