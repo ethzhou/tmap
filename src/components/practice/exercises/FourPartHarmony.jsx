@@ -298,12 +298,12 @@ export default function FourPartHarmony() {
 
   function responseSelectBefore(inputStr) {
     const delta = Number(inputStr.slice(1));
-    selectBefore(delta > -1 ? delta : undefined);
+    selectBefore(delta && delta > -1 ? delta : undefined);
   }
 
   function responseSelectAfter(inputStr) {
     const delta = Number(inputStr.slice(1));
-    selectAfter(delta > -1 ? delta : undefined);
+    selectAfter(delta && delta > -1 ? delta : undefined);
   }
 
   function responseSelection(inputStr) {
@@ -438,6 +438,15 @@ export default function FourPartHarmony() {
     select(
       clamp(selection.chord, 1, newChordCount)
     );
+  }
+
+  function responseMusicParameterShorthand(inputStr) {
+    const args = inputStr.slice(1).split(" ");
+
+    // For each, prepend 0 as a throwaway character
+    responseKeySignature("0" + args[0]);
+    responseTimeSignature("0" + `${args[1]} ${args[3] ?? ""}`);
+    responseChordCount("0" + args[2]);
   }
 
   function responseClear(inputStr) {
