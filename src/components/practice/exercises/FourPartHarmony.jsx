@@ -163,11 +163,11 @@ export default function FourPartHarmony() {
    * Helper for creating selections that target at least one note.
    * If the voices are unspecified, then they are unchanged. If the voices are specified but they select none of the voices (e.g. "" or "qwer", which do not contain any of satb), then all voices are selected.
    * 
-   * @param {number} chord
+   * @param {number} chord Selection chords are 1-indexed.
    * @param {string} voices
    * @returns
    */
-  function constructSelection(chord, voices) {
+  function createSelection(chord, voices) {
     if (voices === undefined) {
       voices = selection.voices;
       return { chord, voices };
@@ -192,7 +192,7 @@ export default function FourPartHarmony() {
    * @param {number} chord The 1-based index of the chord.
    */
   function select(chord, voices) {
-    const selection = constructSelection(chord, voices);
+    const selection = createSelection(chord, voices);
 
     setSelection(() => selection);
   }
@@ -233,6 +233,11 @@ export default function FourPartHarmony() {
     });
   }
 
+  /**
+   * 
+   * @param {string} selectionStr In the format of "`2`1`sa": measure 2, chord 1, soprano and alto voices.
+   * @returns 
+   */
   function parseSelection(selectionStr) {
     const args = selectionStr.slice(1).split("`");
 
@@ -255,7 +260,7 @@ export default function FourPartHarmony() {
     if (newChord > chordCount)
       return;
   
-    return constructSelection(newChord, newVoices);
+    return createSelection(newChord, newVoices);
   }
 
   function responseSelection(inputStr) {
@@ -276,11 +281,9 @@ export default function FourPartHarmony() {
         if (pitch === undefined)
           return;
 
-        newParts[
-          FOUR_VOICES[selection.voices[i]]
-        ][
-          selection.chord - 1
-        ] = pitch;
+        const part = newParts[FOUR_VOICES[selection.voices[i]]];
+        if (part)
+          part[selection.chord - 1] = pitch;
       });
 
       return newParts;
@@ -405,6 +408,19 @@ export default function FourPartHarmony() {
     });
   }
 
+  /**
+   * Clears chords in a specified range. End is included.
+   * 
+   * @param {number} first
+   * @param {number} last Included.
+   */
+  function clearRange(first, last, voices) {
+    for (let iChord = first; iChord <= last; iChord++) {
+      const targetSelection = createSelection(iChord, voices);
+      clear(targetSelection);
+    }
+  }
+
   function responseClear(inputStr) {
     const target = inputStr.slice(1);
     console.log(`Clearing target ${target}`);
@@ -419,16 +435,27 @@ export default function FourPartHarmony() {
     // Clear chord
     if (target[0] === "`") {
       const targetSelection = parseSelection(target);
-    
       clear(targetSelection);
+
+      return;
     }
     
     // Clear measure
+    if (target === "%%%") {
+      const firstChord = chordsPerMeasure * Math.ceil(selection.chord / chordsPerMeasure);
+      const lastChord = firstChord - chordsPerMeasure + 1;
+      
+      clearRange(lastChord, firstChord);
 
-    // Clear voice
+      return;
+    }
 
     // Clear score
-    
+    if (target === "%%%%%%%") {
+      clearRange(1, chordCount);
+
+      return;
+    }
   }
 
   function responseChordAnalyses(inputStr) {
