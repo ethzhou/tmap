@@ -86,82 +86,42 @@ export default function FourPartHarmony() {
     }
   };
 
+  // Lookup table of functions by first character of input
+  const responseTable = {
+    // Chord before
+    ",": responseSelectBefore,
+    // Chord after
+    ".": responseSelectAfter,
+    // Selection
+    "`": responseSelection,
+    // Chordal input
+    "/": responseChordal,
+    // Melodic input
+    "b": responseMelodic,
+    "t": responseMelodic,
+    "a": responseMelodic,
+    "s": responseMelodic,
+    // Key signature
+    "!": responseKeySignature,
+    // Time signature
+    "@": responseTimeSignature,
+    // Chord count
+    "#": responseChordCount,
+    // Shorthand: key, time, chord count
+    "~": responseMusicParameterShorthand,
+    // Clear
+    "%": responseClear,
+    // Chord analysis
+    ";": responseChordAnalyses,
+  };
+  
   /**
    * Parses input.
    * 
-   * @param {string} inputStr
+   * @param {string} inputStr The first character determines the resulting procedure.
    */
   function parseInput(inputStr) {
-    // Chord before
-    if (inputStr[0] === ",") {
-      responseSelectBefore(inputStr);
-
-      return;
-    }
-
-    // Chord after
-    if (inputStr[0] === ".") {
-      responseSelectAfter(inputStr);
-
-      return;
-    }
-
-    // Selection
-    if (inputStr[0] === "`") {
-      responseSelection(inputStr);
-      
-      return;
-    }
-
-    // Chordal
-    if (inputStr[0] === "/") {
-      responseChordal(inputStr);
-      
-      return;
-    }
-
-    // Melodic
-    if ("btas".includes(inputStr[0])) {
-      responseMelodic(inputStr);
-
-      return;
-    }
-
-    // Key signature
-    if (inputStr[0] === "!") {
-      responseKeySignature(inputStr);
-    }
-
-    // Time signature
-    if (inputStr[0] === "@") {
-      responseTimeSignature(inputStr);
-    }
-
-    // Chord count
-    if (inputStr[0] === "#") {
-      responseChordCount(inputStr);
-    }
-
-    // Shorthand: key, time, chord count
-    if (inputStr[0] === "~") {
-      responseMusicParameterShorthand(inputStr);
-
-      return;
-    }
-
-    // Clear
-    if (inputStr[0] === "%") {
-      responseClear(inputStr);
-
-      return;
-    }
-
-    // Chord analysis
-    if (inputStr[0] === ";") {
-      responseChordAnalyses(inputStr);
-
-      return;
-    }
+    responseTable[inputStr[0]](inputStr);
   }
 
   // #region Helper functions
@@ -295,6 +255,8 @@ export default function FourPartHarmony() {
   }
 
   // #endregion
+
+  // #region Response functions
 
   function responseSelectBefore(inputStr) {
     const delta = Number(inputStr.slice(1));
@@ -513,6 +475,8 @@ export default function FourPartHarmony() {
       return newChordAnalyses;
     });
   }
+
+  // #endregion
 
   console.log("selection", selection.chord, selection.voices);
 
