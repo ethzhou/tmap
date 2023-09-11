@@ -15,10 +15,6 @@ const testParts = {
   bass:    f("C2  F2  F2  G1  E2  F2  C2  F2  F2  C2  F2  F2  G1  E2  F2  C2  F2  F2 F2"),
 };
 
-function constructSelection(chord, voices = [...Array(4).keys()]) {
-  return { chord, voices };
-}
-
 export default function FourPartHarmony() {
   const inputRef = useRef();
 
@@ -112,47 +108,82 @@ export default function FourPartHarmony() {
       return;
     }
 
-    // Navigation
+    // Selection
     if (inputStr[0] === "`") {
-      parseSelection(inputStr);
+      responseSelection(inputStr);
       
       return;
     }
 
     // Chordal
     if (inputStr[0] === "/") {
-      parseChordal(inputStr);
+      responseChordal(inputStr);
       
       return;
     }
 
     // Melodic
     if ("btas".includes(inputStr[0])) {
-      parseMelodic(inputStr);
+      responseMelodic(inputStr);
 
       return;
     }
 
     // Key signature
     if (inputStr[0] === "!") {
-      parseKeySignature(inputStr);
+      responseKeySignature(inputStr);
     }
 
     // Time signature
     if (inputStr[0] === "@") {
-      parseTimeSignature(inputStr);
+      responseTimeSignature(inputStr);
     }
 
     // Chord count
     if (inputStr[0] === "#") {
-      parseChordCount(inputStr);
+      responseChordCount(inputStr);
     }
 
-    if (inputStr[0] === "$") {
-      parseChordAnalyses(inputStr);
+    // Clear
+    if (inputStr[0] === "%") {
+      responseClear(inputStr);
 
       return;
     }
+
+    // Chord analysis
+    if (inputStr[0] === ";") {
+      responseChordAnalyses(inputStr);
+
+      return;
+    }
+  }
+
+  /**
+   * Helper for creating selections that target at least one note.
+   * If the voices are unspecified, then they are unchanged. If the voices are specified but they select none of the voices (e.g. "" or "qwer", which do not contain any of satb), then all voices are selected.
+   * 
+   * @param {number} chord
+   * @param {string} voices
+   * @returns
+   */
+  function constructSelection(chord, voices) {
+    if (voices === undefined) {
+      voices = selection.voices;
+      return { chord, voices };
+    }
+
+    if (voices === "*") {
+      voices = "satb";
+    }
+    
+    voices = voices?.split("").map(v => "btas".indexOf(v.toLowerCase())).filter(v => v > -1).sort();
+    // If voices is undefined or its length is 0, set the voices
+    if (!voices?.length) {
+      voices = [...Array(4).keys()];
+    }
+
+    return { chord, voices };
   }
 
   /**
@@ -202,17 +233,15 @@ export default function FourPartHarmony() {
     });
   }
 
-  function parseSelection(inputStr) {
-    const args = inputStr.slice(1).split(" ");
+  function parseSelection(selectionStr) {
+    const args = selectionStr.slice(1).split("`");
 
-    const measure = Number(args[0]);
-    const chordM = Number(args[1]);
-    const voices = args[2]?.split("").map(v => "btas".indexOf(v)).filter(v => v > -1).sort();
+    const I = decomposeIndex(selection.chord, chordsPerMeasure, true);
+    const measure = Number(args[0]) || I[0];
+    const chordM = Number(args[1]) || I[1];
+    const newVoices = args[2];
     
     // Run checks
-    // Check that measure and chord are numbers
-    if (!measure || !chordM)
-      return;
     // Check that the measure access is valid
     if (measure < 1) {
       return;
@@ -221,17 +250,21 @@ export default function FourPartHarmony() {
     if (chordM < 1 || chordM > chordsPerMeasure)
       return;
 
-    const chord = composeIndex([measure, chordM], chordsPerMeasure, true);
+    const newChord = composeIndex([measure, chordM], chordsPerMeasure, true);
     // Check that the chord is within range
-    if (chord > chordCount)
+    if (newChord > chordCount)
       return;
   
-    const newSelection = constructSelection(chord, voices?.length ? voices : undefined);
+    return constructSelection(newChord, newVoices);
+  }
 
+  function responseSelection(inputStr) {
+    const newSelection = parseSelection(inputStr);
+    
     setSelection(() => newSelection);
   }
 
-  function parseChordal(inputStr) {
+  function responseChordal(inputStr) {
     const args = inputStr.slice(1).split("/");
 
     const pitches = args.map(pitchStr => pitchStr === "%" ? null : Pitch.fromString(pitchStr));
@@ -255,7 +288,7 @@ export default function FourPartHarmony() {
     selectAfter();
   }
 
-  function parseMelodic(inputStr) {
+  function responseMelodic(inputStr) {
     const args = inputStr.slice(2).split(" ");
     const voice = "btas".indexOf(inputStr[0]);
     
@@ -283,7 +316,7 @@ export default function FourPartHarmony() {
     });
   }
 
-  function parseKeySignature(inputStr) {
+  function responseKeySignature(inputStr) {
     const keySignature = inputStr.slice(1).trim();
 
     // Validate pitch
@@ -295,7 +328,7 @@ export default function FourPartHarmony() {
     setKeySignature(() => conformToVFKey(keySignature));
   }
 
-  function parseTimeSignature(inputStr) {
+  function responseTimeSignature(inputStr) {
     const args = inputStr.slice(1).split(" ");
 
     const [ upper, lower ] = args[0].split("/").map(v => Number(v));
@@ -326,7 +359,7 @@ export default function FourPartHarmony() {
     );
   }
 
-  function parseChordCount(inputStr) {
+  function responseChordCount(inputStr) {
     const newChordCount = Number(inputStr.slice(1));
 
     if (!newChordCount)
@@ -361,7 +394,44 @@ export default function FourPartHarmony() {
     );
   }
 
-  function parseChordAnalyses(inputStr) {
+  function clear(selection) {
+    setParts(parts => {
+      const newParts = {...parts};
+      
+      for (const voice of selection.voices) {
+        newParts[FOUR_VOICES[voice]][selection.chord - 1] = null;
+      }
+      return newParts;
+    });
+  }
+
+  function responseClear(inputStr) {
+    const target = inputStr.slice(1);
+    console.log(`Clearing target ${target}`);
+
+    // Clear selection
+    if (target === "%") {
+      clear(selection);
+
+      return;
+    }
+
+    // Clear chord
+    if (target[0] === "`") {
+      const targetSelection = parseSelection(target);
+    
+      clear(targetSelection);
+    }
+    
+    // Clear measure
+
+    // Clear voice
+
+    // Clear score
+    
+  }
+
+  function responseChordAnalyses(inputStr) {
     const args = inputStr.slice(1).split(" ");
     console.log(args);
 
