@@ -94,16 +94,14 @@ export default function FourPartHarmony() {
   function parseInput(inputStr) {
     // Chord before
     if (inputStr[0] === ",") {
-      const delta = Number(inputStr.slice(1));
-      selectBefore(delta && delta > -1 ? delta : undefined);
+      responseSelectBefore(inputStr);
 
       return;
     }
 
     // Chord after
     if (inputStr[0] === ".") {
-      const delta = Number(inputStr.slice(1));
-      selectAfter(delta && delta > -1 ? delta : undefined);      
+      responseSelectAfter(inputStr);
 
       return;
     }
@@ -144,6 +142,13 @@ export default function FourPartHarmony() {
       responseChordCount(inputStr);
     }
 
+    // Shorthand: key, time, chord count
+    if (inputStr[0] === "~") {
+      responseMusicParameterShorthand(inputStr);
+
+      return;
+    }
+
     // Clear
     if (inputStr[0] === "%") {
       responseClear(inputStr);
@@ -158,6 +163,8 @@ export default function FourPartHarmony() {
       return;
     }
   }
+
+  // #region Helper functions
 
   /**
    * Helper for creating selections that target at least one note.
@@ -261,6 +268,42 @@ export default function FourPartHarmony() {
       return;
   
     return createSelection(newChord, newVoices);
+  }
+
+  function clear(selection) {
+    setParts(parts => {
+      const newParts = {...parts};
+      
+      for (const voice of selection.voices) {
+        newParts[FOUR_VOICES[voice]][selection.chord - 1] = null;
+      }
+      return newParts;
+    });
+  }
+
+  /**
+   * Clears chords in a specified range. End is included.
+   * 
+   * @param {number} first
+   * @param {number} last Included.
+   */
+  function clearRange(first, last, voices) {
+    for (let iChord = first; iChord <= last; iChord++) {
+      const targetSelection = createSelection(iChord, voices);
+      clear(targetSelection);
+    }
+  }
+
+  // #endregion
+
+  function responseSelectBefore(inputStr) {
+    const delta = Number(inputStr.slice(1));
+    selectBefore(delta > -1 ? delta : undefined);
+  }
+
+  function responseSelectAfter(inputStr) {
+    const delta = Number(inputStr.slice(1));
+    selectAfter(delta > -1 ? delta : undefined);
   }
 
   function responseSelection(inputStr) {
@@ -397,30 +440,6 @@ export default function FourPartHarmony() {
     );
   }
 
-  function clear(selection) {
-    setParts(parts => {
-      const newParts = {...parts};
-      
-      for (const voice of selection.voices) {
-        newParts[FOUR_VOICES[voice]][selection.chord - 1] = null;
-      }
-      return newParts;
-    });
-  }
-
-  /**
-   * Clears chords in a specified range. End is included.
-   * 
-   * @param {number} first
-   * @param {number} last Included.
-   */
-  function clearRange(first, last, voices) {
-    for (let iChord = first; iChord <= last; iChord++) {
-      const targetSelection = createSelection(iChord, voices);
-      clear(targetSelection);
-    }
-  }
-
   function responseClear(inputStr) {
     const target = inputStr.slice(1);
     console.log(`Clearing target ${target}`);
@@ -509,7 +528,7 @@ export default function FourPartHarmony() {
         onKeyDown={handleKeyDown}
         onMouseOver={event => event.target.focus()}
         autoFocus
-        />
+      />
     </>
   )
 }
