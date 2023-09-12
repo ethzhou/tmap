@@ -121,7 +121,9 @@ export default function FourPartHarmony() {
    * @param {string} inputStr The first character determines the resulting procedure.
    */
   function parseInput(inputStr) {
-    responseTable[inputStr[0]](inputStr);
+    const response = responseTable[inputStr[0]];
+    if (response)
+      response(inputStr);
   }
 
   // #region Helper functions
@@ -478,7 +480,8 @@ export default function FourPartHarmony() {
 
   // #endregion
 
-  console.log("selection", selection.chord, selection.voices);
+  // console.log("selection", selection.chord, selection.voices);
+  // console.log("parts" , parts);
 
   return (
     <>
