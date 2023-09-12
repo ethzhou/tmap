@@ -4,6 +4,7 @@ import { A_OCTAVE, FOUR_VOICES, GRAND_STAFF_STAVES, accidentalToCode, keyAcciden
 import { COLOR_CHORD_SELECT, composeIndex, decomposeIndex } from "../../utils/utils";
 import ChordSymbol from "./ChordSymbol";
 import { renderToStaticMarkup } from 'react-dom/server';
+import Pitch from "../../classes/Pitch";
 
 export default function FourPartProgression({
   name,
@@ -114,12 +115,15 @@ export default function FourPartProgression({
 
   // Determine accidentals
 
+  // Add each letter to the base accidentals lookup, i.e. the default accidentals in a measure
   const affectedLetters = keyAffectedLetters(keySignature);
   const keyAccidental = keyAccidentalType(keySignature);
   const baseDisplayedKeyAccidentals = { };
   for (const letter of A_OCTAVE) {
     baseDisplayedKeyAccidentals[letter] = affectedLetters.includes(letter) ? keyAccidental : 0;
   }
+
+  console.log(affectedLetters, keyAccidental, baseDisplayedKeyAccidentals);
 
   const displayedAccidentals = Array(chordCount).fill().map(_ => []);
   for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
@@ -138,13 +142,30 @@ export default function FourPartProgression({
         const lowerPitch = parts[FOUR_VOICES[iLowerVoice]][iChord];
         const upperPitch = parts[FOUR_VOICES[iUpperVoice]][iChord];
 
-        // Helper function
-        const addAccidental = (pitch, iVoice, doCarryAccidentals = true) => {
+        /**
+         * Helper function to add accidentals to the data.
+         * @param {Pitch} pitch 
+         * @param {number} iVoice 
+         * @param {boolean} doCarrAccidentals Whether to consider accidentals before it, including those of the key, meaning the accidental is added. No matter what, the new accidental is recorded as the last accidental used, i.e. future accidentals may remember this one (and potentially not get displayed).
+         * @returns 
+         */
+        const addAccidental = (pitch, iVoice, doCarrAccidentals = true) => {
           const space = pitch.toSpace();
-          if (doCarryAccidentals
-            && pitch.accidental
-              === (currentMeasureAccidentalStates[stave][space] ?? baseDisplayedKeyAccidentals[pitch.letter]))
+
+          // Check whether the space last had the same accidental
+          // First check the last appearance of the space, then fall back onto the base measure accidentals
+          if (
+            doCarrAccidentals
+              && (
+                pitch.accidental === (
+                  currentMeasureAccidentalStates[stave][space] 
+                    ?? baseDisplayedKeyAccidentals[pitch.letter]
+                )
+              )
+          )
             return;
+          
+          // Set the corresponding values
           currentMeasureAccidentalStates[stave][space]
             = displayedAccidentals[iChord][iVoice]
             = pitch.accidental;

@@ -4,6 +4,7 @@ import Pitch from "../classes/Pitch";
 export const A_OCTAVE = "ABCDEFG";
 export const C_OCTAVE = "CDEFGAB";
 
+// This loops from F to F, including F twice
 export const F_CIRCLE_OF_FIFTHS = "FCGDAEBF";
 
 export const FOUR_VOICES = ["bass", "tenor", "alto", "soprano"];
@@ -80,10 +81,26 @@ export function keyAccidentalType(keySignature) {
  * @returns {string}
  */
 export function keyAffectedLetters(keySignature) {
-  if (keyAccidentalType(keySignature) === -1)
-    return F_CIRCLE_OF_FIFTHS.slice(F_CIRCLE_OF_FIFTHS.indexOf(keySignature[0], 1) - 1, -1);
-  else
-    return F_CIRCLE_OF_FIFTHS.slice(F_CIRCLE_OF_FIFTHS.indexOf(Pitch.nextLetterInOctave(keySignature[0])));
+  // The key C returns empty
+  if (keySignature === "C")
+    return "";
+
+  const keyAccidental = keyAccidentalType(keyAccidentalType);
+  // F_CIRCLE_OF_FIFTHS = "FCGDAEBF"
+  // A flat key is named with the letter second to last flatted letter in the display order
+  if (keyAccidental === -1)
+    return F_CIRCLE_OF_FIFTHS.slice(
+      F_CIRCLE_OF_FIFTHS.indexOf(keySignature[0], 1) - 1,
+      -1
+    );
+
+  // A sharp key is named with the letter is named with the letter one semitone higher than the last sharp
+  return F_CIRCLE_OF_FIFTHS.slice(
+    0,
+    F_CIRCLE_OF_FIFTHS.indexOf(
+      Pitch.prevLetterInOctave(keySignature[0])
+    ) + 1
+  );
 }
 
 /**

@@ -135,13 +135,24 @@ export default class Pitch {
   }
 
   /**
-   * 
+   * @param {string | Pitch} letter
+   * @returns {boolean} 
+   */
+  static prevLetterInOctave(letter) {
+    if (typeof letter === "object") 
+      other = other.letter;
+    // Modify via ASCII, but check for end of loop
+    return letter === "A" ? "G" : String.fromCharCode(letter.charCodeAt(0) - 1);
+  }
+
+  /**
    * @param {string | Pitch} letter
    * @returns {boolean} 
    */
   static nextLetterInOctave(letter) {
     if (typeof letter === "object") 
       other = other.letter;
+    // Modify via ASCII, but check for end of loop
     return letter === "G" ? "A" : String.fromCharCode(letter.charCodeAt(0) + 1);
   }
 
