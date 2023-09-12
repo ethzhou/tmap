@@ -146,16 +146,16 @@ export default function FourPartProgression({
          * Helper function to add accidentals to the data.
          * @param {Pitch} pitch 
          * @param {number} iVoice 
-         * @param {boolean} doCarrAccidentals Whether to consider accidentals before it, including those of the key, meaning the accidental is added. No matter what, the new accidental is recorded as the last accidental used, i.e. future accidentals may remember this one (and potentially not get displayed).
+         * @param {boolean} doCarryAccidentals Whether to consider accidentals before it, including those of the key, meaning the accidental is added. No matter what, the new accidental is recorded as the last accidental used, i.e. future accidentals may remember this one (and potentially not get displayed).
          * @returns 
          */
-        const addAccidental = (pitch, iVoice, doCarrAccidentals = true) => {
+        const addAccidental = (pitch, iVoice, doCarryAccidentals = true) => {
           const space = pitch.toSpace();
 
           // Check whether the space last had the same accidental
           // First check the last appearance of the space, then fall back onto the base measure accidentals
           if (
-            doCarrAccidentals
+            doCarryAccidentals
               && (
                 pitch.accidental === (
                   currentMeasureAccidentalStates[stave][space] 
