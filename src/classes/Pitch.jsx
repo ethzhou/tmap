@@ -44,7 +44,7 @@ export default class Pitch {
     // Check validity
     if (!C_OCTAVE.includes(letter))
       return;
-    if (octave === NaN)  // octave is NaN; either accidental was invalid or octave was invalid
+    if (Number.isNaN(octave))  // octave is NaN: either the accidental was invalid or octave was invalid
       return;
 
     return new Pitch(letter, accidental, octave);
