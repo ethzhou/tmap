@@ -146,4 +146,19 @@ export default class Key {
       F_CIRCLE_OF_FIFTHS.indexOf(Pitch.prevLetterInOctave(this.ionian.letter)) + 1
     );
   }
+
+  /**
+   * Finds the requested scale tone of the major scale of the current pitch. 
+   * 
+   * @param {number} n Degree of the scale.
+   * @returns {Pitch}
+   */
+  scaleTone(n) {
+    console.log((n + 7 - 2 - 1) % 7 + 1);
+    return this.ionian.pitch.scaleTone(
+      this.mode === "major" ? n
+      // For a minor key, find the scale tone via the ionian, and use the scale degree two below
+        : (n + 7 - 2 - 1) % 7 + 1
+    );
+  }
 }
