@@ -1,5 +1,6 @@
 import { Accidental, Voice } from "vexflow";
 import Pitch from "../classes/Pitch";
+import Interval from "../classes/Interval";
 
 export const A_OCTAVE = "ABCDEFG";
 export const C_OCTAVE = "CDEFGAB";
@@ -15,92 +16,15 @@ export function accidentalToString(accidental) {
   return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
 }
 
+/**
+ * Returns the string representation of an accidental for VexFlow Accidental constructor.
+ * 
+ * @param {number} accidental
+ * @returns {string}
+ */
 export function accidentalToCode(accidental) {
   const accidentalString = accidentalToString(accidental);
   return accidentalString === "" ? "n" : accidentalString;
-}
-
-/**
- * Determines whether the key is valid and practical. To pass, the letter must be capitalized, and a flat must be lowercase b.
- * 
- * @param {string} keySignature
- * @returns {boolean}
- */
-export function isValidKey(keySignature) {
-  const letter = keySignature[0].toUpperCase();
-
-  // Pitch should be an octave letter
-  if (!C_OCTAVE.includes(letter))
-    return false;
-
-  // No accidental is okay
-  if (keySignature.length === 1)
-    return true;
-
-  // Accidental symbol should be at most 1 symbol
-  if (keySignature.length > 2)
-    return false;
-
-  const accidental = keySignature[1];
-
-  // Check flat signature
-  if (accidental === "b" || accidental === "B")
-    // All but Fb are valid flat keys
-    return letter !== "F";
-
-  // Check sharp signature
-  if (accidental === "#") {
-    // Only F# and C# are valid sharp keys
-    return letter === "F" || letter === "C";
-  }
-}
-
-/**
- * Conforms a key signature to what VexFlow wants in Stave.addKeySignature.
- * 
- * @param {string} keySignature
- * @returns {string}
- */
-export function conformToVFKey(keySignature) {
-  if (!isValidKey(keySignature))
-    return ;
-
-  return `${keySignature[0].toUpperCase()}${keySignature[1]?.toLowerCase() ?? ""}`;
-}
-
-export function keyAccidentalType(keySignature) {
-  return keySignature === "F" || keySignature[1] === "b" ? -1
-    : keySignature === "C" ? 0
-    : 1;
-}
-
-/**
- * Returns the letters of the notes affected by the key.
- * 
- * @param {string} keySignature A valid key.
- * @returns {string}
- */
-export function keyAffectedLetters(keySignature) {
-  // The key C returns empty
-  if (keySignature === "C")
-    return "";
-
-  const keyAccidental = keyAccidentalType(keyAccidentalType);
-  // F_CIRCLE_OF_FIFTHS = "FCGDAEBF"
-  // A flat key is named with the letter second to last flatted letter in the display order
-  if (keyAccidental === -1)
-    return F_CIRCLE_OF_FIFTHS.slice(
-      F_CIRCLE_OF_FIFTHS.indexOf(keySignature[0], 1) - 1,
-      -1
-    );
-
-  // A sharp key is named with the letter is named with the letter one semitone higher than the last sharp
-  return F_CIRCLE_OF_FIFTHS.slice(
-    0,
-    F_CIRCLE_OF_FIFTHS.indexOf(
-      Pitch.prevLetterInOctave(keySignature[0])
-    ) + 1
-  );
 }
 
 /**

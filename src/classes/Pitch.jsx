@@ -45,7 +45,7 @@ export default class Pitch {
     // Check validity
     if (!C_OCTAVE.includes(letter))
       return;
-    if (!octave)  // octave is NaN; either accidental was invalid or octave was invalid
+    if (octave === NaN)  // octave is NaN; either accidental was invalid or octave was invalid
       return;
 
     return new Pitch(letter, accidental, octave);
@@ -61,7 +61,7 @@ export default class Pitch {
   static fromInterval(pitch, interval) {
     const newPitch = pitch.scaleTone(interval.size);
     newPitch.accidental += Interval.qualityToAccidentalChange(interval.quality, interval.size);
-    newPitch.octave += Math.floor((interval.size - 1) / 7) + pitch.letterIsAfterInOctave(letter);
+    newPitch.octave += Math.floor((interval.size - 1) / 7) + pitch.letterIsAfterInOctave(newPitch.letter);
 
     return newPitch;
   }
@@ -83,8 +83,17 @@ export default class Pitch {
     return `${this.letter}${this.octave}`;
   }
 
+  /**
+   * Returns the letter and accidental of the pitch as a string.
+   * 
+   * @returns {string}
+   */
+  toName() {
+    return `${this.letter}${accidentalToString(this.accidental)}`;
+  }
+
   // 'key' by the terminology of VexFlow, as in `new StaveNote({keys: ['C/4', ...], ...})`
-  toVFKey() {
+  toVF() {
     return `${this.letter}${accidentalToString(this.accidental)}/${this.octave}`;
   }
 
@@ -135,14 +144,14 @@ export default class Pitch {
   }
 
   /**
-   * @param {string | Pitch} letter
+   * @param {string | Pitch} other
    * @returns {boolean} 
    */
-  static prevLetterInOctave(letter) {
-    if (typeof letter === "object") 
+  static prevLetterInOctave(other) {
+    if (typeof other === "object") 
       other = other.letter;
     // Modify via ASCII, but check for end of loop
-    return letter === "A" ? "G" : String.fromCharCode(letter.charCodeAt(0) - 1);
+    return other === "A" ? "G" : String.fromCharCode(other.charCodeAt(0) - 1);
   }
 
   /**

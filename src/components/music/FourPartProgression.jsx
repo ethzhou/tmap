@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Accidental, Beam, Formatter, Fraction, Renderer, Stave, StaveConnector, StaveNote, Stem, TextNote, Voice } from "vexflow";
-import { A_OCTAVE, FOUR_VOICES, GRAND_STAFF_STAVES, accidentalToCode, keyAccidentalType, keyAffectedLetters } from "../../utils/musicUtils";
+import { A_OCTAVE, FOUR_VOICES, GRAND_STAFF_STAVES, accidentalToCode } from "../../utils/musicUtils";
 import { COLOR_CHORD_SELECT, composeIndex, decomposeIndex } from "../../utils/utils";
 import ChordSymbol from "./ChordSymbol";
 import { renderToStaticMarkup } from 'react-dom/server';
 import Pitch from "../../classes/Pitch";
+import Key from "../../classes/Key";
 
 export default function FourPartProgression({
   name,
@@ -116,14 +117,12 @@ export default function FourPartProgression({
   // Determine accidentals
 
   // Add each letter to the base accidentals lookup, i.e. the default accidentals in a measure
-  const affectedLetters = keyAffectedLetters(keySignature);
-  const keyAccidental = keyAccidentalType(keySignature);
+  const affectedLetters = keySignature.affectedLetters();
+  const accidentalType = keySignature.accidentalType();
   const baseDisplayedKeyAccidentals = { };
   for (const letter of A_OCTAVE) {
-    baseDisplayedKeyAccidentals[letter] = affectedLetters.includes(letter) ? keyAccidental : 0;
+    baseDisplayedKeyAccidentals[letter] = affectedLetters.includes(letter) ? accidentalType : 0;
   }
-
-  console.log(affectedLetters, keyAccidental, baseDisplayedKeyAccidentals);
 
   const displayedAccidentals = Array(chordCount).fill().map(_ => []);
   for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
@@ -211,8 +210,8 @@ export default function FourPartProgression({
 
   firstTrebleStave.addClef("treble");
   firstBassStave.addClef("bass");
-  firstTrebleStave.addKeySignature(keySignature).addTimeSignature(timeSignatureString);
-  firstBassStave.addKeySignature(keySignature).addTimeSignature(timeSignatureString);
+  firstTrebleStave.addKeySignature(keySignature.toVF()).addTimeSignature(timeSignatureString);
+  firstBassStave.addKeySignature(keySignature.toVF()).addTimeSignature(timeSignatureString);
 
   // Align the first notes of the staves
   // noteStartX is a value measuring from the border of the canvas
@@ -290,7 +289,7 @@ export default function FourPartProgression({
 
         const staveNote = new StaveNote({
           clef: clef,
-          keys: [!pitch ? "R/4" : pitch.toVFKey()],
+          keys: [!pitch ? "R/4" : pitch.toVF()],
           duration: `${noteDuration}${!pitch ? "r" : ""}`,
           stem_direction: (iVoice % 2) ? Stem.UP : Stem.DOWN,
         });
@@ -393,7 +392,7 @@ export default function FourPartProgression({
     const xPositions = getNoteXPositions();
 
     // Indicate the key
-    svgElement.innerHTML += `<text x=${xPositions[0] - 60} y="90%">${keySignature}:</text>`;
+    svgElement.innerHTML += `<text x=${xPositions[0] - 60} y="90%">${keySignature.toAnalysis()}:</text>`;
     for (let iChord = 0; iChord < chordCount; iChord++) {
       // Add each chord analysis
       svgElement.innerHTML += renderToStaticMarkup(

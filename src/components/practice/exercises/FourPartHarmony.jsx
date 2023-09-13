@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { clamp, composeIndex, decomposeIndex, randInt } from "../../../utils/utils";
-import { FOUR_VOICES, conformToVFKey, isValidKey, isValidNoteDuration, isValidTime, calculateNoteDuration, parseStringChordSymbol } from "../../../utils/musicUtils";
+import { FOUR_VOICES, isValidNoteDuration, isValidTime, calculateNoteDuration, parseStringChordSymbol } from "../../../utils/musicUtils";
+import FourPartHarmonyEvaluation from "./FourPartHarmonyEvaluation";
+import Key from "../../../classes/Key";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -27,7 +29,7 @@ export default function FourPartHarmony() {
 
   const [chordAnalyses, setChordAnalyses] = useState([]);
 
-  const [keySignature, setKeySignature] = useState("C");
+  const [keySignature, setKeySignature] = useState(new Key("C"));
   const [timeSignature, setTimeSignature] = useState();
 
   const [chordCount, setChordCount] = useState();
@@ -327,15 +329,16 @@ export default function FourPartHarmony() {
   }
 
   function responseKeySignature(inputStr) {
-    const keySignature = inputStr.slice(1).trim();
+    const keyString = inputStr.slice(1).trim();
+    const key = Key.fromString(keyString);
 
     // Validate pitch
-    if (!isValidKey(keySignature)) {
-      console.log(`${keySignature} is not a valid key.`);
+    if (!key?.isValidKey()) {
+      console.log(`${keyString} is not a valid key.`);
       return;
     }
 
-    setKeySignature(() => conformToVFKey(keySignature));
+    setKeySignature(() => key);
   }
 
   function responseTimeSignature(inputStr) {
