@@ -20,7 +20,7 @@ export default function SingleChord({ name, clef, pitches }) {
     stave.setContext(context).draw();
 
     const printedNotes = [
-      new StaveNote({ keys: pitches.map(pitch => pitch.toVFKey()), duration: "w", clef: clef }),
+      new StaveNote({ keys: pitches.map(pitch => pitch.toVF()), duration: "w", clef: clef }),
     ];
     // Include accidentals where appropriate
     // #region Own accidental application method. Slightly different from VexFlow's Accidental.applyAccidentals: A unison with natural and sharp (like F F#) is rendered with no natural symbol via VexFlow Accidental.applyAccidentals, while this region's code would render a natural symbol. Something a unison with two sharp notes (like F# F#) would be rendered with two sharp symbols via VexFlow and one sharp symbol with this code. For some reason, in the case of flats, one flat note does render the natural symbol, but two flat notes still renders two flat symbols.
