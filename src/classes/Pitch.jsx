@@ -24,7 +24,6 @@ export default class Pitch {
     const octave = 4 + Math.floor(spacesFromC4 / 7);
     const letter = A_OCTAVE[(((2 + spacesFromC4) % 7) + 7) % 7];
     
-    // console.log(spacesFromC4, octave, (((2 + spacesFromC4) % 7) + 7) % 7, letter);
     return new Pitch(letter, accidental, octave);
   }
 
@@ -114,11 +113,11 @@ export default class Pitch {
 
   }
 
-  static #halfstepsToNextLetter(letter) {
+  static halfstepsToNextLetter(letter) {
     return "BE".includes(letter) ? 1 : 2;
   }
   
-  static #halfstepsToPrevLetter(letter) {
+  static halfstepsToPrevLetter(letter) {
     return "CF".includes(letter) ? 1 : 2;
   }
 
@@ -135,7 +134,7 @@ export default class Pitch {
     let intervalSize = 0;
     let i = A_OCTAVE.indexOf(this.letter);
     while (A_OCTAVE[i] !== otherPitch.letter) {
-      halfsteps += Pitch.#halfstepsToNextLetter(A_OCTAVE[i]);
+      halfsteps += Pitch.halfstepsToNextLetter(A_OCTAVE[i]);
       intervalSize += 1;
       i = (i + 1) % 7;
     }
@@ -280,9 +279,8 @@ export default class Pitch {
     const newLetter = A_OCTAVE[(l + n - 1) % 7];
     let newAccidental = this.accidental;
     for (let i = 0; i < n - 1; i++) {
-      // console.log(aOctave[(l + i) % 7], Pitch.#halfstepsToNextLetter(aOctave[(l + i) % 7]));
       // When the note passes from B to C or E to F, the accidental would heighten to make a full whole step.
-      if (Pitch.#halfstepsToNextLetter(A_OCTAVE[(l + i) % 7]) === 1) {
+      if (Pitch.halfstepsToNextLetter(A_OCTAVE[(l + i) % 7]) === 1) {
         newAccidental++;
       }
     }
@@ -290,7 +288,6 @@ export default class Pitch {
     newAccidental -= Math.floor(n / 4);
     const newOctave = this.octave + Math.floor((n - 1) / 7) + this.letterIsAfterInOctave(newLetter);
 
-    // console.log("scaleTone", this.toString(), `${Interval.isPerfect(n) ? "P" : "M"}${n}`, new Pitch(newLetter, newAccidental, newOctave).toString());
     return new Pitch(newLetter, newAccidental, newOctave);
   }
 
