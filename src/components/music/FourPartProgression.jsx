@@ -11,7 +11,7 @@ export default function FourPartProgression({
   name,
   parts,
   chordAnalyses,
-  keySignature,
+  tonality,
   timeSignature,
   chordCount,
   chordsPerMeasure,
@@ -117,8 +117,8 @@ export default function FourPartProgression({
   // Determine accidentals
 
   // Add each letter to the base accidentals lookup, i.e. the default accidentals in a measure
-  const affectedLetters = keySignature.affectedLetters();
-  const accidentalType = keySignature.accidentalType();
+  const affectedLetters = tonality.affectedLetters();
+  const accidentalType = tonality.accidentalType();
   const baseDisplayedKeyAccidentals = { };
   for (const letter of A_OCTAVE) {
     baseDisplayedKeyAccidentals[letter] = affectedLetters.includes(letter) ? accidentalType : 0;
@@ -210,8 +210,8 @@ export default function FourPartProgression({
 
   firstTrebleStave.addClef("treble");
   firstBassStave.addClef("bass");
-  firstTrebleStave.addKeySignature(keySignature.toVF()).addTimeSignature(timeSignatureString);
-  firstBassStave.addKeySignature(keySignature.toVF()).addTimeSignature(timeSignatureString);
+  firstTrebleStave.addKeySignature(tonality.toVF()).addTimeSignature(timeSignatureString);
+  firstBassStave.addKeySignature(tonality.toVF()).addTimeSignature(timeSignatureString);
 
   // Align the first notes of the staves
   // noteStartX is a value measuring from the border of the canvas
@@ -392,7 +392,7 @@ export default function FourPartProgression({
     const xPositions = getNoteXPositions();
 
     // Indicate the key
-    svgElement.innerHTML += `<text x=${xPositions[0] - 60} y="90%">${keySignature.toAnalysis()}:</text>`;
+    svgElement.innerHTML += `<text x=${xPositions[0] - 60} y="90%">${tonality.toAnalysis()}:</text>`;
     for (let iChord = 0; iChord < chordCount; iChord++) {
       // Add each chord analysis
       svgElement.innerHTML += renderToStaticMarkup(

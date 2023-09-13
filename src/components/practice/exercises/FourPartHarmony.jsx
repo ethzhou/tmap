@@ -29,7 +29,8 @@ export default function FourPartHarmony() {
 
   const [chordAnalyses, setChordAnalyses] = useState([]);
 
-  const [keySignature, setKeySignature] = useState(new Key("C"));
+  // Tonality is key, but React's `key` prop is reserved, and so this term serves as a synonym.
+  const [tonality, setTonality] = useState(new Key("C"));
   const [timeSignature, setTimeSignature] = useState();
 
   const [chordCount, setChordCount] = useState();
@@ -104,9 +105,9 @@ export default function FourPartHarmony() {
     "a": responseMelodic,
     "s": responseMelodic,
     // Key signature
-    "!": responseKeySignature,
+    "!": responseKey,
     // Time signature
-    "@": responseTimeSignature,
+    "@": responseTime,
     // Chord count
     "#": responseChordCount,
     // Shorthand: key, time, chord count
@@ -328,7 +329,7 @@ export default function FourPartHarmony() {
     });
   }
 
-  function responseKeySignature(inputStr) {
+  function responseKey(inputStr) {
     const keyString = inputStr.slice(1).trim();
     const key = Key.fromString(keyString);
 
@@ -338,10 +339,10 @@ export default function FourPartHarmony() {
       return;
     }
 
-    setKeySignature(() => key);
+    setTonality(() => key);
   }
 
-  function responseTimeSignature(inputStr) {
+  function responseTime(inputStr) {
     const args = inputStr.slice(1).split(" ");
 
     const [ upper, lower ] = args[0].split("/").map(v => Number(v));
@@ -411,8 +412,8 @@ export default function FourPartHarmony() {
     const args = inputStr.slice(1).split(" ");
 
     // For each, prepend 0 as a throwaway character
-    responseKeySignature("0" + args[0]);
-    responseTimeSignature("0" + `${args[1]} ${args[3] ?? ""}`);
+    responseKey("0" + args[0]);
+    responseTime("0" + `${args[1]} ${args[3] ?? ""}`);
     responseChordCount("0" + args[2]);
   }
 
@@ -493,7 +494,7 @@ export default function FourPartHarmony() {
           {...{
             parts,
             chordAnalyses,
-            keySignature,
+            tonality,
             timeSignature,
             chordCount,
             chordsPerMeasure,
@@ -508,6 +509,7 @@ export default function FourPartHarmony() {
         onMouseOver={event => event.target.focus()}
         autoFocus
       />
+      <FourPartHarmonyEvaluation parts={parts} analysis={chordAnalyses} tonality={tonality} />
     </>
   )
 }
