@@ -38,7 +38,7 @@ export default function FourPartHarmony() {
   const [chordsPerMeasure, setChordsPerMeasure] = useState();
 
   const [selection, setSelection] = useState({
-    chord: 0,
+    iChord: 0,
     voices: [0, 1, 2, 3]
   });
 
@@ -182,7 +182,7 @@ export default function FourPartHarmony() {
     setSelection(selection => {
       const newSelection = {...selection};
 
-      newSelection.chord = clamp(newSelection.chord - delta, 0, chordCount - 1);
+      newSelection.iChord = clamp(newSelection.iChord - delta, 0, chordCount - 1);
 
       return newSelection;
     });
@@ -200,7 +200,7 @@ export default function FourPartHarmony() {
     setSelection(selection => {
       const newSelection = {...selection};
       
-      newSelection.chord = clamp(newSelection.chord + delta, 0, chordCount - 1);
+      newSelection.iChord = clamp(newSelection.iChord + delta, 0, chordCount - 1);
       
       return newSelection;
     });
@@ -215,9 +215,9 @@ export default function FourPartHarmony() {
   function parseSelection(selectionStr) {
     const args = selectionStr.slice(1).split("`");
 
-    const I = decomposeIndex(selection.chord, chordsPerMeasure);
+    const I = decomposeIndex(selection.iChord, chordsPerMeasure);
     const measure = Number(args[0]) - 1 || I[0];
-    const chordM = Number(args[1]) - 1 || I[1];
+    const imChord = Number(args[1]) - 1 || I[1];
     const newVoices = args[2];
     
     // Run checks
@@ -226,14 +226,14 @@ export default function FourPartHarmony() {
       return;
     }
     // Check that the chord access is valid
-    if (chordM < 0 || chordM >= chordsPerMeasure)
+    if (imChord < 0 || imChord >= chordsPerMeasure)
       return;
 
-    const newChord = composeIndex([measure, chordM], chordsPerMeasure);
+    const newChord = composeIndex([measure, imChord], chordsPerMeasure);
     // Check that the chord is within range
     if (newChord > chordCount)
       return;
-      console.log(measure, chordM, newChord);
+      console.log(measure, imChord, newChord);
   
     return createSelection(newChord, newVoices);
   }
@@ -297,7 +297,7 @@ export default function FourPartHarmony() {
 
         const part = newParts[FOUR_VOICES[selection.voices[i]]];
         if (part)
-          part[selection.chord] = pitch;
+          part[selection.iChord] = pitch;
       });
 
       return newParts;
@@ -313,7 +313,7 @@ export default function FourPartHarmony() {
     setParts(parts => {
       const newParts = {...parts};
 
-      const startChord = selection.chord;
+      const startChord = selection.iChord;
       // Iterate the number of pitches, but only up to the last chord
       const iterationCount = clamp(
         chordCount - startChord,
@@ -373,7 +373,7 @@ export default function FourPartHarmony() {
     setChordsPerMeasure(() => newChordsPerMeasure);
 
     select(
-      clamp(selection.chord, 0, chordCount - 1)
+      clamp(selection.iChord, 0, chordCount - 1)
     );
   }
 
@@ -408,7 +408,7 @@ export default function FourPartHarmony() {
     })
 
     select(
-      clamp(selection.chord, 0, newChordCount - 1)
+      clamp(selection.iChord, 0, newChordCount - 1)
     );
   }
 
@@ -443,7 +443,7 @@ export default function FourPartHarmony() {
     
     // Clear measure
     if (target === "%%%") {
-      const firstChord = chordsPerMeasure * Math.floor(selection.chord / chordsPerMeasure);
+      const firstChord = chordsPerMeasure * Math.floor(selection.iChord / chordsPerMeasure);
       const lastChord = firstChord + chordsPerMeasure - 1;
       
       clearRange(lastChord, firstChord);
@@ -467,7 +467,7 @@ export default function FourPartHarmony() {
     setChordAnalyses(chordAnalyses => {
       const newChordAnalyses = [...chordAnalyses]
 
-      const startChord = selection.chord;
+      const startChord = selection.iChord;
       // Iterate the number of pitches, but only up to the last chord
       const iterationCount = clamp(
         chordCount - startChord,

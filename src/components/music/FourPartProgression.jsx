@@ -318,12 +318,12 @@ export default function FourPartProgression({
 
   // Highlight the selected notes
   if (selection) {
-    const [measure, chordM] = decomposeIndex(selection.chord, chordsPerMeasure);
-    if (chordsPerMeasure * measure + chordM >= chordCount) {
-      console.warn(`Warning: The attempted selection (${measure} ${chordM}) is out of range (${selection.chord} > ${chordCount}).`);
+    const [measure, imChord] = decomposeIndex(selection.iChord, chordsPerMeasure);
+    if (chordsPerMeasure * measure + imChord >= chordCount) {
+      console.warn(`Warning: The attempted selection (${measure} ${imChord}) is out of range (${selection.iChord} > ${chordCount}).`);
     }
     for (const voice of selection.voices) {
-      music[measure].voices[voice].tickables[chordM].setStyle({
+      music[measure].voices[voice].tickables[imChord].setStyle({
         fillStyle: COLOR_CHORD_SELECT,
         strokeStyle: COLOR_CHORD_SELECT,
         shadowColor: COLOR_CHORD_SELECT,
@@ -401,7 +401,7 @@ export default function FourPartProgression({
           analysis={chordAnalyses[iChord]}
           x={xPositions[iChord]}
           y="90%"
-          color={iChord === selection.chord ? COLOR_CHORD_SELECT : "#000"}
+          color={iChord === selection.iChord ? COLOR_CHORD_SELECT : "#000"}
         />
       )
     }
