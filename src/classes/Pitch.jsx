@@ -124,16 +124,16 @@ export default class Pitch {
   /**
    * Counts both the number of halfsteps to reach another letter and the simple interval size from pitch letter only.
    * 
-   * @param {Pitch} otherPitch
+   * @param {Pitch} other
    * @returns {object} The two counts.
    * @returns {number} halfsteps
    * @returns {number} intervalSize
    */
-  #countToLetter(otherPitch) {
+  #countToLetter(other) {
     let halfsteps = 0;
     let intervalSize = 0;
     let i = A_OCTAVE.indexOf(this.letter);
-    while (A_OCTAVE[i] !== otherPitch.letter) {
+    while (A_OCTAVE[i] !== other.letter) {
       halfsteps += Pitch.halfstepsToNextLetter(A_OCTAVE[i]);
       intervalSize += 1;
       i = (i + 1) % 7;
@@ -199,71 +199,72 @@ export default class Pitch {
   /**
    * Finds whether this pitch and another share the same letter and octave.
    * 
-   * @param {Pitch} otherPitch
-   * @returns {boolean}
+   * @param {Pitch} other
+   * @returns {boolean | undefined}
    */
-  isSameSpaceAs(otherPitch) {
-    if (!otherPitch) return;
-    return this.letter === otherPitch.letter && this.octave === otherPitch.octave;
+  isSameSpaceAs(other) {
+    if (!other)
+      return;
+    return this.letter === other.letter && this.octave === other.octave;
   }
 
   /**
    * Finds whether this pitch and another are enharmonic.
    * 
-   * @param {Pitch} otherPitch
+   * @param {Pitch} other
    * @returns {boolean}
    */
-  isEnharmonicTo(otherPitch) {
-    if (!otherPitch) return;
-    return this.#countToLetter(otherPitch).halfsteps === this.accidental - otherPitch.accidental;
+  isEnharmonicTo(other) {
+    if (!other) return;
+    return this.#countToLetter(other).halfsteps === this.accidental - other.accidental;
   }
   
   /**
    * Finds whether this pitch is lower than another.
    * 
-   * @param {Pitch} otherPitch
+   * @param {Pitch} other
    * @param {boolean} considerAccidentals Whether or not to keep accidentals in the determination.
    * @returns {boolean}
    */
-  isLowerThan(otherPitch, considerAccidentals = true) {
+  isLowerThan(other, considerAccidentals = true) {
     if (considerAccidentals)
-      return this.halfstepsTo(otherPitch) < 0;
+      return this.halfstepsTo(other) < 0;
     else
-      return this.octave < otherPitch.octave
-        || (this.octave === otherPitch.octave
-          && this.letterIsBeforeInOctave(otherPitch));
+      return this.octave < other.octave
+        || (this.octave === other.octave
+          && this.letterIsBeforeInOctave(other));
   }
   
   /**
    * Finds whether this pitch is higher than another.
    * 
-   * @param {Pitch} otherPitch
+   * @param {Pitch} other
    * @param {boolean} considerAccidentals Whether or not to keep accidentals in the determination.
    * @returns {boolean}
    */
-  isHigherThan(otherPitch, considerAccidentals = true) {
+  isHigherThan(other, considerAccidentals = true) {
     if (considerAccidentals)
-      return this.halfstepsTo(otherPitch) > 0;
+      return this.halfstepsTo(other) > 0;
     else
-      return this.octave > otherPitch.octave
-        || (this.octave === otherPitch.octave
-          && this.letterIsAfterInOctave(otherPitch));
+      return this.octave > other.octave
+        || (this.octave === other.octave
+          && this.letterIsAfterInOctave(other));
   }
 
   /**
    * Counts the number of halfsteps up to reach another pitch.
    * 
-   * @param {Pitch} otherPitch The end pitch.
+   * @param {Pitch} other The end pitch.
    * @returns {number} Number of halfsteps up, or down if negative.
    */
-  halfstepsTo(otherPitch) {
-    if (this.isHigherThan(otherPitch, false)) {
-      return -otherPitch.halfstepsTo(this);
+  halfstepsTo(other) {
+    if (this.isHigherThan(other, false)) {
+      return -other.halfstepsTo(this);
     }
 
-    const { halfsteps } = this.#countToLetter(otherPitch);
-      + (otherPitch.octave - this.octave) * 11;
-      + (otherPitch.accidental - this.accidental);
+    const { halfsteps } = this.#countToLetter(other);
+      + (other.octave - this.octave) * 11;
+      + (other.accidental - this.accidental);
 
     return halfsteps;
   }
@@ -294,15 +295,15 @@ export default class Pitch {
   /**
    * Finds the interval between two pitches.
    * 
-   * @param {Pitch} otherPitch 
+   * @param {Pitch} other 
    * @returns {Interval} Simple interval.
    */
-  interval(otherPitch) {
-    let { intervalSize } = this.#countToLetter(otherPitch);
-    intervalSize = (size === 1) ? (this.octave === otherPitch.octave ? 1 : 8) : size;
+  interval(other) {
+    let { intervalSize } = this.#countToLetter(other);
+    intervalSize = (size === 1) ? (this.octave === other.octave ? 1 : 8) : size;
 
     const baseScaleTone = this.scaleTone(intervalSize);
-    const accidentalChange = otherPitch.accidental - baseScaleTone.accidental;
+    const accidentalChange = other.accidental - baseScaleTone.accidental;
     const intervalQuality = Interval.accidentalChangeToQuality(accidentalChange, intervalSize);
 
     return new Interval(intervalQuality, intervalSize);
