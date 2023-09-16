@@ -2,9 +2,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { clamp, composeIndex, decomposeIndex, randInt } from "../../../utils/utils";
-import { FOUR_VOICES, isValidNoteDuration, isValidTime, calculateNoteDuration, parseStringChordSymbol } from "../../../utils/musicUtils";
+import { FOUR_VOICES, isValidNoteDuration, isValidTime, calculateNoteDuration } from "../../../utils/musicUtils";
 import FourPartHarmonyEvaluation from "./FourPartHarmonyEvaluation";
 import Key from "../../../classes/Key";
+import ChordAnalysis from "../../../classes/ChordAnalysis";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -37,7 +38,7 @@ export default function FourPartHarmony() {
   const [chordsPerMeasure, setChordsPerMeasure] = useState();
 
   const [selection, setSelection] = useState({
-    chord: 1,
+    chord: 0,
     voices: [0, 1, 2, 3]
   });
 
@@ -135,7 +136,7 @@ export default function FourPartHarmony() {
    * Helper for creating selections that target at least one note.
    * If the voices are unspecified, then they are unchanged. If the voices are specified but they select none of the voices (e.g. "" or "qwer", which do not contain any of satb), then all voices are selected.
    * 
-   * @param {number} chord Selection chords are 1-indexed.
+   * @param {number} chord
    * @param {string} voices
    * @returns
    */
@@ -159,9 +160,9 @@ export default function FourPartHarmony() {
   }
 
   /**
-   * Select a chord by 1-based index.
+   * Select a chord by 0-based index.
    * 
-   * @param {number} chord The 1-based index of the chord.
+   * @param {number} chord The 0-based index of the chord.
    */
   function select(chord, voices) {
     const selection = createSelection(chord, voices);
@@ -181,7 +182,7 @@ export default function FourPartHarmony() {
     setSelection(selection => {
       const newSelection = {...selection};
 
-      newSelection.chord = clamp(newSelection.chord - delta, 1, chordCount);
+      newSelection.chord = clamp(newSelection.chord - delta, 0, chordCount - 1);
 
       return newSelection;
     });
@@ -199,38 +200,40 @@ export default function FourPartHarmony() {
     setSelection(selection => {
       const newSelection = {...selection};
       
-      newSelection.chord = clamp(newSelection.chord + delta, 1, chordCount);
+      newSelection.chord = clamp(newSelection.chord + delta, 0, chordCount - 1);
       
       return newSelection;
     });
   }
 
   /**
+   * Returns a selection from string input.
    * 
    * @param {string} selectionStr In the format of "`2`1`sa": measure 2, chord 1, soprano and alto voices.
-   * @returns 
+   * @returns {Object | undefined}
    */
   function parseSelection(selectionStr) {
     const args = selectionStr.slice(1).split("`");
 
-    const I = decomposeIndex(selection.chord, chordsPerMeasure, true);
-    const measure = Number(args[0]) || I[0];
-    const chordM = Number(args[1]) || I[1];
+    const I = decomposeIndex(selection.chord, chordsPerMeasure);
+    const measure = Number(args[0]) - 1 || I[0];
+    const chordM = Number(args[1]) - 1 || I[1];
     const newVoices = args[2];
     
     // Run checks
     // Check that the measure access is valid
-    if (measure < 1) {
+    if (measure < 0) {
       return;
     }
     // Check that the chord access is valid
-    if (chordM < 1 || chordM > chordsPerMeasure)
+    if (chordM < 0 || chordM >= chordsPerMeasure)
       return;
 
-    const newChord = composeIndex([measure, chordM], chordsPerMeasure, true);
+    const newChord = composeIndex([measure, chordM], chordsPerMeasure);
     // Check that the chord is within range
     if (newChord > chordCount)
       return;
+      console.log(measure, chordM, newChord);
   
     return createSelection(newChord, newVoices);
   }
@@ -240,7 +243,7 @@ export default function FourPartHarmony() {
       const newParts = {...parts};
       
       for (const voice of selection.voices) {
-        newParts[FOUR_VOICES[voice]][selection.chord - 1] = null;
+        newParts[FOUR_VOICES[voice]][selection.chord] = null;
       }
       return newParts;
     });
@@ -276,7 +279,8 @@ export default function FourPartHarmony() {
   function responseSelection(inputStr) {
     const newSelection = parseSelection(inputStr);
     
-    setSelection(() => newSelection);
+    if (newSelection)
+      setSelection(() => newSelection);
   }
 
   function responseChordal(inputStr) {
@@ -293,7 +297,7 @@ export default function FourPartHarmony() {
 
         const part = newParts[FOUR_VOICES[selection.voices[i]]];
         if (part)
-          part[selection.chord - 1] = pitch;
+          part[selection.chord] = pitch;
       });
 
       return newParts;
@@ -312,7 +316,7 @@ export default function FourPartHarmony() {
       const startChord = selection.chord;
       // Iterate the number of pitches, but only up to the last chord
       const iterationCount = clamp(
-        chordCount - startChord + 1,
+        chordCount - startChord,
         0,
         pitches.length
       );
@@ -320,7 +324,7 @@ export default function FourPartHarmony() {
         // Filter the undefined pitches
         if (pitches[iPitch] === undefined)
           continue;
-        newParts[FOUR_VOICES[voice]][startChord - 1 + iPitch] = pitches[iPitch];
+        newParts[FOUR_VOICES[voice]][startChord + iPitch] = pitches[iPitch];
       }
       // Move the selection the same amount
       selectAfter(iterationCount);
@@ -369,7 +373,7 @@ export default function FourPartHarmony() {
     setChordsPerMeasure(() => newChordsPerMeasure);
 
     select(
-      clamp(selection.chord, 1, chordCount)
+      clamp(selection.chord, 0, chordCount - 1)
     );
   }
 
@@ -404,7 +408,7 @@ export default function FourPartHarmony() {
     })
 
     select(
-      clamp(selection.chord, 1, newChordCount)
+      clamp(selection.chord, 0, newChordCount - 1)
     );
   }
 
@@ -431,15 +435,16 @@ export default function FourPartHarmony() {
     // Clear chord
     if (target[0] === "`") {
       const targetSelection = parseSelection(target);
-      clear(targetSelection);
+      if (targetSelection)
+        clear(targetSelection);
 
       return;
     }
     
     // Clear measure
     if (target === "%%%") {
-      const firstChord = chordsPerMeasure * Math.ceil(selection.chord / chordsPerMeasure);
-      const lastChord = firstChord - chordsPerMeasure + 1;
+      const firstChord = chordsPerMeasure * Math.floor(selection.chord / chordsPerMeasure);
+      const lastChord = firstChord + chordsPerMeasure - 1;
       
       clearRange(lastChord, firstChord);
 
@@ -458,22 +463,22 @@ export default function FourPartHarmony() {
     const args = inputStr.slice(1).split(" ");
     console.log(args);
 
-    const symbols = args.map(symbol => symbol === "%" ? null : parseStringChordSymbol(symbol));
+    const analyses = args.map(item => item === "%" ? null : ChordAnalysis.fromString(item));
     setChordAnalyses(chordAnalyses => {
       const newChordAnalyses = [...chordAnalyses]
 
       const startChord = selection.chord;
       // Iterate the number of pitches, but only up to the last chord
       const iterationCount = clamp(
-        chordCount - startChord + 1,
+        chordCount - startChord,
         0,
-        symbols.length
+        analyses.length
       );
       for (let iSymbol = 0; iSymbol < iterationCount; iSymbol++) {
         // Filter the undefined pitches
-        if (symbols[iSymbol] === undefined)
+        if (analyses[iSymbol] === undefined)
           continue;
-        newChordAnalyses[startChord - 1 + iSymbol] = symbols[iSymbol];
+        newChordAnalyses[startChord + iSymbol] = analyses[iSymbol];
       }
       // Move the selection the same amount
       selectAfter(iterationCount);
@@ -509,7 +514,7 @@ export default function FourPartHarmony() {
         onMouseOver={event => event.target.focus()}
         autoFocus
       />
-      <FourPartHarmonyEvaluation parts={parts} analysis={chordAnalyses} tonality={tonality} />
+      <FourPartHarmonyEvaluation parts={parts} analyses={chordAnalyses} tonality={tonality} />
     </>
   )
 }

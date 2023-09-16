@@ -16,7 +16,7 @@ export function randInt(min, max) {
  * @param {boolean} fromOne Whether input and output indices count are 1-based (otherwise 0-based).
  * @returns {number} The index.
  */
-export function composeIndex(I, rowLength, fromOne) {
+export function composeIndex(I, rowLength, fromOne = false) {
   const index = rowLength * (I[0] - fromOne) + I[1];
 
   return index;
@@ -35,4 +35,14 @@ export function decomposeIndex(i, rowLength, fromOne = false) {
   const columnIndex = (i + rowLength - fromOne) % rowLength + fromOne;
 
   return [rowIndex, columnIndex];
+}
+
+/**
+ * Read a roman numeral. This only works for scale degrees.
+ * 
+ * @param {string} roman
+ * @returns {number} Defaults to -1 if not found.
+ */
+export function romanValue(roman) {
+  return ["I", "II", "III", "IV", "V", "VI", "VII"].indexOf(roman.toUpperCase()) + 1;
 }
