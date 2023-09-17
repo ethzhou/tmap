@@ -264,7 +264,7 @@ export default function FourPartProgression({
     return { ...measure, staveConnectorLeft, staveConnectorRight };
   })
 
-  // Add notes (voices)
+  // Add notes (voices) and beams
   const music = measureStavesAndConnectors.map((measure, iMeasure) => {
     const { trebleStave, bassStave } = measure;
 
@@ -307,7 +307,7 @@ export default function FourPartProgression({
           new Fraction(1, valuePerBeat),
         ],
         maintain_stem_directions: true,
-        beam_rests: true,
+        // beam_rests: true,
         beam_middle_only: true,
       }));
     }
@@ -317,7 +317,6 @@ export default function FourPartProgression({
 
   // Highlight the selected notes
   if (selection) {
-    console.log(`The selection is ${selection.iChord} ${selection.voices}`)
     const [iMeasure, imChord] = decomposeIndex(selection.iChord, chordsPerMeasure);
     if (chordsPerMeasure * iMeasure + imChord >= chordCount) {
       console.warn(`Warning: The attempted selection (${iMeasure} ${imChord}) is out of range (${selection.iChord} > ${chordCount}).`);
