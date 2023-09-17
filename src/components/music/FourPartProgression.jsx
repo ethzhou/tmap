@@ -189,13 +189,15 @@ export default function FourPartProgression({
           continue;
         }
 
-        // If the pitches are in the same space
-        // Add the first accidental
-        addAccidental(upperPitch, iUpperVoice, false);
-        // If the pitches do not have the same accidental, add the second accidental
-        if (!isSameAccidental) {
-          addAccidental(lowerPitch, iLowerVoice);
+        // If the pitches are in the same space and they have the same accidentals
+        if (isSameAccidental) {
+          addAccidental(upperPitch, iUpperVoice);
+          continue;
         }
+
+        // If the pitches are in the same space and they have different accidentals
+        addAccidental(upperPitch, iUpperVoice, false);
+        addAccidental(lowerPitch, iLowerVoice, false);
       }
     }
   }
