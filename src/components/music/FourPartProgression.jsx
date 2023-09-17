@@ -138,8 +138,8 @@ export default function FourPartProgression({
         const iUpperVoice = iLowerVoice + 1;
 
         const stave = GRAND_STAFF_STAVES[iStave];
-        const lowerPitch = parts[FOUR_VOICES[iLowerVoice]][iChord];
-        const upperPitch = parts[FOUR_VOICES[iUpperVoice]][iChord];
+        const lowerPitch = parts[iLowerVoice][iChord];
+        const upperPitch = parts[iUpperVoice][iChord];
 
         /**
          * Helper function to add accidentals to the data.
@@ -272,7 +272,6 @@ export default function FourPartProgression({
     const beams = [];
 
     for (let iVoice = 0; iVoice < 4; iVoice++) {
-      const part = FOUR_VOICES[iVoice];
       const clef = iVoice < 2 ? "bass" : "treble";
 
       voices[iVoice] = new Voice({ num_beats: beatsPerMeasure, beat_value: valuePerBeat });
@@ -285,7 +284,7 @@ export default function FourPartProgression({
         iChord < Math.min((iMeasure + 1) * chordsPerMeasure, chordCount);
         iChord++
       ) {
-        const pitch = parts[part][iChord];
+        const pitch = parts[iVoice][iChord];
 
         const staveNote = new StaveNote({
           clef: clef,
@@ -318,12 +317,14 @@ export default function FourPartProgression({
 
   // Highlight the selected notes
   if (selection) {
-    const [measure, imChord] = decomposeIndex(selection.iChord, chordsPerMeasure);
-    if (chordsPerMeasure * measure + imChord >= chordCount) {
-      console.warn(`Warning: The attempted selection (${measure} ${imChord}) is out of range (${selection.iChord} > ${chordCount}).`);
+    console.log(`The selection is ${selection.iChord} ${selection.voices}`)
+    const [iMeasure, imChord] = decomposeIndex(selection.iChord, chordsPerMeasure);
+    if (chordsPerMeasure * iMeasure + imChord >= chordCount) {
+      console.warn(`Warning: The attempted selection (${iMeasure} ${imChord}) is out of range (${selection.iChord} > ${chordCount}).`);
     }
     for (const voice of selection.voices) {
-      music[measure].voices[voice].tickables[imChord].setStyle({
+      console.log(voice);
+      music[iMeasure].voices[voice].tickables[imChord].setStyle({
         fillStyle: COLOR_CHORD_SELECT,
         strokeStyle: COLOR_CHORD_SELECT,
         shadowColor: COLOR_CHORD_SELECT,
@@ -367,7 +368,7 @@ export default function FourPartProgression({
     };
   }
 
-  // console.log("music", music);
+  console.log("music", music);
 
   // #endregion
 

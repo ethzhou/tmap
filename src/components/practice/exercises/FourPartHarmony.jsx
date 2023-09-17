@@ -21,12 +21,7 @@ const testParts = {
 export default function FourPartHarmony() {
   const inputRef = useRef();
 
-  const [parts, setParts] = useState({
-    soprano: [],
-    alto: [],
-    tenor: [],
-    bass: []
-  });
+  const [parts, setParts] = useState([[], [], [], []]);
 
   const [chordAnalyses, setChordAnalyses] = useState([]);
 
@@ -55,13 +50,12 @@ export default function FourPartHarmony() {
     const chordCount = 2 * randInt(2, 6) + 1;
     const chordsPerMeasure = [2, 4, 8][randInt(0, 1)];
 
-    setParts(() => ({
-      // null represents a rest
-      soprano: Array(chordCount).fill(null),
-      alto: Array(chordCount).fill(null),
-      tenor: Array(chordCount).fill(null),
-      bass: Array(chordCount).fill(null)
-    }));
+    setParts(() => [
+      Array(chordCount).fill(null),
+      Array(chordCount).fill(null),
+      Array(chordCount).fill(null),
+      Array(chordCount).fill(null)
+    ]);
 
     setChordAnalyses(() => Array(chordCount).fill(null));
 
@@ -125,6 +119,7 @@ export default function FourPartHarmony() {
    * @param {string} inputStr The first character determines the resulting procedure.
    */
   function parseInput(inputStr) {
+    console.log(`Parsing input ${inputStr}`);
     const response = responseTable[inputStr[0]];
     if (response)
       response(inputStr);
@@ -136,14 +131,14 @@ export default function FourPartHarmony() {
    * Helper for creating selections that target at least one note.
    * If the voices are unspecified, then they are unchanged. If the voices are specified but they select none of the voices (e.g. "" or "qwer", which do not contain any of satb), then all voices are selected.
    * 
-   * @param {number} chord
+   * @param {number} iChord
    * @param {string} voices
    * @returns
    */
-  function createSelection(chord, voices) {
+  function createSelection(iChord, voices) {
     if (voices === undefined) {
       voices = selection.voices;
-      return { chord, voices };
+      return { iChord, voices };
     }
 
     if (voices === "*") {
@@ -156,7 +151,7 @@ export default function FourPartHarmony() {
       voices = [...Array(4).keys()];
     }
 
-    return { chord, voices };
+    return { iChord, voices };
   }
 
   /**
@@ -215,36 +210,38 @@ export default function FourPartHarmony() {
   function parseSelection(selectionStr) {
     const args = selectionStr.slice(1).split("`");
 
+    const argsNumbers = args.map(arg => Number(arg));
     const I = decomposeIndex(selection.iChord, chordsPerMeasure);
-    const measure = Number(args[0]) - 1 || I[0];
-    const imChord = Number(args[1]) - 1 || I[1];
+    const iMeasure = argsNumbers[0] ? argsNumbers[0] - 1 : I[0];
+    const imChord = argsNumbers[1] ? argsNumbers[1] - 1 : I[1];
     const newVoices = args[2];
     
     // Run checks
     // Check that the measure access is valid
-    if (measure < 0) {
+    if (iMeasure < 0) {
       return;
     }
     // Check that the chord access is valid
     if (imChord < 0 || imChord >= chordsPerMeasure)
       return;
 
-    const newChord = composeIndex([measure, imChord], chordsPerMeasure);
+    const newChord = composeIndex([iMeasure, imChord], chordsPerMeasure);
     // Check that the chord is within range
     if (newChord > chordCount)
       return;
-      console.log(measure, imChord, newChord);
   
     return createSelection(newChord, newVoices);
   }
 
   function clear(selection) {
+    console.log(selection);
     setParts(parts => {
-      const newParts = {...parts};
+      const newParts = [...parts];
       
-      for (const voice of selection.voices) {
-        newParts[FOUR_VOICES[voice]][selection.chord] = null;
+      for (let iVoice = 0; iVoice < 4; iVoice++) {
+        newParts[iVoice][selection.iChord] = null;
       }
+
       return newParts;
     });
   }
@@ -256,6 +253,7 @@ export default function FourPartHarmony() {
    * @param {number} last Included.
    */
   function clearRange(first, last, voices) {
+    console.log(`clearing ${first} ${last}`);
     for (let iChord = first; iChord <= last; iChord++) {
       const targetSelection = createSelection(iChord, voices);
       clear(targetSelection);
@@ -289,13 +287,13 @@ export default function FourPartHarmony() {
     const pitches = args.map(pitchStr => pitchStr === "%" ? null : Pitch.fromString(pitchStr));
     
     setParts(parts => {
-      const newParts = {...parts};
+      const newParts = [...parts];
       pitches.forEach((pitch, i) => {
         // Filter the undefined pitches
         if (pitch === undefined)
           return;
 
-        const part = newParts[FOUR_VOICES[selection.voices[i]]];
+        const part = newParts[selection.voices[i]];
         if (part)
           part[selection.iChord] = pitch;
       });
@@ -311,7 +309,7 @@ export default function FourPartHarmony() {
     
     const pitches = args.map(pitchStr => pitchStr === "%" ? null : Pitch.fromString(pitchStr));
     setParts(parts => {
-      const newParts = {...parts};
+      const newParts = [...parts];
 
       const startChord = selection.iChord;
       // Iterate the number of pitches, but only up to the last chord
@@ -324,7 +322,7 @@ export default function FourPartHarmony() {
         // Filter the undefined pitches
         if (pitches[iPitch] === undefined)
           continue;
-        newParts[FOUR_VOICES[voice]][startChord + iPitch] = pitches[iPitch];
+        newParts[voice][startChord + iPitch] = pitches[iPitch];
       }
       // Move the selection the same amount
       selectAfter(iterationCount);
@@ -387,20 +385,18 @@ export default function FourPartHarmony() {
     setChordCount(() => newChordCount);
     // Trim or extend the part arrays to have so many chords.
     setParts(parts => {
-      const newParts = {...parts};
+      const newParts = [...parts];
       
       // Trim if fewer
       if (newChordCount < chordCount) {
-        for (const voice in newParts) {
-          newParts[voice] = newParts[voice].slice(0, newChordCount);
+        for (let iPart = 0; iPart < 4; iPart++) {
+          newParts[iPart] = newParts[iPart].slice(0, newChordCount);
         }
       }
       // Extend if more
       else if (newChordCount > chordCount) {
-        for (const voice in newParts) {
-          newParts[voice] = newParts[voice].concat(
-            Array(newChordCount - newParts[voice].length).fill(null)
-          );
+        for (let iPart = 0; iPart < 4; iPart++) {
+          newParts[iPart] = [...newParts[iPart], ...Array(newChordCount - newParts[iPart].length).fill(null)];
         }
       }
       
@@ -423,7 +419,7 @@ export default function FourPartHarmony() {
 
   function responseClear(inputStr) {
     const target = inputStr.slice(1);
-    console.log(`Clearing target ${target}`);
+    console.log(`Clearing target ${target.length}`);
 
     // Clear selection
     if (target === "%") {
@@ -446,14 +442,14 @@ export default function FourPartHarmony() {
       const firstChord = chordsPerMeasure * Math.floor(selection.iChord / chordsPerMeasure);
       const lastChord = firstChord + chordsPerMeasure - 1;
       
-      clearRange(lastChord, firstChord);
+      clearRange(firstChord, lastChord);
 
       return;
     }
 
     // Clear score
     if (target === "%%%%%%%") {
-      clearRange(1, chordCount);
+      clearRange(0, chordCount - 1);
 
       return;
     }
@@ -489,7 +485,7 @@ export default function FourPartHarmony() {
 
   // #endregion
 
-  // console.log("selection", selection.chord, selection.voices);
+  // console.log("selection", selection.iChord, selection.voices);
   // console.log("parts" , parts);
 
   return (
