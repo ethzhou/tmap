@@ -322,7 +322,6 @@ export default function FourPartProgression({
       console.warn(`Warning: The attempted selection (${iMeasure} ${imChord}) is out of range (${selection.iChord} > ${chordCount}).`);
     }
     for (const voice of selection.voices) {
-      console.log(voice);
       music[iMeasure].voices[voice].tickables[imChord].setStyle({
         fillStyle: COLOR_CHORD_SELECT,
         strokeStyle: COLOR_CHORD_SELECT,
