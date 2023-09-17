@@ -1,7 +1,3 @@
-import { Accidental, Voice } from "vexflow";
-import Pitch from "../classes/Pitch";
-import Interval from "../classes/Interval";
-
 export const A_OCTAVE = "ABCDEFG";
 export const C_OCTAVE = "CDEFGAB";
 
@@ -88,7 +84,7 @@ const patternRomanNumeral = `${patternRomanNumeralMajor}|${patternRomanNumeralMi
 const patternArabicNumberals = "\\d+";
 const patternSecondaryDominant = `/(${patternRomanNumeral})`;
 
-const patternChordSymbol = 
+const patternChordAnalysis = 
 `^\
 (?<accidental>${patternAccidental})?\
 (?<roman>${patternRomanNumeral})\
@@ -96,9 +92,5 @@ const patternChordSymbol =
 (?<secondary>${patternSecondaryDominant})?\
 $`;
 
-const regexpChordSymbol = new RegExp(patternChordSymbol);
-console.log(regexpChordSymbol);
-
-export function parseStringChordSymbol(string) {
-  return string.match(regexpChordSymbol)?.groups || undefined;
-}
+export const REGEXP_ChordAnalysis = new RegExp(patternChordAnalysis);
+console.log(REGEXP_ChordAnalysis);
