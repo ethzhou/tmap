@@ -1,35 +1,293 @@
+import { useEffect, useState } from "react";
+import ChordAnalysis from "../../../classes/ChordAnalysis";
+import Key from "../../../classes/Key";
 import Pitch from "../../../classes/Pitch";
+import { FOUR_VOICES } from "../../../utils/musicUtils";
+import ProgressionError from "../../../classes/ProgressionError";
 
-export default function FourPartHarmonyEvaluation({ parts, analysis, tonality }) {
+/**
+ * 
+ * @param {Object} props
+ * @param {Object} parts
+ * @returns 
+ */
+export default function FourPartHarmonyEvaluation({ parts, analyses, tonality }) {
+  /**
+   * Array of provided chords, each in BTAS order.
+   * @type {Array<Array<Pitch | Null>>}
+   */
+  const chords = parts[0].map((_, i) => 
+    parts.map(part => part[i])
+  );
+
+  /**
+   * Array of triads.
+   * @type {Array<Array<Pitch>>}
+   */
+  const triads = analyses.map(analysis => 
+    analysis ? tonality.triad(analysis.roman, analysis.isSeventh(), analysis.accidental) : null
+  );
+  
+  /**
+   * Array of the occurances of pitches in a chord keeping track of the voices using each pitch name.
+   * For example, [{ "F": [0, 3], "C": [1], "A": [2] }].
+   * @type {Array<Map<string, Array<number>>>}
+   */
+  const distributions = [];
+  triads.forEach((triad, i) => {
+    const counts = new Map();
+    distributions.push(counts);
+
+    chords[i].forEach((pitch, iVoice) => {
+      if (!pitch)
+        return;
+
+      const pitchName = pitch.toName();
+      // If 
+      if (!counts.has(pitchName)) {
+        counts.set(pitchName, []);
+      }
+
+      counts.get(pitchName).push(iVoice);
+    });
+  });
+
+  /**
+   * Array of the completenesses of each chord, i.e. whether every pitch is not null in each chord. 
+   * @type {Array<boolean>}
+   */
+  const chordCompletenesses = chords.map(chord => chord.every(pitch => pitch));
+
+  const errors = {
+    spellingErrors: [],
+    progressionErrors: [],
+    leadingErrors: [],
+  };
+  
+  spellingEvalutions.forEach(evaluation => 
+    errors.spellingErrors.push(...evaluation(chords, analyses, tonality, triads, distributions))
+  );
+  progressionEvaluations.forEach(evaluation => 
+    errors.progressionErrors.push(...evaluation(chords, analyses, tonality, triads, distributions))
+  );
+  leadingEvaluations.forEach(evaluation => 
+    errors.leadingErrors.push(...evaluation(chords, analyses, tonality, triads, distributions))
+  );
+
+  // console.log(errors);
 
   return (
     <div>
-      scale: {Array(8).fill().map((_, i) => tonality.scaleTone(i + 1).toName() + " ")}<br />
+      { errors.spellingErrors.map((error, i) => <p key={i}>{ error.toElement() }</p>) }
     </div>
   )
 }
 
-// Check that the chord analysis matches the chords given.
-/**
- * Finds whether the chord matches the analysis.
- * 
- * @param {*} chord
- */
-function isCorrectChordAnalysis(chord, analysis, keyPitch) {
-  // Find triad
+const spellingEvalutions = [
+  // Every note is chordal
+  (chords, analyses, tonality, triads) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
 
-  // Check bass note
+      const triadPitchNames = triads[i].map(pitch => pitch.toName())
+      chords[i].forEach((pitch, iVoice) => {
+        if (!pitch)
+          return;
 
-  
+        if (triadPitchNames.includes(pitch.toName()))
+          return;
 
-}
+        errors.push(new ProgressionError("non-chordal-tone", [
+          { i, voices: [iVoice] }
+        ]));
+      });
+    });
 
-/**
- * Get indices of the chords whose notes match the given analysis.
- */
-function getICorrectAnalyses(parts, analysis, keyPitch) {
+    return errors;
+  },
+  // The bass matches the analysis
+  (chords, analyses, tonality) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+      
+      const bass = analysis.bass(tonality);
+      // Check whether the bass note is the same pitch name as the correct bass
+      if (chords[i][0]?.isSameNameAs(bass))
+        return;
 
-}
+      errors.push(new ProgressionError("bass-mismatch", [
+        { i, voices: [0] }
+      ]));
+    });
+    
+    return errors;
+  },
+  // There is a root
+  (chords, analyses, tonality, triads, distributions) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+      
+      const root = triads[i][0];
+      if (distributions[i].get(root.toName())?.length)
+        return;
+
+      errors.push(new ProgressionError("missing-root", [
+        { i, voices: [0, 1, 2, 3] }
+      ]));
+    });
+
+    return errors;
+  },
+  // There is a third
+  (chords, analyses, tonality, triads, distributions) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+      
+      const third = triads[i][1];
+      if (distributions[i].get(third.toName())?.length)
+        return;
+
+      errors.push(new ProgressionError("missing-third", [
+        { i, voices: [0, 1, 2, 3] }
+      ]));
+    });
+
+    return errors;
+  },
+  // The fifth is omitted only in a root-position chord
+  (chords, analyses, tonality, triads, distributions) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+      
+      const fifth = triads[i][2];
+      // const [third, fifth] = [1, 2].map(item => triads[i][item]);
+      if (distributions[i].get(fifth.toName())?.length || !analysis.inversion())
+        return;
+
+      errors.push(new ProgressionError("non-root-missing-fifth", [
+        { i, voices: [0, 1, 2, 3] }
+      ]))
+    });
+
+    return errors;
+  },
+  // The leading tone is not doubled
+  (chords, analyses, tonality, triads, distributions) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      const leadingTone = tonality.leadingTone();
+      const leadingToneDistribution = distributions[i].get(leadingTone.toName());
+
+      if (!leadingToneDistribution || leadingToneDistribution.length < 2)
+        return;
+    
+      errors.push(new ProgressionError("double-leading", [
+        { i, voices: leadingToneDistribution }
+      ]))
+    });
+
+    return errors;
+  },
+  // The seventh is not doubled
+  (chords, analyses, tonality, triads, distributions) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+      
+      const seventh = triads[i][3];
+      // Do not evaluate non-seventh chords
+      if (!seventh)
+        return;
+
+      if (distributions[i].get(seventh.toName())?.length < 2)
+        return;
+
+      errors.push(new ProgressionError("double-seventh", [
+        { i, voices: distributions[i]?.get(seventh.toName()) }
+      ]));
+    });
+
+    return errors;
+  },
+  // Consecutive upper voices are within an octave
+  (chords, analyses) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+      
+      const chord = chords[i];
+      for (let iVoice = 1; iVoice < 3; iVoice++) {
+        console.log(iVoice, chord[iVoice], iVoice + 1, chord[iVoice + 1])
+        if (!chord[iVoice] || !chord[iVoice + 1])
+          continue;
+          
+        console.log(Math.abs(chord[iVoice]?.halfstepsTo(chord[iVoice + 1])));
+        if (Math.abs(chord[iVoice]?.halfstepsTo(chord[iVoice + 1])) <= 12)
+          continue;
+        
+        errors.push(new ProgressionError("upper-spacing", [
+          { i, voices: [iVoice, iVoice + 1] }
+        ]));
+      }
+    });
+
+    return errors;
+  },
+  // The voices do not cross
+  (chords, analyses) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+      
+      const chord = chords[i];
+      for (let iVoice1 = 1; iVoice1 < 4; iVoice1++) {
+        if (!chord[iVoice1])
+          continue;
+        
+        for (let iVoice2 = iVoice1 + 1; iVoice2 < 4; iVoice2++) {
+          if (!chord[iVoice2])
+            continue;
+
+          console.log(chord[iVoice1], chord[iVoice2], chord[iVoice1].halfstepsTo(chord[iVoice2]));
+          if (chord[iVoice1].isLowerThan(chord[iVoice2]))
+            continue;
+
+        errors.push(new ProgressionError("crossed-voices", [
+            { i, voices: [iVoice1, iVoice2] }
+          ]));
+        }
+      }
+    });
+
+    return errors;
+  },
+];
+
+const progressionEvaluations = [
+  // The progression begins with the tonic chord
+  // The progression ends with the tonic chord
+  // V chords do not resolve to IV chords
+  // 6/4 chords are either passing, neighbor, or cadential
+];
+
+const leadingEvaluations = [
+  // There are no parallel fifths
+  // There are no parallel octaves
+  // 
+]
 
 // Kohs Music Theory
 // Connecting I, IV, and V in the Major Mode

@@ -1,4 +1,5 @@
-import { C_OCTAVE, F_CIRCLE_OF_FIFTHS, accidentalToString } from "../utils/musicUtils";
+import { F_CIRCLE_OF_FIFTHS, accidentalToString } from "../utils/musicUtils";
+import { romanValue } from "../utils/utils";
 import Interval from "./Interval";
 import Pitch from "./Pitch";
 
@@ -23,8 +24,8 @@ export default class Key {
     this._letter = val;
     this.pitch.letter = val;
     // The key of the relative major
-    this.ionian = this.ionian = this.mode === "major" ? this
-    : Key.fromPitch(Pitch.fromInterval(this.pitch, new Interval("m", 3)))
+    this.ionian = this.mode === "major" ? this
+      : Key.fromPitch(Pitch.fromInterval(this.pitch, new Interval("m", 3)))
   }
 
   get letter() {
@@ -154,11 +155,50 @@ export default class Key {
    * @returns {Pitch}
    */
   scaleTone(n) {
-    console.log((n + 7 - 2 - 1) % 7 + 1);
     return this.ionian.pitch.scaleTone(
       this.mode === "major" ? n
-      // For a minor key, find the scale tone via the ionian, and use the scale degree two below
+      // For a minor key, find the scale tone via the ionian, and use the scale degree two below (or five above)
         : (n + 7 - 2 - 1) % 7 + 1
     );
+  }
+  
+  /**
+   * Gets the leading tone. If the key is minor, it returns the raised 7th scale tone.
+   * 
+   * @returns {Pitch}
+   */
+  leadingTone() {
+    const tone = this.pitch.scaleTone(7);
+
+    tone.accidental += this.mode === "minor";
+
+    return tone;
+  }
+
+  /**
+   * Gets the first, the third, the fifth, and, optionally, the seventh of a scale degree in the key.
+   * 
+   * @param {number | string} degree Arabic or roman numeral.
+   * @param {boolean} isSeventh Whether to include the seventh.
+   * @param {number} accidental Relatively applied to each pitch of the triad.
+   * @returns {Array<Pitch>}
+   */
+  triad(degree, isSeventh = false, accidental = 0) {
+    if (typeof degree === "string") {
+      degree = romanValue(degree);
+    }
+
+    const pitches = Array(3 + isSeventh).fill().map((_, i) => this.scaleTone((degree + i * 2 - 1) % 8 + 1));
+    for (const pitch of pitches) {
+      pitch.accidental += accidental;
+      // // Prevent triple accidentals
+      // if (Math.abs(pitch.accidental) >= 2) {
+      //   console.log(`The triad would contain pitches with too many accidentals (> 2), the first of which is ${pitch.toString()}.`);
+      //   return;
+      // }
+    }
+    // console.log(degree, pitches);
+    
+    return pitches;
   }
 }

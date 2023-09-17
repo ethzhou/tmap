@@ -209,6 +209,18 @@ export default class Pitch {
   }
 
   /**
+   * Finds whether this pitch and another share the same letter and accidental.
+   * 
+   * @param {Pitch} other
+   * @returns {boolean | undefined}
+   */
+  isSameNameAs(other) {
+    if (!other)
+      return;
+    return this.letter === other.letter && this.accidental === other.accidental;
+  }
+
+  /**
    * Finds whether this pitch and another are enharmonic.
    * 
    * @param {Pitch} other
@@ -228,7 +240,7 @@ export default class Pitch {
    */
   isLowerThan(other, considerAccidentals = true) {
     if (considerAccidentals)
-      return this.halfstepsTo(other) < 0;
+      return this.halfstepsTo(other) > 0;
     else
       return this.octave < other.octave
         || (this.octave === other.octave
@@ -244,7 +256,7 @@ export default class Pitch {
    */
   isHigherThan(other, considerAccidentals = true) {
     if (considerAccidentals)
-      return this.halfstepsTo(other) > 0;
+      return this.halfstepsTo(other) < 0;
     else
       return this.octave > other.octave
         || (this.octave === other.octave

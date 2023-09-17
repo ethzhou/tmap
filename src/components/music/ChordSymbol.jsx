@@ -1,25 +1,25 @@
-import { parseStringChordSymbol } from "../../utils/musicUtils";
+import ChordAnalysis from "../../classes/ChordAnalysis";
 import { COLOR_CHORD_SELECT } from "../../utils/utils";
 
-export default function ChordSymbol({ symbol, x, y, color }) {
-  symbol = ((typeof symbol) === "string") ? parseStringChordSymbol(symbol) : symbol;
+export default function ChordSymbol({ analysis, x, y, color }) {
+  analysis = (typeof analysis === "string") ? ChordAnalysis.fromString(analysis) : analysis;
 
   return (
     <g className="chordsymbol" fill={color ?? "#000"} stroke={color ?? "#000"} style={{fontSize: 20}}>
       <text x={x} y={y}>
       {
-        symbol ? <>
+        analysis ? <>
           <tspan>
-            {symbol.accidental && (symbol.accidental === "#" ? "♯" : "♭")}{symbol.roman}
+            {analysis.accidental && (analysis.accidental === "#" ? "♯" : "♭")}{analysis.roman}
           </tspan>
           <tspan dy="-10" style={{fontSize: 10}}>
-            {symbol.arabic?.at(0)}
+            {analysis.arabic?.at(0)}
           </tspan>
           <tspan dx="-5.5" y={y} style={{fontSize: 10}}>
-            {symbol.arabic?.at(1)}
+            {analysis.arabic?.at(1)}
           </tspan>
           <tspan y={y}>
-            {symbol.secondary}
+            {analysis.secondary}
           </tspan>
         </> : "."
       }
