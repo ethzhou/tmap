@@ -188,7 +188,7 @@ export default class Key {
       degree = romanValue(degree);
     }
 
-    const pitches = Array(3 + isSeventh).fill().map((_, i) => this.scaleTone((degree + i * 2 - 1) % 8 + 1));
+    const pitches = Array(3 + isSeventh).fill().map((_, i) => this.scaleTone((degree + i * 2 - 1) % 7 + 1));
     for (const pitch of pitches) {
       pitch.accidental += accidental;
       // // Prevent triple accidentals

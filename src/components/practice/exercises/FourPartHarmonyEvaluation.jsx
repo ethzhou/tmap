@@ -33,10 +33,10 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
    * For example, [{ "F": [0, 3], "C": [1], "A": [2] }].
    * @type {Array<Map<string, Array<number>>>}
    */
-  const distributions = [];
+  const charts = [];
   triads.forEach((triad, i) => {
     const counts = new Map();
-    distributions.push(counts);
+    charts.push(counts);
 
     chords[i].forEach((pitch, iVoice) => {
       if (!pitch)
@@ -65,13 +65,13 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
   };
   
   spellingEvalutions.forEach(evaluation => 
-    errors.spellingErrors.push(...evaluation(chords, analyses, tonality, triads, distributions))
+    errors.spellingErrors.push(...evaluation(chords, analyses, tonality, triads, charts))
   );
   progressionEvaluations.forEach(evaluation => 
-    errors.progressionErrors.push(...evaluation(chords, analyses, tonality, triads, distributions))
+    errors.progressionErrors.push(...evaluation(chords, analyses, tonality, triads, charts))
   );
   leadingEvaluations.forEach(evaluation => 
-    errors.leadingErrors.push(...evaluation(chords, analyses, tonality, triads, distributions))
+    errors.leadingErrors.push(...evaluation(chords, analyses, tonality, triads, charts))
   );
 
   // console.log(errors);
@@ -127,14 +127,14 @@ const spellingEvalutions = [
     return errors;
   },
   // There is a root
-  (chords, analyses, tonality, triads, distributions) => {
+  (chords, analyses, tonality, triads, charts) => {
     const errors = [];
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
       
       const root = triads[i][0];
-      if (distributions[i].get(root.toName())?.length)
+      if (charts[i].get(root.toName())?.length)
         return;
 
       errors.push(new ProgressionError("missing-root", [
@@ -145,14 +145,14 @@ const spellingEvalutions = [
     return errors;
   },
   // There is a third
-  (chords, analyses, tonality, triads, distributions) => {
+  (chords, analyses, tonality, triads, charts) => {
     const errors = [];
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
       
       const third = triads[i][1];
-      if (distributions[i].get(third.toName())?.length)
+      if (charts[i].get(third.toName())?.length)
         return;
 
       errors.push(new ProgressionError("missing-third", [
@@ -163,7 +163,7 @@ const spellingEvalutions = [
     return errors;
   },
   // The fifth is omitted only in a root-position chord
-  (chords, analyses, tonality, triads, distributions) => {
+  (chords, analyses, tonality, triads, charts) => {
     const errors = [];
     analyses.forEach((analysis, i) => {
       if (!analysis)
@@ -171,7 +171,7 @@ const spellingEvalutions = [
       
       const fifth = triads[i][2];
       // const [third, fifth] = [1, 2].map(item => triads[i][item]);
-      if (distributions[i].get(fifth.toName())?.length || !analysis.inversion())
+      if (charts[i].get(fifth.toName())?.length || !analysis.inversion())
         return;
 
       errors.push(new ProgressionError("non-root-missing-fifth", [
@@ -181,25 +181,48 @@ const spellingEvalutions = [
 
     return errors;
   },
+  // There is a seventh in 7 chords
+  (chords, analyses, tonality, triads, charts) => {
+    const errors = [];
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+
+      if (!analysis.isSeventh())
+        return;
+      
+      const seventh = triads[i][3];
+      const seventhEntries = charts[i].get(seventh.toName());
+      console.log(seventh, seventhEntries, charts, triads);
+      if (seventhEntries && seventhEntries.length)
+        return;
+
+      errors.push(new ProgressionError("missing-seventh", [
+        { i, voices: [0, 1, 2, 3] }
+      ]));
+    });
+
+    return errors;
+  },
   // The leading tone is not doubled
-  (chords, analyses, tonality, triads, distributions) => {
+  (chords, analyses, tonality, triads, charts) => {
     const errors = [];
     analyses.forEach((analysis, i) => {
       const leadingTone = tonality.leadingTone();
-      const leadingToneDistribution = distributions[i].get(leadingTone.toName());
+      const leadingToneEntries = charts[i].get(leadingTone.toName());
 
-      if (!leadingToneDistribution || leadingToneDistribution.length < 2)
+      if (!leadingToneEntries || leadingToneEntries.length < 2)
         return;
     
       errors.push(new ProgressionError("double-leading", [
-        { i, voices: leadingToneDistribution }
+        { i, voices: leadingToneEntries }
       ]))
     });
 
     return errors;
   },
   // The seventh is not doubled
-  (chords, analyses, tonality, triads, distributions) => {
+  (chords, analyses, tonality, triads, charts) => {
     const errors = [];
     analyses.forEach((analysis, i) => {
       if (!analysis)
@@ -210,11 +233,12 @@ const spellingEvalutions = [
       if (!seventh)
         return;
 
-      if (distributions[i].get(seventh.toName())?.length < 2)
+      const seventhEntries = charts[i].get(seventh.toName());
+      if (!seventhEntries || seventhEntries.length < 2)
         return;
 
       errors.push(new ProgressionError("double-seventh", [
-        { i, voices: distributions[i]?.get(seventh.toName()) }
+        { i, voices: charts[i]?.get(seventh.toName()) }
       ]));
     });
 
@@ -224,16 +248,11 @@ const spellingEvalutions = [
   (chords, analyses) => {
     const errors = [];
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
-      
       const chord = chords[i];
       for (let iVoice = 1; iVoice < 3; iVoice++) {
-        console.log(iVoice, chord[iVoice], iVoice + 1, chord[iVoice + 1])
         if (!chord[iVoice] || !chord[iVoice + 1])
           continue;
           
-        console.log(Math.abs(chord[iVoice]?.halfstepsTo(chord[iVoice + 1])));
         if (Math.abs(chord[iVoice]?.halfstepsTo(chord[iVoice + 1])) <= 12)
           continue;
         
@@ -249,9 +268,6 @@ const spellingEvalutions = [
   (chords, analyses) => {
     const errors = [];
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
-      
       const chord = chords[i];
       for (let iVoice1 = 1; iVoice1 < 4; iVoice1++) {
         if (!chord[iVoice1])
@@ -261,8 +277,7 @@ const spellingEvalutions = [
           if (!chord[iVoice2])
             continue;
 
-          console.log(chord[iVoice1], chord[iVoice2], chord[iVoice1].halfstepsTo(chord[iVoice2]));
-          if (chord[iVoice1].isLowerThan(chord[iVoice2]))
+          if (!chord[iVoice1].isHigherThan(chord[iVoice2]))
             continue;
 
         errors.push(new ProgressionError("crossed-voices", [
