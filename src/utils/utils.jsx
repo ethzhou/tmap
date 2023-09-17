@@ -11,7 +11,7 @@ export function randInt(min, max) {
 /**
  * Compose a two-dimensional index into one-dimension (row-major).
  * 
- * @param {Array<number>[2]} i The row and column.
+ * @param {Array<number>} i The row and column.
  * @param {number} rowLength
  * @param {boolean} fromOne Whether input and output indices count are 1-based (otherwise 0-based).
  * @returns {number} The index.
@@ -28,7 +28,7 @@ export function composeIndex(I, rowLength, fromOne = false) {
  * @param {number} i The index.
  * @param {number} rowLength
  * @param {boolean} fromOne Whether input and output indices count are 1-based (otherwise 0-based).
- * @returns {Array<number>[2]} The row and column.
+ * @returns {Array<number>} The row and column.
  */
 export function decomposeIndex(i, rowLength, fromOne = false) {
   const rowIndex = Math.floor((i - fromOne) / rowLength) + fromOne;
