@@ -6,6 +6,16 @@ import { FOUR_VOICES, VOICE_RANGES } from "../../../utils/musicUtils";
 import ProgressionError from "../../../classes/ProgressionError";
 
 /**
+ * @callback EvaluationFunction
+ * @param {Array<Pitch>} chords
+ * @param {Array<ChordAnalysis>} analyses
+ * @param {Key} tonality
+ * @param {Array<Pitch>} triads
+ * @param {Array<Map<string, Array<number>>>} charts
+ * @returns {Array<ProgressionError>}
+ */
+
+/**
  * 
  * @param {Object} props
  * @param {Object} parts
@@ -83,6 +93,7 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
   )
 }
 
+/** @type {Array<EvaluationFunction>} */
 const spellingEvalutions = [
   // The voices are in their ranges
   (chords) => {
