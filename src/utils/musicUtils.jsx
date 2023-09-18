@@ -1,3 +1,5 @@
+import Pitch from "../classes/Pitch";
+
 export const A_OCTAVE = "ABCDEFG";
 export const C_OCTAVE = "CDEFGAB";
 
@@ -94,3 +96,26 @@ $`;
 
 export const REGEXP_ChordAnalysis = new RegExp(patternChordAnalysis);
 console.log(REGEXP_ChordAnalysis);
+
+export const VOICE_RANGES = [
+  [new Pitch("F", 0, 2), new Pitch("D", 0, 4)],
+  [new Pitch("C", 0, 3), new Pitch("A", 0, 4)],
+  [new Pitch("F", 0, 3), new Pitch("D", 0, 5)],
+  [new Pitch("C", 0, 4), new Pitch("A", 0, 5)],
+];
+
+// [
+//   ["C4", "C4"],
+//   ["C4", "C#4"],
+//   ["C4", "C5"],
+//   ["C4", "D#4"],
+//   ["Fb4", "F4"],
+//   ["A2", "C3"],
+//   ["B#2", "Cbb3"],
+// ].forEach(pair => {
+//   const pitches = pair.map(item => Pitch.fromString(item));
+//   console.log(pitches);
+//   console.log(pitches[0].halfstepsTo(pitches[1]));
+//   console.log(pitches[0].isLowerThan(pitches[1]));
+//   console.log(pitches[0].isHigherThan(pitches[1]));
+// })
