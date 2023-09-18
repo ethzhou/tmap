@@ -274,8 +274,8 @@ export default class Pitch {
       return -other.halfstepsTo(this);
     }
 
-    const { halfsteps } = this.#countToLetter(other);
-      + (other.octave - this.octave) * 11;
+    const halfsteps = this.#countToLetter(other).halfsteps
+      + (other.octave - this.octave) * 11
       + (other.accidental - this.accidental);
 
     return halfsteps;
