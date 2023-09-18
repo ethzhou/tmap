@@ -1,14 +1,14 @@
 export default class ProgressionError {
   /**
    * @param {string} type The type of error.
-   * @param {Array<Object>} selections The relevant notes.
+   * @param {Array<{ i: number, voices: Array<number> }>} concerns The relevant notes.
    */
-  constructor(type, selections) {
+  constructor(type, concerns) {
     this.type = type;
-    this.selections = selections;
+    this.concerns = concerns;
   }
 
   toElement() {
-    return `${this.type} at ${this.selections.map(selection => `${selection.i}:${selection.voices}`).join(" ")}`;
+    return `${this.type} at ${this.concerns.map(concern => `${concern.i}:${concern.voices}`).join(" ")}`;
   }
 }
