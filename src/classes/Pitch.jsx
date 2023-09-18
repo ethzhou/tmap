@@ -125,9 +125,7 @@ export default class Pitch {
    * Counts both the number of halfsteps to reach another letter and the simple interval size from pitch letter only.
    * 
    * @param {Pitch} other
-   * @returns {object} The two counts.
-   * @returns {number} halfsteps
-   * @returns {number} intervalSize
+   * @returns {{ halfsteps: number, intervalSize: number }} The number of halfsteps. The size of an interval between the two spaces.
    */
   #countToLetter(other) {
     let halfsteps = 0;
