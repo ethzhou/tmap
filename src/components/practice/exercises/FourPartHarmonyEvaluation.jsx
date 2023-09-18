@@ -98,6 +98,7 @@ const spellingEvalutions = [
   // The voices are in their ranges
   (chords) => {
     const errors = [];
+    
     chords.forEach((chord, i) => {
       chord.forEach((pitch, iVoice) => {
         if (!pitch)
@@ -118,6 +119,7 @@ const spellingEvalutions = [
   // Consecutive upper voices are within an octave
   (chords) => {
     const errors = [];
+
     chords.forEach((chord, i) => {
       for (let iVoice = 1; iVoice < 3; iVoice++) {
         if (!chord[iVoice] || !chord[iVoice + 1])
@@ -137,6 +139,7 @@ const spellingEvalutions = [
   // The voices do not cross
   (chords) => {
     const errors = [];
+    
     chords.forEach((chord, i) => {
       for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
         if (!chord[iVoice1])
@@ -161,6 +164,7 @@ const spellingEvalutions = [
   // Every note is chordal
   (chords, analyses, tonality, triads) => {
     const errors = [];
+
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
@@ -184,6 +188,7 @@ const spellingEvalutions = [
   // The bass matches the analysis
   (chords, analyses, tonality) => {
     const errors = [];
+
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
@@ -203,6 +208,7 @@ const spellingEvalutions = [
   // There is a root
   (chords, analyses, tonality, triads, charts) => {
     const errors = [];
+
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
@@ -221,6 +227,7 @@ const spellingEvalutions = [
   // There is a third
   (chords, analyses, tonality, triads, charts) => {
     const errors = [];
+
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
@@ -239,6 +246,7 @@ const spellingEvalutions = [
   // The fifth is omitted only in a root-position chord
   (chords, analyses, tonality, triads, charts) => {
     const errors = [];
+
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
@@ -258,6 +266,7 @@ const spellingEvalutions = [
   // There is a seventh in 7 chords
   (chords, analyses, tonality, triads, charts) => {
     const errors = [];
+
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
@@ -281,6 +290,7 @@ const spellingEvalutions = [
   // The leading tone is not doubled
   (chords, analyses, tonality, triads, charts) => {
     const errors = [];
+
     analyses.forEach((analysis, i) => {
       const leadingTone = tonality.leadingTone();
       const leadingToneEntries = charts[i].get(leadingTone.toName());
@@ -298,6 +308,7 @@ const spellingEvalutions = [
   // The seventh is not doubled
   (chords, analyses, tonality, triads, charts) => {
     const errors = [];
+
     analyses.forEach((analysis, i) => {
       if (!analysis)
         return;
