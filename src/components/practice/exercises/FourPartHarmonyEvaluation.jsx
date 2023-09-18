@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ChordAnalysis from "../../../classes/ChordAnalysis";
 import Key from "../../../classes/Key";
 import Pitch from "../../../classes/Pitch";
-import { FOUR_VOICES } from "../../../utils/musicUtils";
+import { FOUR_VOICES, VOICE_RANGES } from "../../../utils/musicUtils";
 import ProgressionError from "../../../classes/ProgressionError";
 
 /**
@@ -84,6 +84,69 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
 }
 
 const spellingEvalutions = [
+  // The voices are in their ranges
+  (chords) => {
+    const errors = [];
+    chords.forEach((chord, i) => {
+      chord.forEach((pitch, iVoice) => {
+        if (!pitch)
+          return;
+
+        const range = VOICE_RANGES[iVoice];
+        if (!pitch.isLowerThan(range[0]) && !pitch.isHigherThan(range[1]))
+          return;
+
+        errors.push(new ProgressionError("voice-out-of-range", [
+          { i, voices: [iVoice] }
+        ]));
+      });
+    });
+
+    return errors;
+  },
+  // Consecutive upper voices are within an octave
+  (chords) => {
+    const errors = [];
+    chords.forEach((chord, i) => {
+      for (let iVoice = 1; iVoice < 3; iVoice++) {
+        if (!chord[iVoice] || !chord[iVoice + 1])
+          continue;
+          
+        if (Math.abs(chord[iVoice]?.halfstepsTo(chord[iVoice + 1])) <= 12)
+          continue;
+        
+        errors.push(new ProgressionError("upper-spacing", [
+          { i, voices: [iVoice, iVoice + 1] }
+        ]));
+      }
+    });
+
+    return errors;
+  },
+  // The voices do not cross
+  (chords) => {
+    const errors = [];
+    chords.forEach((chord, i) => {
+      for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
+        if (!chord[iVoice1])
+          continue;
+        
+        for (let iVoice2 = iVoice1 + 1; iVoice2 < 4; iVoice2++) {
+          if (!chord[iVoice2])
+            continue;
+
+          if ([false, true].every(considerAccidentals => !chord[iVoice1].isHigherThan(chord[iVoice2], considerAccidentals)))
+            continue;
+
+        errors.push(new ProgressionError("crossed-voices", [
+            { i, voices: [iVoice1, iVoice2] }
+          ]));
+        }
+      }
+    });
+
+    return errors;
+  },
   // Every note is chordal
   (chords, analyses, tonality, triads) => {
     const errors = [];
@@ -240,51 +303,6 @@ const spellingEvalutions = [
       errors.push(new ProgressionError("double-seventh", [
         { i, voices: charts[i]?.get(seventh.toName()) }
       ]));
-    });
-
-    return errors;
-  },
-  // Consecutive upper voices are within an octave
-  (chords, analyses) => {
-    const errors = [];
-    analyses.forEach((analysis, i) => {
-      const chord = chords[i];
-      for (let iVoice = 1; iVoice < 3; iVoice++) {
-        if (!chord[iVoice] || !chord[iVoice + 1])
-          continue;
-          
-        if (Math.abs(chord[iVoice]?.halfstepsTo(chord[iVoice + 1])) <= 12)
-          continue;
-        
-        errors.push(new ProgressionError("upper-spacing", [
-          { i, voices: [iVoice, iVoice + 1] }
-        ]));
-      }
-    });
-
-    return errors;
-  },
-  // The voices do not cross
-  (chords, analyses) => {
-    const errors = [];
-    analyses.forEach((analysis, i) => {
-      const chord = chords[i];
-      for (let iVoice1 = 1; iVoice1 < 4; iVoice1++) {
-        if (!chord[iVoice1])
-          continue;
-        
-        for (let iVoice2 = iVoice1 + 1; iVoice2 < 4; iVoice2++) {
-          if (!chord[iVoice2])
-            continue;
-
-          if (!chord[iVoice1].isHigherThan(chord[iVoice2]))
-            continue;
-
-        errors.push(new ProgressionError("crossed-voices", [
-            { i, voices: [iVoice1, iVoice2] }
-          ]));
-        }
-      }
     });
 
     return errors;
