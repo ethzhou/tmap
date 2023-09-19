@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Accidental, Beam, Formatter, Fraction, Renderer, Stave, StaveConnector, StaveNote, Stem, TextNote, Voice } from "vexflow";
-import { A_OCTAVE, FOUR_VOICES, GRAND_STAFF_STAVES, accidentalToCode } from "../../utils/musicUtils";
-import { COLOR_CHORD_SELECT, composeIndex, decomposeIndex } from "../../utils/utils";
+import { A_OCTAVE, GRAND_STAFF_STAVES, accidentalToCode } from "../../utils/musicUtils";
+import { COLOR_CHORD_SELECT, decomposeIndex } from "../../utils/utils";
 import ChordSymbol from "./ChordSymbol";
 import { renderToStaticMarkup } from 'react-dom/server';
 import Pitch from "../../classes/Pitch";
-import Key from "../../classes/Key";
 
 export default function FourPartProgression({
   name,

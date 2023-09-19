@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
 import ChordAnalysis from "../../../classes/ChordAnalysis";
 import Key from "../../../classes/Key";
 import Pitch from "../../../classes/Pitch";
-import { FOUR_VOICES, MAJOR_ROMAN, MINOR_ROMAN, VOICE_RANGES } from "../../../utils/musicUtils";
+import { MAJOR_ROMAN, MINOR_ROMAN, VOICE_RANGES } from "../../../utils/musicUtils";
 import ProgressionError from "../../../classes/ProgressionError";
 
 /**
@@ -60,12 +59,6 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
       counts.get(pitchName).push(iVoice);
     });
   });
-
-  /**
-   * Array of the completenesses of each chord, i.e. whether every pitch is not null in each chord. 
-   * @type {Array<boolean>}
-   */
-  const chordCompletenesses = chords.map(chord => chord.every(pitch => pitch));
 
   const errors = [];
   evaluations.forEach(evaluation => 

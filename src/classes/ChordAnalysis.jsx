@@ -1,4 +1,4 @@
-import { REGEXP_ChordAnalysis, accidentalToString } from "../utils/musicUtils";
+import { REGEXP_ChordAnalysis } from "../utils/musicUtils";
 import { romanToDegree } from "../utils/musicUtils";
 import Key from "./Key";
 import Pitch from "./Pitch";

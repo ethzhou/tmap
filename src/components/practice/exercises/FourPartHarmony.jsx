@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Pitch from "../../../classes/Pitch";
 import FourPartProgression from "../../music/FourPartProgression";
 import { clamp, composeIndex, decomposeIndex, randInt } from "../../../utils/utils";
-import { FOUR_VOICES, isValidNoteDuration, isValidTime, calculateNoteDuration } from "../../../utils/musicUtils";
+import { isValidNoteDuration, isValidTime, calculateNoteDuration } from "../../../utils/musicUtils";
 import FourPartHarmonyEvaluation from "./FourPartHarmonyEvaluation";
 import Key from "../../../classes/Key";
 import ChordAnalysis from "../../../classes/ChordAnalysis";

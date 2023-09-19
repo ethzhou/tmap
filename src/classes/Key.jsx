@@ -1,4 +1,4 @@
-import { F_CIRCLE_OF_FIFTHS, MAJOR_ROMAN, MINOR_ROMAN, ROMAN_DEGREES, accidentalToString } from "../utils/musicUtils";
+import { F_CIRCLE_OF_FIFTHS, MAJOR_ROMAN, MINOR_ROMAN, accidentalToString } from "../utils/musicUtils";
 import { romanToDegree } from "../utils/musicUtils";
 import Interval from "./Interval";
 import Pitch from "./Pitch";
