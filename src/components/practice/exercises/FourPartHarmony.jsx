@@ -383,7 +383,8 @@ export default function FourPartHarmony() {
 
     // Set chord count
     setChordCount(() => newChordCount);
-    // Trim or extend the part arrays to have so many chords.
+
+    // Trim or extend the arrays to have so many chords.
     setParts(parts => {
       const newParts = [...parts];
       
@@ -396,12 +397,30 @@ export default function FourPartHarmony() {
       // Extend if more
       else if (newChordCount > chordCount) {
         for (let iPart = 0; iPart < 4; iPart++) {
-          newParts[iPart] = [...newParts[iPart], ...Array(newChordCount - newParts[iPart].length).fill(null)];
+          newParts[iPart] = [
+            ...newParts[iPart],
+            ...Array(newChordCount - newParts[iPart].length).fill(null)
+          ];
         }
       }
       
       return newParts;
-    })
+    });
+    setChordAnalyses(chordAnalyses => {
+      // Trim if fewer
+      if (newChordCount < chordCount) {
+        return chordAnalyses.slice(0, newChordCount);
+      }
+      // Extend if more
+      else if (newChordCount > chordCount) {
+        return [
+          ...chordAnalyses,
+          ...Array(newChordCount - chordAnalyses.length).fill(null)
+        ];
+      }
+
+      return chordAnalyses;
+    });
 
     select(
       clamp(selection.iChord, 0, newChordCount - 1)
