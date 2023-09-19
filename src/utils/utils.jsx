@@ -36,13 +36,3 @@ export function decomposeIndex(i, rowLength, fromOne = false) {
 
   return [rowIndex, columnIndex];
 }
-
-/**
- * Read a roman numeral. This only works for scale degrees.
- * 
- * @param {string} roman
- * @returns {number} Defaults to -1 if not found.
- */
-export function romanValue(roman) {
-  return ["I", "II", "III", "IV", "V", "VI", "VII"].indexOf(roman.toUpperCase()) + 1;
-}

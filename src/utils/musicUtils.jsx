@@ -97,6 +97,20 @@ $`;
 export const REGEXP_ChordAnalysis = new RegExp(patternChordAnalysis);
 console.log(REGEXP_ChordAnalysis);
 
+export const ROMAN_DEGREES = ["I", "II", "III", "IV", "V", "VI", "VII"];
+export const MAJOR_ROMAN = ["I", "ii", "iii", "IV", "V", "vi", "vii"];
+export const MINOR_ROMAN = ["i", "ii", "III", "iv", "V", "VI", "vii"];
+
+/**
+ * Read the degree of a roman numeral. This only works for scale degrees.
+ * 
+ * @param {string} roman
+ * @returns {number} Defaults to -1 if not found.
+ */
+export function romanToDegree(roman) {
+  return ROMAN_DEGREES.indexOf(roman.toUpperCase()) + 1;
+}
+
 export const VOICE_RANGES = [
   [new Pitch("F", 0, 2), new Pitch("D", 0, 4)],
   [new Pitch("C", 0, 3), new Pitch("A", 0, 4)],

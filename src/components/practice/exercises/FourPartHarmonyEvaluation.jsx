@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ChordAnalysis from "../../../classes/ChordAnalysis";
 import Key from "../../../classes/Key";
 import Pitch from "../../../classes/Pitch";
-import { FOUR_VOICES, VOICE_RANGES } from "../../../utils/musicUtils";
+import { FOUR_VOICES, MAJOR_ROMAN, MINOR_ROMAN, VOICE_RANGES } from "../../../utils/musicUtils";
 import ProgressionError from "../../../classes/ProgressionError";
 
 /**
@@ -68,33 +68,24 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
    */
   const chordCompletenesses = chords.map(chord => chord.every(pitch => pitch));
 
-  const errors = {
-    spellingErrors: [],
-    progressionErrors: [],
-    leadingErrors: [],
-  };
-  
-  spellingEvalutions.forEach(evaluation => 
-    errors.spellingErrors.push(...evaluation(chords, analyses, tonality, triads, charts))
-  );
-  progressionEvaluations.forEach(evaluation => 
-    errors.progressionErrors.push(...evaluation(chords, analyses, tonality, triads, charts))
-  );
-  leadingEvaluations.forEach(evaluation => 
-    errors.leadingErrors.push(...evaluation(chords, analyses, tonality, triads, charts))
+  const errors = [];
+  evaluations.forEach(evaluation => 
+    errors.push(...evaluation(chords, analyses, tonality, triads, charts))
   );
 
   // console.log(errors);
 
   return (
     <div>
-      { errors.spellingErrors.map((error, i) => <p key={i}>{ error.toElement() }</p>) }
+      { errors.map((error, i) => <p key={i}>{ error.toElement() }</p>) }
     </div>
   )
 }
 
 /** @type {Array<EvaluationFunction>} */
-const spellingEvalutions = [
+const evaluations = [
+  // Spelling
+
   // The voices are in their ranges
   (chords) => {
     const errors = [];
@@ -109,7 +100,7 @@ const spellingEvalutions = [
           return;
 
         errors.push(new ProgressionError("voice-out-of-range", [
-          { i, voices: [iVoice] }
+          { i, voices: [iVoice] },
         ]));
       });
     });
@@ -121,15 +112,15 @@ const spellingEvalutions = [
     const errors = [];
 
     chords.forEach((chord, i) => {
-      for (let iVoice = 1; iVoice < 3; iVoice++) {
-        if (!chord[iVoice] || !chord[iVoice + 1])
+      for (let iVoice = 2; iVoice < 4; iVoice++) {
+        if (!chord[iVoice - 1] || !chord[iVoice])
           continue;
           
-        if (Math.abs(chord[iVoice]?.halfstepsTo(chord[iVoice + 1])) <= 12)
+        if (Math.abs(chord[iVoice - 1]?.halfstepsTo(chord[iVoice])) < 12)
           continue;
         
         errors.push(new ProgressionError("upper-spacing", [
-          { i, voices: [iVoice, iVoice + 1] }
+          { i, voices: [iVoice - 1, iVoice] },
         ]));
       }
     });
@@ -153,10 +144,46 @@ const spellingEvalutions = [
             continue;
 
         errors.push(new ProgressionError("crossed-voices", [
-            { i, voices: [iVoice1, iVoice2] }
+            { i, voices: [iVoice1, iVoice2] },
           ]));
         }
       }
+    });
+
+    return errors;
+  },
+  // The analysis' roman numeral is cased correctly (all roman numerals should be validated by the input process, so a mismatch is only a case issue)
+  (chords, analyses, tonality) => {
+    const errors = [];
+
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+
+      if ((tonality.mode === "minor" ? MINOR_ROMAN : MAJOR_ROMAN).includes(analysis.roman))
+        return;
+
+      errors.push(new ProgressionError("miscased-roman", [
+        { i, voices: [-1] },
+      ]));
+    });
+
+    return errors;
+  },
+  // The analysis' arabic numerals are valid
+  (chords, analyses) => {
+    const errors = [];
+
+    analyses.forEach((analysis, i) => {
+      if (!analysis)
+        return;
+
+      if (analysis.inversion() > -1)
+        return;
+
+      errors.push(new ProgressionError("invalid-arabic", [
+        { i, voices: [-1] },
+      ]));
     });
 
     return errors;
@@ -178,7 +205,7 @@ const spellingEvalutions = [
           return;
 
         errors.push(new ProgressionError("non-chordal-tone", [
-          { i, voices: [iVoice] }
+          { i, voices: [iVoice] },
         ]));
       });
     });
@@ -199,7 +226,7 @@ const spellingEvalutions = [
         return;
 
       errors.push(new ProgressionError("bass-mismatch", [
-        { i, voices: [0] }
+        { i, voices: [0] },
       ]));
     });
     
@@ -218,7 +245,7 @@ const spellingEvalutions = [
         return;
 
       errors.push(new ProgressionError("missing-root", [
-        { i, voices: [0, 1, 2, 3] }
+        { i, voices: [0, 1, 2, 3] },
       ]));
     });
 
@@ -237,7 +264,7 @@ const spellingEvalutions = [
         return;
 
       errors.push(new ProgressionError("missing-third", [
-        { i, voices: [0, 1, 2, 3] }
+        { i, voices: [0, 1, 2, 3] },
       ]));
     });
 
@@ -257,7 +284,7 @@ const spellingEvalutions = [
         return;
 
       errors.push(new ProgressionError("non-root-missing-fifth", [
-        { i, voices: [0, 1, 2, 3] }
+        { i, voices: [0, 1, 2, 3] },
       ]))
     });
 
@@ -281,7 +308,7 @@ const spellingEvalutions = [
         return;
 
       errors.push(new ProgressionError("missing-seventh", [
-        { i, voices: [0, 1, 2, 3] }
+        { i, voices: [0, 1, 2, 3] },
       ]));
     });
 
@@ -299,7 +326,7 @@ const spellingEvalutions = [
         return;
     
       errors.push(new ProgressionError("double-leading", [
-        { i, voices: leadingToneEntries }
+        { i, voices: leadingToneEntries },
       ]))
     });
 
@@ -323,26 +350,148 @@ const spellingEvalutions = [
         return;
 
       errors.push(new ProgressionError("double-seventh", [
-        { i, voices: charts[i]?.get(seventh.toName()) }
+        { i, voices: seventhEntries },
       ]));
     });
 
     return errors;
   },
-];
+  // The bass of a 6/4 chord is doubled
+  (chords, analyses, tonality, triads, charts) => {
+    const errors = [];
 
-const progressionEvaluations = [
+    analyses.forEach((analysis, i) => {
+      if (analysis?.arabic !== "64")
+        return;
+
+      const fifth = triads[i][2];
+      if (charts[i].get(fifth.toName())?.length === 2)
+        return;
+
+      errors.push(new ProgressionError("64-not-double-fifth", [
+        { i, voices: [0, 1, 2, 3] },
+      ]));
+    });
+
+    return errors;
+  },
+
+  // Progression
+
   // The progression begins with the tonic chord
-  // The progression ends with the tonic chord
-  // V chords do not resolve to IV chords
-  // 6/4 chords are either passing, neighbor, or cadential
-];
+  (chords, analyses) => {
+    const errors = [];
+    
+    const analysis = analyses[0];
+    if (!analysis || analysis.degree !== 1) {
+      errors.push(new ProgressionError("begin-not-tonic", [
+        { i: 0, voices: [-1] },
+      ]));
+    }
 
-const leadingEvaluations = [
+    return errors;
+  },
+  // The progression ends with the tonic chord
+  (chords, analyses) => {
+    const errors = [];
+    
+    const analysis = analyses.at(-1);
+    if (!analysis || analysis.degree !== 1) {
+      errors.push(new ProgressionError("end-not-tonic", [
+        { i: analyses.length - 1, voices: [-1] },
+      ]));
+    }
+
+    return errors;
+  },
+  // V chords do not resolve to IV chords
+  (chords, analyses) => {
+    const errors = [];
+
+    for (let i = 1; i < analyses.length; i++) {
+      if (!analyses[i - 1] || !analyses[i])
+        continue;
+
+      if (analyses[i - 1].degree !== 5 || analyses[i].degree !== 4)
+        continue;
+
+      errors.push(new ProgressionError("v-iv", [
+        { i: i - 1, voices: [-1] },
+        { i, voices: [-1] },
+      ]));
+    }
+
+    return errors;
+  },
+  // 6/4 chords are either passing, neighbor, or cadential
+  (chords, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 0; i < analyses.length; i++) {
+      if (analyses[i]?.arabic !== "64")
+        continue;
+
+      const isCadential = 
+        // The chord is a I chord three chords from the end
+        i === analyses.length - 3
+          && analyses[i].degree === 1
+        // It resolves to a root position V chord
+          && analyses[i + 1]?.degree === 5
+          && analyses[i + 1]?.inversion() === 0;
+      console.log(`isCadential ${isCadential}`);
+      if (isCadential)
+        continue;
+
+      const isPassing = 
+        // The chord is approached by and resolves down a fifth (relative I-V64-I6 pattern)
+        analyses[i - 1]?.movementTo(analyses[i]) === 5
+          && analyses[i + 1]?.movementTo(analyses[i]) === 5
+        // Exactly one neighboring chord is inverted
+          && ((analyses[i - 1]?.inversion() === 0 && analyses[i + 1]?.inversion() === 1)
+            || (analyses[i - 1]?.inversion() === 1 && analyses[i + 1]?.inversion() === 0));
+      if (isPassing)
+        continue;
+
+      const isNeighbor = 
+        // The chord is approached by and resolves down a fourth (relative I-IV64-I pattern)
+        analyses[i - 1]?.movementTo(analyses[i]) === 4
+          && analyses[i + 1]?.movementTo(analyses[i]) === 4
+        // Neither neighbor chord is inverted
+          && !analyses[i - 1]?.inversion()
+          && !analyses[i + 1]?.inversion();
+      if (isNeighbor)
+        continue;
+
+      errors.push(new ProgressionError("bad-64", [
+        { i, voices: [-1] },
+      ]));
+    };
+
+    return errors;
+  },
+  // The cadence should be authentic or plagal
+  (chords, analyses) => {
+    const errors = [];
+
+    const secondLast = analyses.at(-2);
+    const last = analyses.at(-1);
+    if (![4, 5].includes(secondLast?.degree) || 1 !== last?.degree || last.inversion()) {
+      errors.push(new ProgressionError("bad-cadence", [
+        { i: analyses.length - 2, voices: [-1] },
+        { i: analyses.length - 1, voices: [-1] },
+      ]));
+    }
+    
+    return errors;
+  }
+
+  // Leading
+
   // There are no parallel fifths
   // There are no parallel octaves
-  // 
-]
+  // The leading tone resolves up to the tonic
+  
+];
 
 // Kohs Music Theory
 // Connecting I, IV, and V in the Major Mode

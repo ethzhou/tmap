@@ -1,5 +1,5 @@
-import { F_CIRCLE_OF_FIFTHS, accidentalToString } from "../utils/musicUtils";
-import { romanValue } from "../utils/utils";
+import { F_CIRCLE_OF_FIFTHS, MAJOR_ROMAN, MINOR_ROMAN, ROMAN_DEGREES, accidentalToString } from "../utils/musicUtils";
+import { romanToDegree } from "../utils/musicUtils";
 import Interval from "./Interval";
 import Pitch from "./Pitch";
 
@@ -185,7 +185,7 @@ export default class Key {
    */
   triad(degree, isSeventh = false, accidental = 0) {
     if (typeof degree === "string") {
-      degree = romanValue(degree);
+      degree = romanToDegree(degree);
     }
 
     const pitches = Array(3 + isSeventh).fill().map((_, i) => this.scaleTone((degree + i * 2 - 1) % 7 + 1));
@@ -200,5 +200,17 @@ export default class Key {
     // console.log(degree, pitches);
     
     return pitches;
+  }
+
+  /**
+   * Gets the correct roman numeral notation of the given degree.
+   * 
+   * @param {number} degree
+   * @returns {string}
+   */
+  roman(degree) {
+    const roman = (this.mode === "minor" ? MINOR_ROMAN : MAJOR_ROMAN)[degree - 1];
+    
+    return roman;
   }
 }

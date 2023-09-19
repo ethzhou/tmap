@@ -1,5 +1,5 @@
 import { REGEXP_ChordAnalysis, accidentalToString } from "../utils/musicUtils";
-import { romanValue } from "../utils/utils";
+import { romanToDegree } from "../utils/musicUtils";
 import Key from "./Key";
 import Pitch from "./Pitch";
 
@@ -7,7 +7,7 @@ export default class ChordAnalysis {
   /**
    * @param {Object}
    * @property {string} accidental
-   * @property {string} roman
+   * @property {string} roman Case sensitive.
    * @property {string} arabic
    * @property {string} secondary
    */
@@ -23,7 +23,7 @@ export default class ChordAnalysis {
    */
   set roman(value) {
     this._roman = value;
-    this.degree = romanValue(value);
+    this.degree = romanToDegree(value);
   }
 
   get roman() {
@@ -78,5 +78,15 @@ export default class ChordAnalysis {
    */
   bass(key) {
     return key.scaleTone(this.bassDegree());
+  }
+
+  /**
+   * Finds the interval size between the roots of the analyses. 
+   * 
+   * @param {ChordAnalysis} other
+   * @returns {number} The result is always positive.
+   */
+  movementTo(other) {
+    return (other.degree - this.degree + 7) % 7 + 1;
   }
 }
