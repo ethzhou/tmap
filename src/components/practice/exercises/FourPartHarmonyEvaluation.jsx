@@ -53,7 +53,6 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
         return;
 
       const pitchName = pitch.toName();
-      // If 
       if (!counts.has(pitchName)) {
         counts.set(pitchName, []);
       }
