@@ -335,7 +335,6 @@ export default class Pitch {
     }
     
     const intervalSize = this.#countTo(other).spaces + 1;
-    console.log("asdf,dfd", intervalSize);
 
     const baseScaleTone = this.scaleTone(intervalSize);
     const accidental = other.accidental - baseScaleTone.accidental;
