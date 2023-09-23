@@ -125,19 +125,21 @@ export default class Pitch {
    * Counts both the number of halfsteps to reach another letter and the simple interval size from pitch letter only.
    * 
    * @param {Pitch} other
-   * @returns {{ halfsteps: number, intervalSize: number }} The number of halfsteps. The size of an interval between the two spaces.
+   * @returns {{ halfsteps: number, spaces: number }} Neither count includes the starting pitch.
    */
-  #countToLetter(other) {
+  #countTo(other) {
     let halfsteps = 0;
-    let intervalSize = 0;
+    let spaces = 0;
+
     let i = A_OCTAVE.indexOf(this.letter);
     while (A_OCTAVE[i] !== other.letter) {
       halfsteps += Pitch.halfstepsToNextLetter(A_OCTAVE[i]);
-      intervalSize += 1;
+      spaces += 1;
       i = (i + 1) % 7;
     }
+    spaces += (other.octave - this.octave - this.letterIsAfterInOctave(other)) * 7;
     
-    return { halfsteps: halfsteps, intervalSize: intervalSize };
+    return { halfsteps: halfsteps, spaces: spaces };
   }
 
   /**
@@ -226,7 +228,7 @@ export default class Pitch {
    */
   isEnharmonicTo(other) {
     if (!other) return;
-    return this.#countToLetter(other).halfsteps === this.accidental - other.accidental;
+    return this.#countTo(other).halfsteps === this.accidental - other.accidental;
   }
   
   /**
@@ -262,7 +264,7 @@ export default class Pitch {
   }
 
   /**
-   * Counts the number of halfsteps up to reach another pitch.
+   * Counts the number of halfsteps up to reach another pitch. The start pitch is excluded from the count.
    * 
    * @param {Pitch} other The end pitch.
    * @returns {number} Number of halfsteps up, or down if negative.
@@ -272,11 +274,27 @@ export default class Pitch {
       return -other.halfstepsTo(this);
     }
 
-    const halfsteps = this.#countToLetter(other).halfsteps
+    const halfsteps = this.#countTo(other).halfsteps
       + (other.octave - this.octave - this.letterIsAfterInOctave(other)) * 11
       + (other.accidental - this.accidental);
 
     return halfsteps;
+  }
+
+  /**
+   * Counts the number of spaces (and lines) up to reach another pitch. The start pitch is excluded from the count.
+   * 
+   * @param {Pitch} other The end pitch.
+   * @returns {number} Number of spaces up, or down if negative.
+   */
+  spacesTo(other) {
+    if (this.isHigherThan(other, false)) {
+      return -other.spacesTo(this);
+    }
+
+    const spaces = this.#countTo(other).spaces;
+
+    return spaces;
   }
 
   /**
@@ -306,11 +324,14 @@ export default class Pitch {
    * Finds the interval between two pitches.
    * 
    * @param {Pitch} other 
-   * @returns {Interval} Simple interval.
+   * @returns {Interval}
    */
   interval(other) {
-    let { intervalSize } = this.#countToLetter(other);
-    intervalSize = (size === 1) ? (this.octave === other.octave ? 1 : 8) : size;
+    if (this.isHigherThan(other)) {
+      return other.interval(this);
+    }
+    
+    const intervalSize = this.#countTo(other).spaces + 1;
 
     const baseScaleTone = this.scaleTone(intervalSize);
     const accidentalChange = other.accidental - baseScaleTone.accidental;
