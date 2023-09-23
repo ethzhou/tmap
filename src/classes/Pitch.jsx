@@ -59,7 +59,7 @@ export default class Pitch {
    */
   static fromInterval(pitch, interval) {
     const newPitch = pitch.scaleTone(interval.size);
-    newPitch.accidental += Interval.qualityToAccidentalChange(interval.quality, interval.size);
+    newPitch.accidental += Interval.qualityToAccidental(interval.quality, interval.size);
     newPitch.octave += Math.floor((interval.size - 1) / 7) + pitch.letterIsAfterInOctave(newPitch.letter);
 
     return newPitch;
@@ -338,8 +338,8 @@ export default class Pitch {
     console.log("asdf,dfd", intervalSize);
 
     const baseScaleTone = this.scaleTone(intervalSize);
-    const accidentalChange = other.accidental - baseScaleTone.accidental;
-    const intervalQuality = Interval.accidentalChangeToQuality(accidentalChange, intervalSize);
+    const accidental = other.accidental - baseScaleTone.accidental;
+    const intervalQuality = Interval.accidentalToQuality(accidental, intervalSize);
 
     return new Interval(intervalQuality, intervalSize);
   }

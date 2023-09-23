@@ -18,7 +18,7 @@ export default function IntervalReading() {
       );
       const upperPitch = lowerPitch.scaleTone(intervalSize);
       const intervalQuality = Interval.randomQuality(intervalSize, upperPitch.accidental);
-      upperPitch.accidental += Interval.qualityToAccidentalChange(intervalQuality, intervalSize);
+      upperPitch.accidental += Interval.qualityToAccidental(intervalQuality, intervalSize);
 
       const interval = new Interval(intervalQuality, intervalSize);
       const pitches = [lowerPitch, upperPitch];

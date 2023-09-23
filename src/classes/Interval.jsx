@@ -82,13 +82,13 @@ export default class Interval {
   }
 
   /**
-   * Finds the accidental change corresponding to the size and quality of an interval.
+   * Finds the accidental corresponding to the size and quality of an interval.
    * 
    * @param {Quality} quality
    * @param {number} size Size of the hypothetical interval.
    * @returns {number}
    */
-  static qualityToAccidentalChange(quality, size) {
+  static qualityToAccidental(quality, size) {
     return Interval.isPerfect(size) ? (
       quality === "d" ? -1
         : quality === "P" ? 0
@@ -104,13 +104,13 @@ export default class Interval {
   }
 
   /**
-   * Finds the quality corresponding to an interval size and accidental change.
+   * Finds the quality corresponding to an interval size and accidental.
    * 
    * @param {number} change Change in accidental.
    * @param {number} size Size of the hypothetical interval.
    * @returns {Quality}
    */
-  static accidentalChangeToQuality(change, size) {
+  static accidentalToQuality(change, size) {
     return Interval.isPerfect(size) ? (
       change === -1 ? "d"
         : change === 0 ? "P"
@@ -133,7 +133,7 @@ export default class Interval {
   halfsteps() {
     const halfsteps = MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS[this.size - 1]
       + Math.floor((this.size - 1) / 7) * 11
-      + Interval.qualityToAccidentalChange(this.quality, this.size);
+      + Interval.qualityToAccidental(this.quality, this.size);
 
     return halfsteps;
   }

@@ -25,7 +25,7 @@ export default function IntervalDictation() {
       );
       const upperNote = lowerNote.scaleTone(intervalSize);
       const intervalQuality = Interval.randomQuality(intervalSize, upperNote.accidental);
-      upperNote.accidental += Interval.qualityToAccidentalChange(intervalQuality, intervalSize);
+      upperNote.accidental += Interval.qualityToAccidental(intervalQuality, intervalSize);
 
       const interval = new Interval(intervalQuality, intervalSize);
       const notes = [lowerNote, upperNote];
