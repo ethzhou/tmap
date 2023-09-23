@@ -313,8 +313,11 @@ export default class Pitch {
         newAccidental++;
       }
     }
-    // The fourth note of every tetrachord is only a halfstep away, so the accidental is reduced.
-    newAccidental -= Math.floor(n / 4);
+    // Reduce the accidental per halfstep step in the scale
+    // Two notes per complete octave are only a halfstep away
+    newAccidental -= 2 * Math.floor((n - 1) / 7);
+    // In the last octave, the fourth note of each tetrachord is only a halfstep away
+    newAccidental -= Math.floor(((n - 1) % 7 + 1) / 4);
     const newOctave = this.octave + Math.floor((n - 1) / 7) + this.letterIsAfterInOctave(newLetter);
 
     return new Pitch(newLetter, newAccidental, newOctave);
@@ -332,6 +335,7 @@ export default class Pitch {
     }
     
     const intervalSize = this.#countTo(other).spaces + 1;
+    console.log("asdf,dfd", intervalSize);
 
     const baseScaleTone = this.scaleTone(intervalSize);
     const accidentalChange = other.accidental - baseScaleTone.accidental;

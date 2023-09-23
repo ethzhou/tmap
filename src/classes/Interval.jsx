@@ -21,7 +21,8 @@ export default class Interval {
   set size(value) {
     this._size = value;
     this.simple = (value - 1) % 7 + 1;
-    this.simple = this.simple === 1 && value === 1 ? 1 : 8;
+    if (this.simple === 1)
+      this.simple = value === 1 ? 1 : 8;
   }
   
   get size() {
@@ -54,7 +55,9 @@ export default class Interval {
   static isPerfect(size) {
     if (typeof size === "object")
       size = size.size;
-    return [1, 4, 5, 8].includes(size);
+
+    console.log((size - 1) % 7 + 1);
+    return [1, 4, 5].includes((size - 1) % 7 + 1);
   }
 
   /**
