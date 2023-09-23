@@ -1,15 +1,31 @@
+import { MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS } from "../utils/musicUtils";
 import { clamp, randInt } from "../utils/utils";
 
-const majorIntervalHalfstepCounts = [0, 2, 4, 5, 7, 9, 11, 12];
+/**
+ * @typedef {"d" | "m" | "M" | "A" | "P"} Quality
+ */
 
 export default class Interval {
   /**
-   * @param {string} quality
+   * @param {Quality} quality
    * @param {number} size
    */
   constructor(quality, size) {
     this.quality = quality;
     this.size = size;
+  }
+
+  /**
+   * @param {number} value 
+   */
+  set size(value) {
+    this._size = value;
+    this.simple = (value - 1) % 7 + 1;
+    this.simple = this.simple === 1 && value === 1 ? 1 : 8;
+  }
+  
+  get size() {
+    return this._size;
   }
 
   /**
@@ -46,7 +62,7 @@ export default class Interval {
    * 
    * @param {number} size
    * @param {number} baseAccidental The accidental of the major interval whose specification avoids excessive accidentals. For instance, a diminished third above Gb would be Bbbb; specifying baseAccidental = 1 in this case disallows the random selection of the diminished quality.
-   * @returns {string}
+   * @returns {Quality}
    */
   static randomQuality(size, baseAccidental = 0) {
     return Interval.isPerfect(size) ? "dPA"[
@@ -65,7 +81,7 @@ export default class Interval {
   /**
    * Finds the accidental change corresponding to the size and quality of an interval.
    * 
-   * @param {string} quality
+   * @param {Quality} quality
    * @param {number} size Size of the hypothetical interval.
    * @returns {number}
    */
@@ -89,7 +105,7 @@ export default class Interval {
    * 
    * @param {number} change Change in accidental.
    * @param {number} size Size of the hypothetical interval.
-   * @returns {number}
+   * @returns {Quality}
    */
   static accidentalChangeToQuality(change, size) {
     return Interval.isPerfect(size) ? (
@@ -112,7 +128,11 @@ export default class Interval {
    * @returns {number}
    */
   halfsteps() {
-    return majorIntervalHalfstepCounts[this.size - 1] + Interval.qualityToAccidentalChange(this.quality, this.size);
+    const halfsteps = MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS[this.size - 1]
+      + Math.floor((this.size - 1) / 7) * 11
+      + Interval.qualityToAccidentalChange(this.quality, this.size);
+
+    return halfsteps;
   }
 
   /**

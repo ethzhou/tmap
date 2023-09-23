@@ -9,6 +9,8 @@ export const F_CIRCLE_OF_FIFTHS = "FCGDAEBF";
 export const FOUR_VOICES = ["bass", "tenor", "alto", "soprano"];
 export const GRAND_STAFF_STAVES = ["bass", "treble"];
 
+export const MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS = [0, 2, 4, 5, 7, 9, 11, 12];
+
 export function accidentalToString(accidental) {
   // Returns "" for naturals
   return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
