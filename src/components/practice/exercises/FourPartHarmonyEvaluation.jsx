@@ -3,10 +3,12 @@ import Key from "../../../classes/Key";
 import Pitch from "../../../classes/Pitch";
 import { MAJOR_ROMAN, MINOR_ROMAN, VOICE_RANGES } from "../../../utils/musicUtils";
 import ProgressionError from "../../../classes/ProgressionError";
+import Interval from "../../../classes/Interval";
 
 /**
  * @callback EvaluationFunction
  * @param {Array<Pitch>} chords
+ * @param {Array<Array<Array<Interval | null>>>} intervals
  * @param {Array<ChordAnalysis>} analyses
  * @param {Key} tonality
  * @param {Array<Pitch>} triads
@@ -60,9 +62,31 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
     });
   });
 
+  /**
+   * Array of the intervals between each voice and the higher voices of a chord.
+   * @type {Array<Array<Array<Interval | null>>>}
+   */
+  const intervals = [];
+  for (let i = 0; i < chords.length; i++) {
+    const chordIntervals = [];
+    for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
+      const intervalsFromVoice = [];
+      for (let iVoice2 = iVoice1 + 1; iVoice2 < 4; iVoice2++) {
+        const interval = chords[i][iVoice1] && chords[i][iVoice2] ? chords[i][iVoice1].interval(chords[i][iVoice2])
+          : null;
+        
+        intervalsFromVoice.push(interval);
+      }
+
+      chordIntervals.push(intervalsFromVoice);
+    }
+
+    intervals.push(chordIntervals);
+  }
+
   const errors = [];
   evaluations.forEach(evaluation => 
-    errors.push(...evaluation(chords, analyses, tonality, triads, charts))
+    errors.push(...evaluation(chords, intervals, analyses, tonality, triads, charts))
   );
 
   // console.log(errors);
@@ -145,7 +169,7 @@ const evaluations = [
     return errors;
   },
   // The analysis' roman numeral is cased correctly (all roman numerals should be validated by the input process, so a mismatch is only a case issue)
-  (chords, analyses, tonality) => {
+  (chords, intervals, analyses, tonality) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -163,7 +187,7 @@ const evaluations = [
     return errors;
   },
   // The analysis' arabic numerals are valid
-  (chords, analyses) => {
+  (chords, intervals, analyses) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -181,7 +205,7 @@ const evaluations = [
     return errors;
   },
   // Every note is chordal
-  (chords, analyses, tonality, triads) => {
+  (chords, intervals, analyses, tonality, triads) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -205,7 +229,7 @@ const evaluations = [
     return errors;
   },
   // The bass matches the analysis
-  (chords, analyses, tonality) => {
+  (chords, intervals, analyses, tonality) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -225,7 +249,7 @@ const evaluations = [
     return errors;
   },
   // There is a root
-  (chords, analyses, tonality, triads, charts) => {
+  (chords, intervals, analyses, tonality, triads, charts) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -244,7 +268,7 @@ const evaluations = [
     return errors;
   },
   // There is a third
-  (chords, analyses, tonality, triads, charts) => {
+  (chords, intervals, analyses, tonality, triads, charts) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -263,7 +287,7 @@ const evaluations = [
     return errors;
   },
   // The fifth is omitted only in a root-position chord
-  (chords, analyses, tonality, triads, charts) => {
+  (chords, intervals, analyses, tonality, triads, charts) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -283,7 +307,7 @@ const evaluations = [
     return errors;
   },
   // There is a seventh in 7 chords
-  (chords, analyses, tonality, triads, charts) => {
+  (chords, intervals, analyses, tonality, triads, charts) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -307,7 +331,7 @@ const evaluations = [
     return errors;
   },
   // The leading tone is not doubled
-  (chords, analyses, tonality, triads, charts) => {
+  (chords, intervals, analyses, tonality, triads, charts) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -325,7 +349,7 @@ const evaluations = [
     return errors;
   },
   // The seventh is not doubled
-  (chords, analyses, tonality, triads, charts) => {
+  (chords, intervals, analyses, tonality, triads, charts) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -349,7 +373,7 @@ const evaluations = [
     return errors;
   },
   // The bass of a 6/4 chord is doubled
-  (chords, analyses, tonality, triads, charts) => {
+  (chords, intervals, analyses, tonality, triads, charts) => {
     const errors = [];
 
     analyses.forEach((analysis, i) => {
@@ -371,7 +395,7 @@ const evaluations = [
   // Progression
 
   // The progression begins with the tonic chord
-  (chords, analyses) => {
+  (chords, intervals, analyses) => {
     const errors = [];
     
     const analysis = analyses[0];
@@ -384,7 +408,7 @@ const evaluations = [
     return errors;
   },
   // The progression ends with the tonic chord
-  (chords, analyses) => {
+  (chords, intervals, analyses) => {
     const errors = [];
     
     const analysis = analyses.at(-1);
@@ -397,7 +421,7 @@ const evaluations = [
     return errors;
   },
   // V chords do not resolve to IV chords
-  (chords, analyses) => {
+  (chords, intervals, analyses) => {
     const errors = [];
 
     for (let i = 1; i < analyses.length; i++) {
@@ -416,7 +440,7 @@ const evaluations = [
     return errors;
   },
   // 6/4 chords are either passing, neighbor, or cadential
-  (chords, analyses, tonality, triads, charts) => {
+  (chords, intervals, analyses, tonality, triads, charts) => {
     const errors = [];
 
     for (let i = 0; i < analyses.length; i++) {
@@ -462,7 +486,7 @@ const evaluations = [
     return errors;
   },
   // The cadence should be authentic or plagal
-  (chords, analyses) => {
+  (chords, intervals, analyses) => {
     const errors = [];
 
     const secondLast = analyses.at(-2);
@@ -475,42 +499,352 @@ const evaluations = [
     }
     
     return errors;
-  }
+  },
 
   // Leading
 
+  // Common tones are held
+  (chords, intervals, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 1; i < analyses.length; i++) {
+      if (!analyses[i - 1] || !analyses[i])
+        continue;
+
+      // This rule does not apply when the chord does not change
+      if (analyses[i - 1].degree === analyses[i].degree)
+        continue;
+
+      for (let iVoice = 1; iVoice < 4; iVoice++) {
+        // The pitch from the previous chord in the consecutive pair (i - 1, i)
+        const pitch = chords[i - 1][iVoice];
+        if (!pitch)
+          continue;
+
+        // The entries in the chart of the previous chord
+        const entriesPrev = charts[i - 1].get(pitch.toName());
+        // The entries in the chart of the current chord
+        const entries = charts[i].get(pitch.toName());
+
+        // The rule does not apply if the tone is not in the current chord (i.e. it is not a common tone)
+        if (!entries)
+          continue;
+
+        // Otherwise, the tone appears, so check that the tone appears on some voice on both chords
+        if (entries.some(entry => entriesPrev.includes(entry)))
+          continue;
+
+        errors.push(new ProgressionError("common-not-held", [
+          { i: i - 1, voices: [iVoice] },
+          { i, voices: entries },
+        ]));
+      }
+    }
+
+    return errors;
+  },
+  // Upper voices are primarily stepwise
+  (chords) => {
+    const errors = [];
+
+    for (let i = 1; i < chords.length; i++) {
+      for (let iVoice = 1; iVoice < 4; iVoice++) {
+        if (!chords[i - 1][iVoice] || !chords[i][iVoice])
+          continue;
+
+        const spaceDistance = chords[i - 1][iVoice].spacesTo(chords[i][iVoice]);
+        if (Math.abs(spaceDistance) < 3)
+          continue;
+
+        errors.push(new ProgressionError("voice-leap", [
+          { i: i - 1, voices: [iVoice] },
+          { i, voices: [iVoice] },
+        ]));
+      }
+    }
+
+    return errors;
+  },
   // There are no parallel fifths
+  (chords, intervals, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 1; i < intervals.length; i++) {
+      for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
+        // This loop uses change in voice index rather than voice index because of the way `intervals` is constructed (only records intervals between higher voices)
+        for (let delVoice = 0; delVoice + iVoice1 < 3; delVoice++) {
+          const intervalPrevious = intervals[i - 1][iVoice1][delVoice];
+          const interval = intervals[i][iVoice1][delVoice];
+
+          if (!intervalPrevious || !interval)
+            continue;
+
+          console.log(iVoice1, delVoice, intervalPrevious, interval);
+
+          if (intervalPrevious.quality !== "P" || interval.quality !== "P")
+            continue;
+
+          if (intervalPrevious.simple !== 5 || interval.simple !== 5)
+            continue;
+
+          const iVoice2 = iVoice1 + delVoice + 1;
+
+          errors.push(new ProgressionError("parallel-fifths", [
+            { i: i - 1, voices: [iVoice1, iVoice2] },
+            { i, voices: [iVoice1, iVoice2] },
+          ]));
+        }
+      }
+    }
+
+    return errors;
+  },
   // There are no parallel octaves
-  // The leading tone resolves up to the tonic
-  
+  (chords, intervals, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 1; i < intervals.length; i++) {
+      for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
+        // This loop uses change in voice index rather than voice index because of the way `intervals` is constructed (only records intervals between higher voices)
+        for (let delVoice = 0; delVoice + iVoice1 < 3; delVoice++) {
+          const intervalPrevious = intervals[i - 1][iVoice1][delVoice];
+          const interval = intervals[i][iVoice1][delVoice];
+
+          if (!intervalPrevious || !interval)
+            continue;
+
+          console.log(iVoice1, delVoice, intervalPrevious, interval);
+
+          if (intervalPrevious.quality !== "P" || interval.quality !== "P")
+            continue;
+
+          if (intervalPrevious.simple !== 8 || interval.simple !== 8)
+            continue;
+
+          const iVoice2 = iVoice1 + delVoice + 1;
+
+          errors.push(new ProgressionError("parallel-octaves", [
+            { i: i - 1, voices: [iVoice1, iVoice2] },
+            { i, voices: [iVoice1, iVoice2] },
+          ]));
+        }
+      }
+    }
+
+    return errors;
+  },
+  // A d5 to P5 is in the upper voices
+  (chords, intervals, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 1; i < intervals.length; i++) {
+      // Check the intervals between the bass and upper voices
+      // This loop uses change in voice index rather than voice index because of the way `intervals` is constructed (only records intervals between higher voices)
+      for (let delVoice = 0; delVoice < 3; delVoice++) {
+        const intervalPrevious = intervals[i - 1][0][delVoice];
+        const interval = intervals[i][0][delVoice];
+
+        if (!intervalPrevious || !interval)
+          continue;
+
+        console.log(0, delVoice, intervalPrevious, interval);
+
+        if (intervalPrevious.quality !== "d" || interval.quality !== "P")
+          continue;
+
+        if (intervalPrevious.simple !== 5 || interval.simple !== 5)
+          continue;
+
+        const iVoiceUpper = delVoice + 1;
+
+        errors.push(new ProgressionError("d5-P5-not-upper", [
+          { i: i - 1, voices: [iVoice1, iVoiceUpper] },
+          { i, voices: [iVoice1, iVoiceUpper] },
+        ]));
+      }
+    }
+
+    return errors;
+  },
+  // An ascending d5 to P5 is passing between I and I6
+  (chords, intervals, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 1; i < intervals.length; i++) {
+      for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
+        // This loop uses change in voice index rather than voice index because of the way `intervals` is constructed (only records intervals between higher voices)
+        for (let delVoice = 0; delVoice + iVoice1 < 4; delVoice++) {
+          const intervalPrevious = intervals[i - 1][iVoice1][delVoice];
+          const interval = intervals[i][iVoice1][delVoice];
+
+          if (!intervalPrevious || !interval)
+            continue;
+
+          console.log(iVoice1, delVoice, intervalPrevious, interval);
+
+          if (intervalPrevious.quality !== "d" || interval.quality !== "P")
+            continue;
+
+          if (intervalPrevious.simple !== 5 || interval.simple !== 5)
+            continue;
+
+          if (analyses[i - 1].degree === 1 && analyses[i - 1].inversion() === 0
+            || analyses[i].degree === 1 && analyses[i].inversion() === 1)
+            continue;
+
+          const iVoice2 = iVoice1 + delVoice + 1;
+
+          errors.push(new ProgressionError("d5-P5-not-passing", [
+            { i: i - 1, voices: [iVoice1, iVoice2] },
+            { i, voices: [iVoice1, iVoice2] },
+          ]));
+        }
+      }
+    }
+
+    return errors;
+  },
+  // A hidden fifth in outer voices features a step in the higher voice
+  (chords, intervals, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 1; i < intervals.length; i++) {
+      // The interval between the bass and soprano
+      const intervalPrevious = intervals[i - 1][0][2];
+      const interval = intervals[i][0][2];
+
+      if (!intervalPrevious || !interval)
+        continue;
+
+      if (interval.quality !== "P")
+        continue;
+
+      if (interval.simple !== 5)
+        continue;
+      
+      const spaceDistanceBass = chords[i - 1][0].spacesTo(chords[i][0]);
+      const spaceDistanceSoprano = chords[i - 1][3].spacesTo(chords[i][3]);
+
+      // Contrary or oblique motion is okay
+      if (spaceDistanceBass * spaceDistanceSoprano <= 0)
+        continue;
+
+      if (Math.abs(spaceDistanceSoprano) < 2)
+        continue;
+
+      errors.push(new ProgressionError("hidden-fifth-soprano-not-step", [
+        { i: i - 1, voices: [0, 3] },
+        { i, voices: [0, 3] },
+      ]));
+    }
+
+    return errors;
+  },
+  // A hidden octave features a step in the higher voice
+  (chords, intervals, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 1; i < intervals.length; i++) {
+      // The interval between the bass and soprano
+      const intervalPrevious = intervals[i - 1][0][2];
+      const interval = intervals[i][0][2];
+
+      if (!intervalPrevious || !interval)
+        continue;
+
+      if (interval.quality !== "P")
+        continue;
+
+      if (interval.simple !== 8)
+        continue;
+      
+      const spaceDistanceBass = chords[i - 1][0].spacesTo(chords[i][0]);
+      const spaceDistanceSoprano = chords[i - 1][3].spacesTo(chords[i][3]);
+
+      // Contrary or oblique motion is okay
+      if (spaceDistanceBass * spaceDistanceSoprano <= 0)
+        continue;
+
+      if (Math.abs(spaceDistanceSoprano) < 2)
+        continue;
+
+      errors.push(new ProgressionError("hidden-octave-soprano-not-step", [
+        { i: i - 1, voices: [0, 3] },
+        { i, voices: [0, 3] },
+      ]));
+    }
+
+    return errors;
+  },
+  // There are no overlapping voices (n.b. overlapping voices are not the same as crossed voices)
+  (chords) => {
+    const errors = [];
+
+    for (let i = 1; i < chords.length; i++) {
+      for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
+        if (!chords[i][iVoice1])
+          continue;
+
+        for (let iVoice2Previous = 0; iVoice2Previous < 4; iVoice2Previous++) {
+          if (iVoice1 === iVoice2Previous)
+            continue;
+
+          if (!chords[i - 1][iVoice2Previous])
+            continue;
+
+          if ([false, true].every(considerAccidentals => 
+            iVoice1 < iVoice2Previous ? !chords[i][iVoice1].isHigherThan(chords[i - 1][iVoice2Previous], considerAccidentals)
+              : !chords[i][iVoice1].isLowerThan(chords[i - 1][iVoice2Previous], considerAccidentals)
+          ))
+            continue;
+
+          errors.push(new ProgressionError("overlapping-voices", [
+            { i: i - 1, voices: [iVoice2Previous] },
+            { i, voices: [iVoice1] },
+          ]));
+        }
+      }
+    }
+
+    return errors;
+  },
+  // The leading tone resolves up to the tonic unless in a I7 chord
+  (chords, intervals, analyses, tonality) => {
+    const errors = [];
+
+    const leadingToneName = tonality.leadingTone().toName();
+
+    chords.forEach((chord, i) => {
+      if (analyses[i]?.degree === 1 && analyses[i]?.isSeventh())
+        return;
+
+      chord.forEach((pitch, iVoice) => {
+        if (!pitch)
+          return;
+
+        if (pitch.toName() !== leadingToneName)
+          return;
+
+        // The next pitch in the voice
+        const resolution = chords[i + 1][iVoice];
+
+        // Leading tones should resolve to a halfstep up
+        if (resolution && pitch.halfstepsTo(resolution) === 1)
+          return;
+
+        errors.push(new ProgressionError("unresolved-seventh", [
+          { i, voices: [iVoice] },
+          { i: i + 1, voices: [iVoice] },
+        ]));
+      });
+    });
+
+    return errors;
+  },
 ];
 
-// Kohs Music Theory
-// Connecting I, IV, and V in the Major Mode
-// abridged
-
-//  1. Begin on the tonic chord (I).
-
-//  2. End on the tonic.
-
-//  3. Hold common tones and move the other voices stepwise. If there is no common tone (as in IV-V), move the upper voices in contrary motion against the bass, keeping all leaps to a minimum.
-
-//  4. Avoid V-IV.
-
-//  5. Melodic interest...
-
-//  6. In general, change chords on every beat (and particularly over the bar line).
-
-//  7. As in two-voice counterpoint, avoid consecutive fifths and octaves; motion into these sensitive intervals by oblique motion ("hidden" fifths or octaves) is objectionable if the upper voice leaps to the interval, but it is usually permissible for the lower voice to leap this way. You should also avoid parallel octaves and fifths.
-
-//  8. Keep each of the upper voices within an octave of its neighbor. This bass may be any distance from the tenor, but these two should not be very close if they are both in an extremely low register.
-
-//  9. In general, double the root of the triad in one of the upper voices. The third or fifth may be doubled, but only if considerations of voice leading (melodic values) make this the lesser evil. The leading tone (third of the V chord) should not be doubled because of its high "voltage" (need to resolve).
-
-// 10. Notes doubled at the octave or unison are best approached and quitted in contrary motion, and stepwise if possible. This applies with particular strength to any irregular doubling, such as that of the third or fifth of the chord.
-
-// 11. It is possible to omit the fifth, leaving it understood. If this is done it should be with a view to improve the voice leading, and the root should be tripled. Do not double the third in such a case.
-
-// 12. Occassional use of the P.T. and N.T. is permitted. Do not use any other dissonances at this time.
-
-// 13. Observe the approximate vocal ranges indicated in Example I.
+/**
+ * References:
+ *  - Kohs Music Theory
+ *  - https://apcentral.collegeboard.org/media/pdf/ap23-sg-music-theory.pdf
+ */
