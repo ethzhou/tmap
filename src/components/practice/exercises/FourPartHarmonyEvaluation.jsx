@@ -17,7 +17,6 @@ import Interval from "../../../classes/Interval";
  */
 
 /**
- * 
  * @param {Object} props
  * @param {Object} parts
  * @returns 
@@ -319,7 +318,6 @@ const evaluations = [
       
       const seventh = triads[i][3];
       const seventhEntries = charts[i].get(seventh.toName());
-      console.log(seventh, seventhEntries, charts, triads);
       if (seventhEntries && seventhEntries.length)
         return;
 
@@ -454,7 +452,6 @@ const evaluations = [
         // It resolves to a root position V chord
           && analyses[i + 1]?.degree === 5
           && analyses[i + 1]?.inversion() === 0;
-      console.log(`isCadential ${isCadential}`);
       if (isCadential)
         continue;
 
@@ -579,8 +576,6 @@ const evaluations = [
           if (!intervalPrevious || !interval)
             continue;
 
-          console.log(iVoice1, delVoice, intervalPrevious, interval);
-
           if (intervalPrevious.quality !== "P" || interval.quality !== "P")
             continue;
 
@@ -612,8 +607,6 @@ const evaluations = [
 
           if (!intervalPrevious || !interval)
             continue;
-
-          console.log(iVoice1, delVoice, intervalPrevious, interval);
 
           if (intervalPrevious.quality !== "P" || interval.quality !== "P")
             continue;
@@ -647,8 +640,6 @@ const evaluations = [
         if (!intervalPrevious || !interval)
           continue;
 
-        console.log(0, delVoice, intervalPrevious, interval);
-
         if (intervalPrevious.quality !== "d" || interval.quality !== "P")
           continue;
 
@@ -679,8 +670,6 @@ const evaluations = [
 
           if (!intervalPrevious || !interval)
             continue;
-
-          console.log(iVoice1, delVoice, intervalPrevious, interval);
 
           if (intervalPrevious.quality !== "d" || interval.quality !== "P")
             continue;
