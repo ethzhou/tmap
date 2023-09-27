@@ -830,6 +830,29 @@ const evaluations = [
 
     return errors;
   },
+  // Voices do not leap by tritones
+  (chords) => {
+    const errors = [];
+
+    const tritone = new Interval("A", 4);
+
+    for (let i = 1; i < chords.length; i++) {
+      for (let iVoice = 0; iVoice < 4; iVoice++) {
+        if (!chords[i - 1][iVoice] || !chords[i][iVoice])
+          continue;
+      
+        if (!chords[i - 1][iVoice].interval(chords[i][iVoice]).isEnharmonicTo(tritone, true))
+          continue;
+
+        errors.push(new ProgressionError("tritone-leap", [
+          { i: i - 1, voices: [iVoice] },
+          { i: i, voices: [iVoice] },
+        ]));
+      }
+    }
+
+    return errors;
+  },
 ];
 
 /**
