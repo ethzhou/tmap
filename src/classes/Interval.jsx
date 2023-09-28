@@ -56,7 +56,6 @@ export default class Interval {
     if (typeof size === "object")
       size = size.size;
 
-    console.log((size - 1) % 7 + 1);
     return [1, 4, 5].includes((size - 1) % 7 + 1);
   }
 
@@ -156,7 +155,6 @@ export default class Interval {
    * @returns {boolean}
    */
   isEnharmonicTo(otherInterval, simple = false) {
-    console.log(this.halfstepDifference(otherInterval));
     return simple ? this.halfstepDifference(otherInterval) % 11 === 0
       : this.halfstepDifference(otherInterval) === 0;
   }
