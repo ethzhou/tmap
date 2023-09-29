@@ -37,7 +37,7 @@ export default class ChordAnalysis {
    * @returns {ChordAnalysis | undefined}
    */
   static fromString(strRepresentation) {
-    const groups = strRepresentation.match(REGEXP_ChordAnalysis)?.groups || undefined;
+    const groups = strRepresentation?.match(REGEXP_ChordAnalysis)?.groups || undefined;
 
     return groups ? new ChordAnalysis(groups) : undefined;
   }
