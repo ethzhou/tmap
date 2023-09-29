@@ -841,10 +841,11 @@ const evaluations = [
         if (!chords[i - 1][iVoice] || !chords[i][iVoice])
           continue;
       
-        if (!chords[i - 1][iVoice].interval(chords[i][iVoice]).isEnharmonicTo(augmentedSecond, true))
+        const melodicInterval = chords[i - 1][iVoice].interval(chords[i][iVoice]);
+        if (melodicInterval.quality !== "A" || melodicInterval.size !== 2)
           continue;
 
-        errors.push(new ProgressionError("tritone-leap", [
+        errors.push(new ProgressionError("augmented-second-leap", [
           { i: i - 1, voices: [iVoice] },
           { i: i, voices: [iVoice] },
         ]));
@@ -864,6 +865,7 @@ const evaluations = [
         if (!chords[i - 1][iVoice] || !chords[i][iVoice])
           continue;
       
+        console.log(chords[i - 1][iVoice].interval(chords[i][iVoice]).isEnharmonicTo(tritone, true));
         if (!chords[i - 1][iVoice].interval(chords[i][iVoice]).isEnharmonicTo(tritone, true))
           continue;
 
