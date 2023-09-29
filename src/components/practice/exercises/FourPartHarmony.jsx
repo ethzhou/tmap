@@ -6,6 +6,7 @@ import { isValidNoteDuration, isValidTime, calculateNoteDuration } from "../../.
 import FourPartHarmonyEvaluation from "./FourPartHarmonyEvaluation";
 import Key from "../../../classes/Key";
 import ChordAnalysis from "../../../classes/ChordAnalysis";
+import PianoPlayer from "../../../classes/PianoPlayer";
 
 function f(s) {
   return s.split(" ").filter(item => item !== "").map(e => e === "r" ? null : Pitch.fromString(e));
@@ -17,6 +18,8 @@ const testParts = {
   tenor:   f("G3  Ab4 F3  A4  E3  D3  G3  Ab4 F3  G3  Ab4 F3  A4  E3  D3  G3  Ab4 F3 F3"),
   bass:    f("C2  F2  F2  G1  E2  F2  C2  F2  F2  C2  F2  F2  G1  E2  F2  C2  F2  F2 F2"),
 };
+
+const pianoPlayer = new PianoPlayer();
 
 export default function FourPartHarmony() {
   const inputRef = useRef();
@@ -38,9 +41,82 @@ export default function FourPartHarmony() {
   });
 
   useEffect(() => {
-    generateParameters();
+    loadParameters();
     inputRef.current.focus();
   }, []);
+
+  // #region Parameter saves and loads
+
+  function save() {
+    const jsonData = {
+      parts: parts.map(part => part.map(pitch => pitch?.toString())),
+      chordAnalyses: chordAnalyses.map(chordAnalysis => chordAnalysis?.toString()),
+      tonality: tonality.toString(),
+      timeSignature,
+      chordCount,
+      chordsPerMeasure,
+    };
+    // console.log("Storing", jsonData, JSON.stringify(jsonData));
+    localStorage.setItem("fourPartHarmonyParameters", JSON.stringify(jsonData));
+  }
+
+  function setParameters({
+    parts,
+    chordAnalyses,
+    tonality,
+    timeSignature,
+    chordCount,
+    chordsPerMeasure,
+    selection,
+  }) {
+    if (parts)
+      setParts(() => parts);
+
+    if (chordAnalyses)
+      setChordAnalyses(() => chordAnalyses);
+
+    if (tonality)
+      setTonality(() => tonality);
+
+    if (timeSignature)
+      setTimeSignature(() => timeSignature);
+
+    if (chordCount)
+      setChordCount(() => chordCount);
+    
+    if (chordsPerMeasure)
+      setChordsPerMeasure(() => chordsPerMeasure);
+
+    if (selection)
+      setSelection(() => selection);
+  }
+
+  function loadParameters() {
+    const retrievedData = localStorage.getItem("fourPartHarmonyParameters");
+
+    // console.log("Retrieving", retrievedData, JSON.parse(retrievedData));
+    const retrievedObject = retrievedData ? JSON.parse(retrievedData) : undefined;
+    const parameters = retrievedObject?.parts[0].length ? parseLoadedParameters(retrievedObject) : generateParameters();
+    setParameters(parameters);
+  }
+
+  function parseLoadedParameters(data) {
+    const parts = data.parts?.map(part => part.map(pitch => pitch ? Pitch.fromString(pitch) : null));
+    const chordAnalyses = data.chordAnalyses?.map(chordAnalysis => chordAnalysis ? ChordAnalysis.fromString(chordAnalysis) : null);
+    const tonality = Key.fromString(data.tonality);
+    const { timeSignature, chordCount, chordsPerMeasure, selection, } = data;
+
+    const parameters = {
+      parts,
+      chordAnalyses,
+      tonality,
+      timeSignature,
+      chordCount,
+      chordsPerMeasure,
+      selection,
+    };
+    return parameters;
+  }
 
   function generateParameters() {
     const beatsPerMeasure = [2, 4, 8][randInt(0, 1)];
@@ -50,39 +126,25 @@ export default function FourPartHarmony() {
     const chordCount = 2 * randInt(2, 6) + 1;
     const chordsPerMeasure = [2, 4, 8][randInt(0, 1)];
 
-    setParts(() => [
+    const parts = [
       Array(chordCount).fill(null),
       Array(chordCount).fill(null),
       Array(chordCount).fill(null),
       Array(chordCount).fill(null)
-    ]);
+    ];
 
-    setChordAnalyses(() => Array(chordCount).fill(null));
+    const chordAnalyses = Array(chordCount).fill(null);
 
-    setTimeSignature(() => timeSignature);
-    setChordCount(() => chordCount);
-    setChordsPerMeasure(() => chordsPerMeasure);
+    return {
+      parts,
+      chordAnalyses,
+      timeSignature,
+      chordCount,
+      chordsPerMeasure,
+    };
   }
 
-  function handleKeyDown(event) {
-    // Submission
-    if (event.key === "Enter") {
-      parseInput(inputRef.current.value);
-      inputRef.current.value = "";
-
-      return;
-    }
-
-    // Actions for an empty input field
-    if (inputRef.current.value === "") {
-      if (event.key === "ArrowLeft") {
-        selectBefore();
-      }
-      else if (event.key === "ArrowRight") {
-        selectAfter();
-      }
-    }
-  };
+  // #endregion
 
   // Lookup table of functions by first character of input
   const responseTable = {
@@ -504,22 +566,48 @@ export default function FourPartHarmony() {
 
   // #endregion
 
-  // console.log("selection", selection.iChord, selection.voices);
-  // console.log("parts" , parts);
+  
+
+  function handleKeyDown(event) {
+    // Submission
+    if (event.key === "Enter") {
+      parseInput(inputRef.current.value);
+      inputRef.current.value = "";
+
+      return;
+    }
+
+    // Actions for an empty input field
+    if (inputRef.current.value === "") {
+      if (event.key === "ArrowLeft") {
+        selectBefore();
+      }
+      else if (event.key === "ArrowRight") {
+        selectAfter();
+      }
+    }
+  }
+  
+  function playAudio() {
+    pianoPlayer.stop();
+    pianoPlayer.playParts(parts, .85, .85);
+  }
+
+  const parameters = {
+    parts,
+    chordAnalyses,
+    tonality,
+    timeSignature,
+    chordCount,
+    chordsPerMeasure,
+    selection
+  };
 
   return (
     <>
-      {chordCount && (
+      {parts[0].length && (
         <FourPartProgression
-          {...{
-            parts,
-            chordAnalyses,
-            tonality,
-            timeSignature,
-            chordCount,
-            chordsPerMeasure,
-            selection
-          }}
+          {...parameters}
         />
       )}
       <input
@@ -529,6 +617,8 @@ export default function FourPartHarmony() {
         onMouseOver={event => event.target.focus()}
         autoFocus
       />
+      <button type="button" onClick={playAudio}>play audio</button>
+      <button type="button" onClick={save}>save</button>
       <FourPartHarmonyEvaluation parts={parts} analyses={chordAnalyses} tonality={tonality} />
     </>
   )
