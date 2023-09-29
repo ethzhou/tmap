@@ -834,8 +834,6 @@ const evaluations = [
   (chords) => {
     const errors = [];
 
-    const augmentedSecond = new Interval("A", 2);
-
     for (let i = 1; i < chords.length; i++) {
       for (let iVoice = 0; iVoice < 4; iVoice++) {
         if (!chords[i - 1][iVoice] || !chords[i][iVoice])
