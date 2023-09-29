@@ -43,7 +43,7 @@ export default class ChordAnalysis {
   }
 
   toString() {
-    return `${this.accidental}${this.roman}${this.arabic}${this.secondary}`;
+    return `${this.accidental ?? ""}${this.roman}${this.arabic ?? ""}${this.secondary ?? ""}`;
   }
 
   isSeventh() {
