@@ -863,7 +863,6 @@ const evaluations = [
         if (!chords[i - 1][iVoice] || !chords[i][iVoice])
           continue;
       
-        console.log(chords[i - 1][iVoice].interval(chords[i][iVoice]).isEnharmonicTo(tritone, true));
         if (!chords[i - 1][iVoice].interval(chords[i][iVoice]).isEnharmonicTo(tritone, true))
           continue;
 

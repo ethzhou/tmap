@@ -367,7 +367,7 @@ export default function FourPartProgression({
     };
   }
 
-  console.log("music", music);
+  // console.log("music", music);
 
   // #endregion
 
