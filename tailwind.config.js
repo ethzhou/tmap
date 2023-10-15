@@ -5,11 +5,24 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        display: ["Comfortaa"],
+      },
+      keyframes: {
+        cardhover: {
+          "50%": { transform: "rotateY(0deg)" },
+        },
+      },
+      animation: {
+        cardhover: "cardhover 2s infinite",
+      }
+    },
   },
-  plugins: [],
+  plugins: [
+    // "prettier-plugin-tailwindcss",
+  ],
   corePlugins: {
     preflight: false,
   },
-}
-
+};

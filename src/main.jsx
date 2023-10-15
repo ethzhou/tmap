@@ -10,6 +10,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route index element={<App />} />
         <Route path='tmap/*' element={<App />} />
       </Routes>
     </BrowserRouter>
