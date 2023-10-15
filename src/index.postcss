@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Comfortaa&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Patrick%20Hand&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,18 +8,16 @@
 
 .light-card::before {
   background: radial-gradient(
-    600px circle at var(--mouse-x) var(--mouse-y),
-    rgba(255, 255, 255, 0.3),
-    transparent 60%
+    800px circle at var(--light-x) var(--light-y),
+    rgba(255, 255, 255, 0.15),
+    transparent 35%
   );
-  z-index: 3;
 }
 
 .light-card::after {
   background: radial-gradient(
-    1000px circle at var(--mouse-x) var(--mouse-y),
+    1000px circle at var(--light-x) var(--light-y),
     rgba(254, 219, 103, 0.9),
-    transparent 40%
+    transparent 20%
   );
-  z-index: 1;
 }
