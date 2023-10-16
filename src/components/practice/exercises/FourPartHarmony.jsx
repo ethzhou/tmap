@@ -57,7 +57,7 @@ export default function FourPartHarmony() {
       chordsPerMeasure,
     };
     // console.log("Storing", jsonData, JSON.stringify(jsonData));
-    localStorage.setItem("fourPartHarmonyParameters", JSON.stringify(jsonData));
+    localStorage.setItem("fourPartHarmonyScore", JSON.stringify(jsonData));
   }
 
   function setParameters({
@@ -92,7 +92,7 @@ export default function FourPartHarmony() {
   }
 
   function loadParameters() {
-    const retrievedData = localStorage.getItem("fourPartHarmonyParameters");
+    const retrievedData = localStorage.getItem("fourPartHarmonyScore");
 
     // console.log("Retrieving", retrievedData, JSON.parse(retrievedData));
     const retrievedObject = retrievedData ? JSON.parse(retrievedData) : undefined;
