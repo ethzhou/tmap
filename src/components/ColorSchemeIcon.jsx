@@ -9,7 +9,6 @@ export default function ColorSchemeIcon() {
 
   const colorSchemeCycle = ["system", "light", "dark"];
   function cycleColorScheme() {
-    console.log("asdfasdf", colorScheme);
     setColorScheme(
       (colorScheme) =>
         colorSchemeCycle[(colorSchemeCycle.indexOf(colorScheme) + 1) % 3],
