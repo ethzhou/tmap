@@ -3,8 +3,10 @@ import ColorSchemeIcon from "./ColorSchemeIcon";
 export default function Belt() {
   return (
     <>
-      <div className="absolute right-0 top-0 m-4 flex gap-4">
-        <ColorSchemeIcon />
+      <div className="sticky top-4 flex gap-4">
+        <div className="absolute right-4">
+          <ColorSchemeIcon />
+        </div>
       </div>
     </>
   );

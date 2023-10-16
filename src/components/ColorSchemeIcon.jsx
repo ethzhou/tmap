@@ -20,12 +20,12 @@ export default function ColorSchemeIcon() {
       <button
         type="button"
         onClick={cycleColorScheme}
-        className="group flex select-none flex-col items-end border-none bg-transparent"
+        className="group flex h-16 w-16 select-none flex-col items-center border-none bg-transparent p-2"
       >
         <div className="text-4xl leading-none text-slate-400 dark:text-slate-700">
           {colorScheme === "light" ? "☉" : colorScheme === "dark" ? "☽︎" : "◑"}
         </div>
-        <div className="self-center font-hand text-slate-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-slate-700">
+        <div className="font-hand text-slate-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-slate-700">
           {colorScheme}
         </div>
       </button>
@@ -43,7 +43,7 @@ export function isLight(colorScheme) {
   }
 
   if (colorScheme === "system") {
-    return useMediaQuery({ query: "prefers-color-scheme: light" });
+    return window.matchMedia("(prefers-color-scheme: light)").matches;
   }
 
   // Safety
