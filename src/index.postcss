@@ -17,9 +17,10 @@
 
 .home-card::after {
   background: radial-gradient(
-    1000px circle at var(--light-x) var(--light-y),
+    300px circle at var(--light-x) var(--light-y),
     rgba(254, 219, 103, 0.9),
-    transparent 20%
+    rgba(236, 159, 78, 0.9) 50%,
+    transparent 60%
   );
 }
 
@@ -54,24 +55,24 @@
     300px circle at var(--light-x) var(--light-y),
     rgba(254, 219, 103, 0.9),
     rgba(236, 159, 78, 0.9) 40%,
-    transparent 70%
+    transparent 80%
   );
 }
 
 @media (prefers-color-scheme: dark) {
   .practice-card::before {
     background: radial-gradient(
-      400px circle at var(--light-x) var(--light-y),
+      480px circle at var(--light-x) var(--light-y),
       rgba(255, 255, 255, 0.15),
-      transparent 100%
+      transparent 80%
     );
   }
 
   .practice-card::after {
     background: radial-gradient(
-      3000px circle at var(--light-x) var(--light-y),
-      rgba(133, 194, 255, 0.9),
-      transparent 10%
+      1000px circle at var(--light-x) var(--light-y),
+      rgba(208, 133, 255, 0.9),
+      transparent 20%
     );
   }
 }
