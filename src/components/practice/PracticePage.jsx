@@ -27,7 +27,7 @@ export default function PracticePage() {
             </Link>
             <Link
               to="/tmap/"
-              className="ml-2 h-8 font-hand text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
+              className="group ml-2 h-8 font-hand text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
             >
               <div className="before:inline-block before:rotate-0 before:transition-transform before:duration-500 before:ease-in-out before:content-['⇡'] group-hover:before:rotate-[360deg]">
                 {/* <div className="back"> */}
