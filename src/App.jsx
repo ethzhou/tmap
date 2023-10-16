@@ -19,8 +19,6 @@ export default function App() {
     localStorage.setItem("colorScheme", colorSchemeState[0]);
   }, [colorSchemeState[0]]);
 
-  console.log(colorSchemeState);
-
   return (
     <>
       <ColorSchemeContext.Provider value={colorSchemeState}>
