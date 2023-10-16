@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router";
-import LearnPage from '../components/learn/LearnPage';
-import Lesson from '../components/learn/Lesson';
-import LearnLayout from '../components/learn/LearnLayout';
+import LearnPage from "../learn/LearnPage";
+import Lesson from "../learn/Lesson";
+import LearnLayout from "../learn/LearnLayout";
 
 export default function LearnRoutes() {
   return (
@@ -9,7 +9,7 @@ export default function LearnRoutes() {
       <Routes>
         <Route element={<LearnLayout />}>
           <Route index element={<LearnPage />} />
-          <Route path=':lessonID' element={<Lesson />} />
+          <Route path=":lessonID" element={<Lesson />} />
         </Route>
       </Routes>
     </>

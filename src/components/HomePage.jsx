@@ -1,16 +1,9 @@
-import { useNavigate } from "react-router";
-import useKeyPress from "../hooks/useKeyPress";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { ColorSchemeContext } from "../App";
 
 export default function HomePage() {
-  const navigate = useNavigate();
-
-  useKeyPress(["l"], () => {
-    navigate("learn");
-  });
-  useKeyPress(["p"], () => {
-    navigate("practice");
-  });
+  const [colorScheme, setColorScheme] = useContext(ColorSchemeContext);
 
   function handleMouseMoveLightPos(event) {
     const target = event.currentTarget;
@@ -29,41 +22,48 @@ export default function HomePage() {
     <>
       <div className="flex justify-center">
         <div className="flex h-screen w-[40rem] flex-col justify-center gap-0.5">
-          <nav className="flex justify-between px-1">
+          <nav className="flex items-baseline justify-between px-1">
             <Link
               to="/tmap/"
-              className="font-name h-8 text-2xl text-black no-underline"
+              className="h-8 font-hand text-2xl text-slate-700 no-underline dark:text-slate-400 max-sm:text-xl"
             >
-              <div>tmap ♫</div>
+              <div>tmap&nbsp;♫</div>
             </Link>
+            <div className="self-bottom ml-2 h-[3px] flex-auto rounded-tr-full bg-slate-700 dark:bg-slate-400"></div>
             <Link
               to="about"
-              className="font-name text-2xl text-slate-400 no-underline"
+              className="ml-6 font-hand text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
             >
-              <div>// (about)</div>
+              <div className="before:mr-1.5 before:inline-block before:content-['/\/']">
+                (about)
+              </div>
             </Link>
           </nav>
           <nav
             onMouseMove={handleMouseMoveLightPos}
-            className="group relative flex h-80 w-full flex-wrap items-center justify-center justify-items-center gap-1 overflow-x-hidden font-display"
+            className="group relative flex h-80 w-full flex-wrap items-start justify-center justify-items-center gap-1 overflow-x-hidden"
           >
-            <div className="light-card relative flex aspect-square flex-auto items-center justify-center rounded bg-emerald-400 before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:rounded before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:rounded after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:animate-cardhover hover:before:opacity-100 group-hover:after:opacity-100">
-              <div className="light-card-content absolute z-[2] flex h-[calc(100%-4px)] w-[calc(100%-4px)] items-center justify-center rounded bg-emerald-600">
+            <div className="home-card relative flex aspect-square flex-auto items-center justify-center rounded-sm bg-emerald-400 before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:rounded-sm before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:rounded-sm after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100 dark:bg-emerald-600">
+              <div className="home-card-content absolute z-[2] flex h-[calc(100%-4px)] w-[calc(100%-4px)] items-center justify-center rounded-sm bg-emerald-600 dark:bg-teal-900">
                 <Link
                   to="learn"
-                  className="flex h-full w-full items-center justify-center text-4xl text-white no-underline"
+                  className="flex h-full w-full items-center justify-center text-slate-50 no-underline dark:text-slate-200"
                 >
-                  <div>Learn</div>
+                  <div className="font-comic text-4xl max-sm:text-2xl">
+                    Learn
+                  </div>
                 </Link>
               </div>
             </div>
-            <div className="light-card relative flex aspect-square flex-auto items-center justify-center rounded bg-pink-400 before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:rounded before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:rounded after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:animate-cardhover hover:before:opacity-100 group-hover:after:opacity-100">
-              <div className="light-card-content absolute z-[2] h-[calc(100%-4px)] w-[calc(100%-4px)] rounded bg-pink-600">
+            <div className="home-card relative flex aspect-square flex-auto items-center justify-center rounded-sm bg-pink-400 before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:rounded-sm before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:rounded-sm after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100 dark:bg-pink-600">
+              <div className="home-card-content absolute z-[2] h-[calc(100%-4px)] w-[calc(100%-4px)] rounded-sm bg-pink-600 dark:bg-pink-900">
                 <Link
                   to="practice"
-                  className="flex h-full w-full items-center justify-center text-4xl text-white no-underline"
+                  className="flex h-full w-full items-center justify-center text-slate-50 no-underline dark:text-slate-200"
                 >
-                  <div>Practice</div>
+                  <div className="font-comic text-4xl max-sm:text-2xl">
+                    Practice
+                  </div>
                 </Link>
               </div>
             </div>

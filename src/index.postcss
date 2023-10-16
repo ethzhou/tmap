@@ -1,23 +1,77 @@
 @import url("https://fonts.googleapis.com/css?family=Comfortaa&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Comic%20Neue&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Raleway:300&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Patrick%20Hand&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.light-card::before {
+.home-card::before {
   background: radial-gradient(
     800px circle at var(--light-x) var(--light-y),
-    rgba(255, 255, 255, 0.15),
-    transparent 35%
+    rgba(255, 255, 255, 0.35),
+    transparent 45%
   );
 }
 
-.light-card::after {
+.home-card::after {
   background: radial-gradient(
     1000px circle at var(--light-x) var(--light-y),
     rgba(254, 219, 103, 0.9),
     transparent 20%
   );
+}
+
+@media (prefers-color-scheme: dark) {
+  .home-card::before {
+    background: radial-gradient(
+      800px circle at var(--light-x) var(--light-y),
+      rgba(255, 255, 255, 0.15),
+      transparent 35%
+    );
+  }
+
+  .home-card::after {
+    background: radial-gradient(
+      1000px circle at var(--light-x) var(--light-y),
+      rgba(133, 194, 255, 0.9),
+      transparent 20%
+    );
+  }
+}
+
+.practice-card::before {
+  background: radial-gradient(
+    800px circle at var(--light-x) var(--light-y),
+    rgba(255, 255, 255, 0.55),
+    transparent 45%
+  );
+}
+
+.practice-card::after {
+  background: radial-gradient(
+    300px circle at var(--light-x) var(--light-y),
+    rgba(254, 219, 103, 0.9),
+    rgba(236, 159, 78, 0.9) 40%,
+    transparent 70%
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  .practice-card::before {
+    background: radial-gradient(
+      400px circle at var(--light-x) var(--light-y),
+      rgba(255, 255, 255, 0.15),
+      transparent 100%
+    );
+  }
+
+  .practice-card::after {
+    background: radial-gradient(
+      3000px circle at var(--light-x) var(--light-y),
+      rgba(133, 194, 255, 0.9),
+      transparent 10%
+    );
+  }
 }

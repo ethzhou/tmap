@@ -4,9 +4,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        name: ["Patrick Hand"],
+        hand: ["Patrick Hand"],
         display: ["Comfortaa"],
-        raleway: ["Raleway"],
+        comic: ["Comic Neue"],
+        clean: ["Raleway"],
       },
       keyframes: {
         // cardhover: {
