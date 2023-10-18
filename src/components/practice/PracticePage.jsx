@@ -17,7 +17,7 @@ export default function PracticePage() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="mt-20 flex h-screen w-[48rem] flex-col justify-start gap-1">
+        <div className="my-20 flex w-[48rem] flex-col justify-start gap-1">
           <nav className="flex items-baseline">
             <Link
               to=""
@@ -38,9 +38,9 @@ export default function PracticePage() {
           </nav>
           <div
             onMouseMove={handleMouseMoveLightPos}
-            className="group flex flex-wrap items-start justify-between justify-items-center gap-y-1"
+            className="group grid grid-flow-row-dense grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-1"
           >
-            <div className="practice-card relative flex h-96 w-60 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
+            <div className="practice-card relative flex h-96 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
               <div className="practice-card-content absolute z-[2] flex h-[calc(100%-4px)] w-[calc(100%-4px)] items-center justify-center bg-slate-100 dark:bg-slate-800">
                 <div className="h-full w-full px-4 text-center">
                   <Link
@@ -61,12 +61,12 @@ export default function PracticePage() {
                     >
                       <use href="/src/assets/interval-reading.svg#graphic"></use>
                     </svg>
-                    <div className="font-clean">One, two, three, four…</div>
+                    <div className="font-clean">Okay.</div>
                   </Link>
                 </div>
               </div>
             </div>
-            <div className="practice-card relative flex h-96 w-60 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
+            <div className="practice-card relative flex h-96 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
               <div className="practice-card-content absolute z-[2] flex h-[calc(100%-4px)] w-[calc(100%-4px)] items-center justify-center bg-slate-100 dark:bg-slate-800">
                 <div className="h-full w-full px-4 text-center">
                   <Link
@@ -92,7 +92,7 @@ export default function PracticePage() {
                 </div>
               </div>
             </div>
-            <div className="practice-card relative flex h-96 w-60 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
+            <div className="practice-card relative flex h-96 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
               <div className="practice-card-content absolute z-[2] flex h-[calc(100%-4px)] w-[calc(100%-4px)] items-center justify-center bg-slate-100 dark:bg-slate-800">
                 <div className="h-full w-full px-4 text-center">
                   <Link
@@ -113,12 +113,17 @@ export default function PracticePage() {
                     >
                       <use href="/src/assets/four-part-harmony.svg#graphic"></use>
                     </svg>
-                    <div className="font-clean">I - IV - V - I!</div>
+                    <div className="font-clean">
+                      IV - V - I<br />
+                      IV - V - I<br />
+                      IV - V - I<br />
+                      IV - V - I
+                    </div>
                   </Link>
                 </div>
               </div>
             </div>
-            <div className="practice-card relative flex h-96 w-60 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
+            <div className="practice-card relative flex h-96 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
               <div className="practice-card-content absolute z-[2] flex h-[calc(100%-4px)] w-[calc(100%-4px)] items-center justify-center bg-slate-100 dark:bg-slate-800">
                 <div className="h-full w-full px-4 text-center">
                   <Link
