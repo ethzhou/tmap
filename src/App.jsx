@@ -14,24 +14,69 @@ export default function App() {
   const colorSchemeState = useState(
     localStorage.getItem("colorScheme") ?? "system",
   );
+  const [colorScheme, setColorScheme] = colorSchemeState;
 
   useEffect(() => {
-    localStorage.setItem("colorScheme", colorSchemeState[0]);
-  }, [colorSchemeState[0]]);
+    localStorage.setItem("colorScheme", colorScheme);
+  }, [colorScheme]);
+
+  const systemColorSchemeIsLight = useMediaQuery(
+    { query: "(prefers-color-scheme: light" },
+    undefined,
+    matches =>
+      colorScheme === "system" &&
+      setColorScheme(colorScheme => (matches ? true : false)),
+  );
+
+  /**
+   * @type {"light" | "dark"}
+   */
+  const displayColorSchemeIsLight =
+    colorScheme === "system"
+      ? systemColorSchemeIsLight
+      : colorScheme === "light";
+
+  if (displayColorSchemeIsLight) {
+    document.documentElement.classList.remove("dark");
+  } else {
+    document.documentElement.classList.add("dark");
+  }
 
   return (
     <>
       <ColorSchemeContext.Provider value={colorSchemeState}>
-        <Belt />
-        <Routes>
-          <Route path="" element={<HomePage />} />
-          <Route path="learn/*" element={<LearnRoutes />} />
-          <Route path="practice/*" element={<PracticeRoutes />} />
-          <Route path="about/*" element={<AboutRoutes />} />
-          <Route path="sheet-music-test" element={<SheetMusicTest />} />
-          <Route path="*" element={<p>jajaja not a page</p>} />
-        </Routes>
+        <div className={`${displayColorSchemeIsLight ? "" : "dark"}`}>
+          <Belt />
+          <Routes>
+            <Route path="" element={<HomePage />} />
+            <Route path="learn/*" element={<LearnRoutes />} />
+            <Route path="practice/*" element={<PracticeRoutes />} />
+            <Route path="about/*" element={<AboutRoutes />} />
+            <Route path="sheet-music-test" element={<SheetMusicTest />} />
+            <Route path="*" element={<p>jajaja not a page</p>} />
+          </Routes>
+        </div>
       </ColorSchemeContext.Provider>
     </>
   );
+}
+
+export function isLight(colorScheme) {
+  if (colorScheme === "light") {
+    return true;
+  }
+
+  if (colorScheme === "dark") {
+    return false;
+  }
+
+  if (colorScheme === "system") {
+    return window.matchMedia("(prefers-color-scheme: light)").matches;
+  }
+
+  // Safety
+
+  console.warn(`Color scheme ${colorScheme} is unrecognized.`);
+
+  return true;
 }
