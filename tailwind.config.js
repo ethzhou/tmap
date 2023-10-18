@@ -10,14 +10,6 @@ export default {
         comic: ["Comic Neue"],
         clean: ["Raleway"],
       },
-      keyframes: {
-        // cardhover: {
-        //   "50%": { transform: "rotateY(0deg)" },
-        // },
-      },
-      animation: {
-        // cardhover: "cardhover 2s infinite",
-      },
     },
   },
   plugins: [
