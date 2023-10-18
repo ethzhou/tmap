@@ -41,7 +41,7 @@ export default function HomePage() {
           </nav>
           <nav
             onMouseMove={handleMouseMoveLightPos}
-            className="group relative flex h-80 w-full flex-wrap items-start justify-center justify-items-center gap-1"
+            className="group relative grid h-80 grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-1"
           >
             <div className="home-card before after relative flex aspect-square flex-auto items-center justify-center bg-emerald-400 before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100 dark:bg-emerald-600">
               <div className="home-card-content absolute z-[2] flex h-[calc(100%-4px)] w-[calc(100%-4px)] items-center justify-center bg-emerald-600 dark:bg-teal-900">
@@ -49,9 +49,7 @@ export default function HomePage() {
                   to="learn"
                   className="flex h-full w-full items-center justify-center text-slate-50 no-underline dark:text-slate-200"
                 >
-                  <div className="font-comic text-4xl max-sm:text-2xl">
-                    Learn
-                  </div>
+                  <div className="font-comic text-4xl">Learn</div>
                 </Link>
               </div>
             </div>
@@ -61,9 +59,7 @@ export default function HomePage() {
                   to="practice"
                   className="flex h-full w-full items-center justify-center text-slate-50 no-underline dark:text-slate-200"
                 >
-                  <div className="font-comic text-4xl max-sm:text-2xl">
-                    Practice
-                  </div>
+                  <div className="font-comic text-4xl">Practice</div>
                 </Link>
               </div>
             </div>
