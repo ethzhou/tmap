@@ -45,7 +45,7 @@ export default function App() {
   return (
     <>
       <ColorSchemeContext.Provider value={colorSchemeState}>
-        <div className={`${displayColorSchemeIsLight ? "" : "dark"}`}>
+        <div>
           <Belt />
           <Routes>
             <Route path="" element={<HomePage />} />
