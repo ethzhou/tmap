@@ -17,12 +17,12 @@ export default function ColorSchemeIcon() {
       <button
         type="button"
         onClick={cycleColorScheme}
-        className="dark group flex h-8 w-8 cursor-pointer select-none flex-col items-center justify-center overflow-hidden border-none bg-transparent p-2"
+        className="dark group flex h-8 w-8 cursor-pointer select-none flex-col items-center justify-center overflow-hidden rounded-full border-none bg-transparent p-2"
       >
         <div className="text-4xl leading-none text-slate-400 dark:text-slate-700">
           {colorScheme === "light" ? "☉" : colorScheme === "dark" ? "☽︎" : "◑"}
         </div>
-        <div className="absolute -bottom-5 font-hand text-slate-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-slate-700">
+        <div className="pointer-events-none absolute -bottom-5 font-hand text-slate-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-slate-700">
           {colorScheme}
         </div>
       </button>

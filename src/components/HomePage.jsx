@@ -21,7 +21,7 @@ export default function HomePage() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="flex h-screen w-[40rem] flex-col justify-center gap-0.5">
+        <div className="flex h-screen w-[40rem] flex-col justify-center gap-1">
           <nav className="flex items-baseline justify-between px-1">
             <Link
               to="/tmap/"
@@ -29,7 +29,7 @@ export default function HomePage() {
             >
               <div>tmap&nbsp;♫</div>
             </Link>
-            <div className="self-bottom ml-2 h-[3px] flex-auto rounded-tr-full bg-slate-700 dark:bg-slate-400"></div>
+            <div className="self-bottom ml-2 h-[2px] flex-auto rounded-tr-full bg-slate-700 dark:bg-slate-400"></div>
             <Link
               to="about"
               className="ml-6 font-hand text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"

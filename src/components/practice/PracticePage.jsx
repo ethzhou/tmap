@@ -17,7 +17,7 @@ export default function PracticePage() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="mt-20 flex h-screen w-[48rem] flex-col justify-start gap-0.5">
+        <div className="mt-20 flex h-screen w-[48rem] flex-col justify-start gap-1">
           <nav className="flex items-baseline">
             <Link
               to=""
@@ -34,11 +34,11 @@ export default function PracticePage() {
                 (tmap&nbsp;♫)
               </div>
             </Link>
-            <div className="self-bottom ml-2 h-[3px] flex-auto rounded-tr-full bg-pink-600"></div>
+            <div className="self-bottom ml-2 h-[2px] flex-auto rounded-tr-full bg-pink-600"></div>
           </nav>
           <div
             onMouseMove={handleMouseMoveLightPos}
-            className="group flex flex-wrap items-start justify-between justify-items-center gap-y-6"
+            className="group flex flex-wrap items-start justify-between justify-items-center gap-y-1"
           >
             <div className="practice-card relative flex h-96 w-60 items-center justify-center bg-slate-500 text-center before:pointer-events-none before:absolute before:inset-0 before:z-[3] before:h-full before:w-full before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] after:absolute after:inset-0 after:z-[1] after:h-full after:w-full after:opacity-0 after:transition-opacity after:duration-500 after:content-[''] hover:before:opacity-100 group-hover:after:opacity-100">
               <div className="practice-card-content absolute z-[2] flex h-[calc(100%-4px)] w-[calc(100%-4px)] items-center justify-center bg-slate-100 dark:bg-slate-800">
