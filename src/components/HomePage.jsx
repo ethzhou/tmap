@@ -25,14 +25,14 @@ export default function HomePage() {
           <nav className="flex items-baseline justify-between px-1">
             <Link
               to="/tmap/"
-              className="h-8 font-hand text-2xl text-slate-700 no-underline dark:text-slate-400 max-sm:text-xl"
+              className="h-8 font-hand text-2xl text-slate-500 no-underline dark:text-slate-400 max-sm:text-xl"
             >
               <div>tmap&nbsp;♫</div>
             </Link>
-            <div className="self-bottom ml-2 h-[2px] flex-auto rounded-tr-full bg-slate-700 dark:bg-slate-400"></div>
+            <div className="self-bottom ml-2 h-[2px] flex-auto rounded-tr-full bg-slate-500 dark:bg-slate-400"></div>
             <Link
               to="about"
-              className="ml-6 font-hand text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
+              className="ml-6 font-hand text-2xl text-slate-400 no-underline dark:text-slate-600 max-sm:text-xl"
             >
               <div className="before:mr-1.5 before:inline-block before:content-['/\/']">
                 (about)
