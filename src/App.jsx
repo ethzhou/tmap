@@ -6,6 +6,7 @@ import SheetMusicTest from "./components/practice/exercises/SheetMusicTest";
 import AboutRoutes from "./components/routes/AboutRoutes";
 import { useMediaQuery } from "react-responsive";
 import { createContext, useContext, useEffect, useState } from "react";
+import Necklace from "./components/Necklace";
 import Belt from "./components/Belt";
 
 export const ColorSchemeContext = createContext("system");
@@ -46,7 +47,7 @@ export default function App() {
     <>
       <ColorSchemeContext.Provider value={colorSchemeState}>
         <div>
-          <Belt />
+          <Necklace />
           <Routes>
             <Route path="" element={<HomePage />} />
             <Route path="learn/*" element={<LearnRoutes />} />
@@ -55,6 +56,7 @@ export default function App() {
             <Route path="sheet-music-test" element={<SheetMusicTest />} />
             <Route path="*" element={<p>jajaja not a page</p>} />
           </Routes>
+          <Belt />
         </div>
       </ColorSchemeContext.Provider>
     </>
