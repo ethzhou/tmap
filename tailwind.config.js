@@ -6,9 +6,10 @@ export default {
     extend: {
       fontFamily: {
         hand: ["Patrick Hand"],
-        display: ["Comfortaa"],
+        clear: ["Comfortaa"],
         comic: ["Comic Neue"],
-        clean: ["Raleway"],
+        text: ["Raleway"],
+        mono: ["Nanum Gothic Coding"],
       },
     },
   },

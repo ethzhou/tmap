@@ -61,7 +61,7 @@ export default function PracticePage() {
                     >
                       <use href="/src/assets/interval-reading.svg#graphic"></use>
                     </svg>
-                    <div className="font-clean">Okay.</div>
+                    <div className="font-text">Okay.</div>
                   </Link>
                 </div>
               </div>
@@ -87,7 +87,7 @@ export default function PracticePage() {
                     >
                       <use href="/src/assets/interval-dictation.svg#graphic"></use>
                     </svg>
-                    <div className="font-clean">hm–⁠hm… hm… hm…</div>
+                    <div className="font-text">hm–⁠hm… hm… hm…</div>
                   </Link>
                 </div>
               </div>
@@ -113,7 +113,7 @@ export default function PracticePage() {
                     >
                       <use href="/src/assets/four-part-harmony.svg#graphic"></use>
                     </svg>
-                    <div className="font-clean">
+                    <div className="font-text">
                       IV - V - I<br />
                       IV - V - I<br />
                       IV - V - I<br />
@@ -144,7 +144,7 @@ export default function PracticePage() {
                     >
                       <use href="/src/assets/something-else.svg#graphic"></use>
                     </svg>
-                    <div className="font-clean">
+                    <div className="font-text">
                       What's the lorem ipsum of music?
                     </div>
                   </Link>
