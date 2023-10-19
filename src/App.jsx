@@ -6,8 +6,8 @@ import SheetMusicTest from "./components/practice/exercises/SheetMusicTest";
 import AboutRoutes from "./components/routes/AboutRoutes";
 import { useMediaQuery } from "react-responsive";
 import { createContext, useContext, useEffect, useState } from "react";
-import Necklace from "./components/Necklace";
-import Belt from "./components/Belt";
+import Necklace from "./components/bars/Necklace";
+import Belt from "./components/bars/Belt";
 
 export const ColorSchemeContext = createContext("system");
 
