@@ -113,7 +113,13 @@ html.dark {
   }
 }
 
-.asdf::before {
-  content: "";
-  background-color: red;
+.nav-up {
+  @apply before:inline-block;
+  @apply before:rotate-0;
+  @apply before:transition-transform;
+  @apply before:duration-500;
+  @apply before:ease-in-out;
+  @apply before:content-['⇡'];
+  @apply group-hover:before:rotate-[360deg];
+  @apply before:mr-0.5;
 }
