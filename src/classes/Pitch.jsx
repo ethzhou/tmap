@@ -1,4 +1,4 @@
-import { A_OCTAVE, C_OCTAVE, accidentalToString } from "../utils/musicUtils";
+import { A_OCTAVE, C_OCTAVE, accidentalToString, accidentalToText } from "../utils/musicUtils";
 import Interval from "./Interval";
 
 export default class Pitch {
@@ -66,11 +66,17 @@ export default class Pitch {
   }
 
   /**
-   * @param {boolean} includeAccidental Whether to keep the accidental.
    * @returns {string}
    */
   toString() {
-    return `${this.letter}${accidentalToString(this.accidental)}${this.octave}`;
+    return `${this.letter}${accidentalToString(this.accidental) ?? ""}${this.octave}`;
+  }
+  
+  /**
+   * @returns {string}
+   */
+  toText() {
+    return `${this.letter}${accidentalToText(this.accidental) ?? ""}${this.octave}`;
   }
 
   /**
