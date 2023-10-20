@@ -50,7 +50,7 @@ export default function PracticePage() {
                     className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
                   >
                     <div className="px-4">
-                      <div className="mb-4 mt-20 px-4 font-clear text-xl">
+                      <div className="font-display mb-4 mt-20 px-4 text-xl">
                         Interval Reading
                       </div>
                       <svg
@@ -78,7 +78,7 @@ export default function PracticePage() {
                     className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
                   >
                     <div className="px-4">
-                      <div className="mb-4 mt-20 px-4 font-clear text-xl">
+                      <div className="font-display mb-4 mt-20 px-4 text-xl">
                         Interval Dictation
                       </div>
                       <svg
@@ -106,7 +106,7 @@ export default function PracticePage() {
                     className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
                   >
                     <div className="px-4">
-                      <div className="mb-4 mt-20 px-4 font-clear text-xl">
+                      <div className="font-display mb-4 mt-20 px-4 text-xl">
                         Four-Part Harmony
                       </div>
                       <svg
@@ -138,7 +138,7 @@ export default function PracticePage() {
                     className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
                   >
                     <div className="px-4">
-                      <div className="mb-4 mt-20 font-clear text-xl">
+                      <div className="font-display mb-4 mt-20 text-xl">
                         Something Else
                       </div>
                       <svg

@@ -40,15 +40,15 @@ export default function IntervalExercise({
             <div className="self-bottom h-[2px] w-[4px] rounded-tr-full bg-pink-600"></div>
           </nav>
           <div className="flex flex-col items-center">
-            <div className="mb-6 font-clear">
-              <span className="inline-block min-w-[72px] text-right font-clear text-6xl text-slate-700 dark:text-slate-300">
+            <div className="font-display mb-6">
+              <span className="font-display inline-block min-w-[72px] text-right text-6xl text-slate-700 dark:text-slate-300">
                 {record.score}
               </span>
               <span className="text-sm text-slate-500 dark:text-slate-500">
                 {" "}
                 of{" "}
               </span>
-              <span className="w-8 font-clear text-xl text-slate-500 dark:text-slate-500">
+              <span className="font-display w-8 text-xl text-slate-500 dark:text-slate-500">
                 {record.history.length}
               </span>
             </div>
@@ -56,7 +56,7 @@ export default function IntervalExercise({
             <div className="flex-auto"></div>
             <div className="mt-20 max-h-40 overflow-y-scroll scroll-smooth">
               <table className="relative table-fixed">
-                <thead className="sticky top-0 font-clear">
+                <thead className="font-display sticky top-0">
                   <tr>
                     <th className="w-28 bg-slate-50 p-0 font-normal dark:bg-slate-900">
                       pitch 1
