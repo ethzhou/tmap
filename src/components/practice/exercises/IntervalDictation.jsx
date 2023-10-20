@@ -14,7 +14,7 @@ function nextPlayType(playType) {
 }
 
 export default function IntervalDictation() {
-  const { parameters, totalSeconds, record } = useExercise(
+  const { parameters, stopwatch, record } = useExercise(
     () => {
       const intervalSize = randInt(1, 8);
       const lowerPitch = Pitch.fromInt(
@@ -91,8 +91,9 @@ export default function IntervalDictation() {
 
   return (
     <IntervalExercise
+      name={"Interval Dictation"}
       record={record}
-      totalSeconds={totalSeconds}
+      stopwatch={stopwatch}
       exerciseContent={
         parameters && (
           <>

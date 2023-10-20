@@ -7,7 +7,7 @@ import CharByCharField from "../../general/CharByCharField";
 import IntervalExercise from "./IntervalExercise";
 
 export default function IntervalReading() {
-  const { parameters, totalSeconds, record } = useExercise(
+  const { parameters, stopwatch, record } = useExercise(
     () => {
       const intervalSize = randInt(1, 8);
       const lowerPitch = Pitch.fromInt(
@@ -71,8 +71,9 @@ export default function IntervalReading() {
 
   return (
     <IntervalExercise
+      name={"Interval Reading"}
       record={record}
-      totalSeconds={totalSeconds}
+      stopwatch={stopwatch}
       exerciseContent={
         parameters && (
           <>

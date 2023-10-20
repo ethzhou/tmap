@@ -2,23 +2,26 @@ import { useEffect, useState } from "react";
 import { useStopwatch } from "react-timer-hook";
 
 /**
- * 
+ *
  * @param {Function} generateParameters Returns an object holding the parameters of the exercise.
  * @param {string} submissionEventType Type of event triggering the record update process.
  * @param {Function} generateRecordUpdate Takes an event and the exercise parameters and returns an object holding a score and history entry.
  * @returns An object holding the exercise data.
  */
-export default function useExercise(generateParameters, submissionEventType, generateRecordUpdate) {
+export default function useExercise(
+  generateParameters,
+  submissionEventType,
+  generateRecordUpdate,
+) {
   const [record, setRecord] = useState({ score: 0, history: [] });
-  
-  const { totalSeconds } = useStopwatch({
-    autoStart: false,  // TODO change when ready for it
+
+  const stopwatch = useStopwatch({
+    autoStart: true, // TODO change when ready for it
   });
 
   const [parameters, setParameters] = useState();
 
   const [submissionCallback, setSubmissionCallback] = useState();
-
 
   // Create a new exercise
   useEffect(() => {
@@ -28,14 +31,15 @@ export default function useExercise(generateParameters, submissionEventType, gen
   // Update the record and record updater
   useEffect(() => {
     document.removeEventListener(submissionEventType, submissionCallback);
-    setSubmissionCallback(() => (event) => {
+    setSubmissionCallback(() => event => {
       const update = generateRecordUpdate(event, parameters);
-      update && setRecord(record => {
-        return {
-          score: record.score + update.score,
-          history: [...record.history, update],
-        };
-      });
+      update &&
+        setRecord(record => {
+          return {
+            score: record.score + update.score,
+            history: [...record.history, update],
+          };
+        });
     });
   }, [parameters]);
 
@@ -47,5 +51,5 @@ export default function useExercise(generateParameters, submissionEventType, gen
       document.removeEventListener(submissionEventType, submissionCallback);
   }, [submissionCallback]);
 
-  return { parameters, totalSeconds, record };
+  return { parameters, stopwatch, record };
 }
