@@ -10,6 +10,8 @@ export default {
         comic: ["Comic Neue"],
         text: ["Raleway"],
         mono: ["Nanum Gothic Coding"],
+        emoji: ["Noto Emoji"],
+        redacted: ["Redacted Script"],
       },
     },
   },
