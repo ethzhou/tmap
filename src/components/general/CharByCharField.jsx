@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function CharByCharField({
   length,
@@ -8,12 +8,10 @@ export default function CharByCharField({
   function handleMouseMoveLightPos(event) {
     const target = event.currentTarget;
 
-    for (const field of target.children) {
-      const rect = field.getBoundingClientRect();
-      const relativeX = event.clientX - rect.x;
+    const rect = target.getBoundingClientRect();
+    const relativeX = event.clientX - rect.x;
 
-      field.style.setProperty("--light-x", `${relativeX}px`);
-    }
+    target.style.setProperty("--light-x", `${relativeX}px`);
   }
 
   const divRef = useRef();
@@ -26,12 +24,20 @@ export default function CharByCharField({
           type="text"
           maxLength={1}
           onKeyDown={handleInputKeyDown}
+          onMouseMove={handleMouseMoveLightPos}
           onChange={handleInputChange}
           // className="border-px m-0 aspect-square rounded-sm border-solid border-slate-500 bg-transparent text-center font-comic text-3xl text-slate-800 outline-0 dark:border-slate-400 dark:text-slate-200"
-          className="char-field m-0 aspect-square border-0 border-b-2 border-dashed border-slate-500 bg-transparent text-center font-comic text-5xl text-slate-800 outline-0 hover:border-orange-400 focus:border-solid focus:border-slate-800 dark:border-slate-400 dark:text-slate-200 dark:hover:border-purple-600 dark:focus:border-slate-200"
+          className="char-field pb-auto m-0 aspect-square border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 text-center font-comic text-5xl text-slate-800 outline-0 hover:border-orange-400 focus:border-solid focus:border-slate-800 dark:border-slate-400 dark:text-slate-200 dark:hover:border-purple-600 dark:focus:border-slate-200"
         />
       )),
   );
+
+  useEffect(() => {
+    divRef.current.style[
+      "grid-template-columns"
+    ] = `repeat(${2}, minmax(0, 1fr))`;
+    divRef.current.style.width = `${5.5 * length - 0.5} rem`;
+  }, []);
 
   function getString() {
     return [...divRef.current.children]
@@ -118,19 +124,16 @@ export default function CharByCharField({
   return (
     <>
       <div className="relative">
-        <div
-          ref={divRef}
-          onMouseMove={handleMouseMoveLightPos}
-          className="relative grid w-40 grid-cols-2 gap-2"
-        >
+        {/* grid-template-columns set above in useEffect */}
+        <div ref={divRef} className="relative grid w-40 gap-2">
           {/* Do not put more elements under this div. The selection of previous/next sibling does not check whether the input field is the last one. */}
           {fields}
         </div>
         <button
           onClick={submit}
-          className="absolute -right-10 top-8 border-none bg-transparent text-3xl text-slate-500 dark:text-slate-600"
+          className="absolute -right-10 top-8 aspect-square border-none bg-transparent"
         >
-          ↩
+          <div className="text-3xl text-slate-500 dark:text-slate-600">↜</div>
         </button>
       </div>
     </>
