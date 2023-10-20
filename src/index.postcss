@@ -10,6 +10,56 @@
 @tailwind components;
 @tailwind utilities;
 
+html.dark * {
+  scrollbar-color: red;
+}
+
+/* https://css-tricks.com/the-current-state-of-styling-scrollbars-in-css/ */
+
+html {
+  /* --scrollbarBG: #e8e8e7; */
+  --thumbBG: #e7bf98;
+}
+
+html.dark {
+  /* --scrollbarBG: #302b42; */
+  --thumbBG: #bcb1d5;
+}
+
+::-webkit-scrollbar {
+  width: 0.375rem;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 6px;
+  border: 3px solid var(--scrollbarBG);
+}
+
+/* Navigate Up arrows */
+
+.nav-up {
+  @apply before:inline-block;
+  @apply before:rotate-0;
+  @apply before:transition-transform;
+  @apply before:duration-500;
+  @apply before:ease-in-out;
+  @apply before:content-['⇡'];
+  @apply group-hover:before:rotate-[360deg];
+  @apply before:mr-0.5;
+}
+
+/* Light */
+
 .home-card::before {
   background: radial-gradient(
     800px circle at var(--light-x) var(--light-y),
@@ -99,6 +149,8 @@ html.dark {
   }
 }
 
+/* VexFlow */
+
 #vf-canvas,
 #vf-canvas * {
   @apply stroke-slate-700;
@@ -111,15 +163,4 @@ html.dark {
     @apply stroke-slate-300;
     @apply fill-slate-300;
   }
-}
-
-.nav-up {
-  @apply before:inline-block;
-  @apply before:rotate-0;
-  @apply before:transition-transform;
-  @apply before:duration-500;
-  @apply before:ease-in-out;
-  @apply before:content-['⇡'];
-  @apply group-hover:before:rotate-[360deg];
-  @apply before:mr-0.5;
 }
