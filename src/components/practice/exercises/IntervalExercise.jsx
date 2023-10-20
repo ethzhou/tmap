@@ -27,7 +27,7 @@ export default function IntervalExercise({
               </div>
             </Link>
             <div className="self-bottom h-[2px] flex-auto bg-pink-600"></div>
-            <div className="font-mono text-2xl text-slate-700 no-underline dark:text-slate-300">
+            <div className="font-mono text-2xl text-slate-700 no-underline dark:text-slate-200">
               {stopwatch.days !== 0 && <span>{stopwatch.days}:</span>}
               {stopwatch.hours !== 0 && <span>{stopwatch.hours}:</span>}
               {stopwatch.minutes !== 0 && (
@@ -41,14 +41,14 @@ export default function IntervalExercise({
           </nav>
           <div className="flex flex-col items-center">
             <div className="mb-6 font-clear">
-              <span className="inline-block min-w-[72px] text-right font-clear text-6xl text-slate-800 dark:text-slate-200">
+              <span className="inline-block min-w-[72px] text-right font-clear text-6xl text-slate-700 dark:text-slate-300">
                 {record.score}
               </span>
-              <span className="text-sm text-slate-600 dark:text-slate-400">
+              <span className="text-sm text-slate-500 dark:text-slate-500">
                 {" "}
                 of{" "}
               </span>
-              <span className="w-8 font-clear text-2xl text-slate-700 dark:text-slate-300">
+              <span className="w-8 font-clear text-xl text-slate-500 dark:text-slate-500">
                 {record.history.length}
               </span>
             </div>
