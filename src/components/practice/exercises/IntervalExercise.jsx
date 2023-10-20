@@ -56,7 +56,7 @@ export default function IntervalExercise({
             <div className="flex-auto"></div>
             <div className="mt-20 max-h-40 overflow-y-scroll scroll-smooth">
               <table className="relative table-fixed">
-                <thead className="font-display sticky top-0">
+                <thead className="font-display sticky top-0 text-slate-700 dark:text-slate-300">
                   <tr>
                     <th className="w-28 bg-slate-50 p-0 font-normal dark:bg-slate-900">
                       pitch 1
@@ -75,9 +75,12 @@ export default function IntervalExercise({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="font-comic">
-                  {record.history.map((item, index) => (
-                    <tr key={index}>
+                <tbody className="font-comic text-slate-400 dark:text-slate-600">
+                  {record.history.toReversed().map((item, index) => (
+                    <tr
+                      key={index}
+                      className="first:text-slate-600 dark:first:text-slate-400"
+                    >
                       <td className="w-28 text-center">
                         {item.pitches[0].toText()}
                       </td>
