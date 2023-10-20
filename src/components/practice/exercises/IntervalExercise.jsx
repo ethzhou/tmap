@@ -6,6 +6,7 @@ export default function IntervalExercise({
   stopwatch,
   exerciseContent,
 }) {
+  console.log(stopwatch);
   return (
     <>
       <div className="my-16 flex justify-center">
@@ -40,11 +41,12 @@ export default function IntervalExercise({
               {(stopwatch.days !== 0 ||
                 stopwatch.hours !== 0 ||
                 stopwatch.minutes !== 0 ||
-                stopwatch.seconds !== 0) && (
+                stopwatch.seconds !== 0 ||
+                stopwatch.totalSeconds === 0) && (
                 <span>{String(stopwatch.seconds).padStart(2, "0")}</span>
               )}
             </div>
-            <div className="self-bottom h-[2px] w-[4px] rounded-tr-full bg-pink-600"></div>
+            <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-600"></div>
           </nav>
           <div className="flex flex-col items-center">
             <div className="font-display mb-6">
