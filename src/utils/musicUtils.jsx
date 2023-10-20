@@ -16,9 +16,14 @@ export function accidentalToString(accidental) {
   return (accidental < 0 ? "b" : "#").repeat(Math.abs(accidental));
 }
 
+export function accidentalToText(accidental) {
+  // Returns "" for naturals
+  return ["𝄫", "♭", "", "♯", "𝄪"][accidental + 2];
+}
+
 /**
  * Returns the string representation of an accidental for VexFlow Accidental constructor.
- * 
+ *
  * @param {number} accidental
  * @returns {string}
  */
@@ -29,7 +34,7 @@ export function accidentalToCode(accidental) {
 
 /**
  * Determines whether the time is valid.
- * 
+ *
  * @param {string | object} timeSignature
  * @param {undefined} chordsPerMeasure
  * @returns {boolean}
@@ -42,11 +47,12 @@ export function isValidTime(timeSignature) {
     return true;
   }
 
-  const values = isString ? timeSignature.split("/") : [timeSignature.beatsPerMeasure, timeSignature.valuePerBeat];
+  const values = isString
+    ? timeSignature.split("/")
+    : [timeSignature.beatsPerMeasure, timeSignature.valuePerBeat];
 
   // No "/"
-  if (values.length === 1)
-    return false;
+  if (values.length === 1) return false;
 
   // Some not numbers
   if (values.some(item => !Number(item))) {
@@ -58,7 +64,7 @@ export function isValidTime(timeSignature) {
 
 /**
  * Calculates the note duration.
- * 
+ *
  * @param {object} timeSignature
  * @param {number} chordsPerMeasure
  * @returns {number}
@@ -66,12 +72,12 @@ export function isValidTime(timeSignature) {
 export function calculateNoteDuration(timeSignature, chordsPerMeasure) {
   const { beatsPerMeasure, valuePerBeat } = timeSignature;
 
-  return chordsPerMeasure * valuePerBeat / beatsPerMeasure;
+  return (chordsPerMeasure * valuePerBeat) / beatsPerMeasure;
 }
 
 /**
  * Determines whether the note duration is valid, i.e. an integer power of two.
- * 
+ *
  * @param {number} noteDuration
  * @returns {boolean}
  */
@@ -82,14 +88,13 @@ export function isValidNoteDuration(noteDuration) {
 }
 
 const patternAccidental = "[b#]";
-const patternRomanNumeralMajor = "I{1,3}|IV|VI{0,2}";  // From https://stackoverflow.com/questions/267399/how-do-you-match-only-valid-roman-numerals-with-a-regular-expression
+const patternRomanNumeralMajor = "I{1,3}|IV|VI{0,2}"; // From https://stackoverflow.com/questions/267399/how-do-you-match-only-valid-roman-numerals-with-a-regular-expression
 const patternRomanNumeralMinor = patternRomanNumeralMajor.toLowerCase();
 const patternRomanNumeral = `${patternRomanNumeralMajor}|${patternRomanNumeralMinor}`;
 const patternArabicNumberals = "\\d+";
 const patternSecondaryDominant = `/(${patternRomanNumeral})`;
 
-const patternChordAnalysis = 
-`^\
+const patternChordAnalysis = `^\
 (?<accidental>${patternAccidental})?\
 (?<roman>${patternRomanNumeral})\
 (?<arabic>${patternArabicNumberals}){0,2}\
@@ -105,7 +110,7 @@ export const MINOR_ROMAN = ["i", "ii", "III", "iv", "V", "VI", "vii"];
 
 /**
  * Read the degree of a roman numeral. This only works for scale degrees.
- * 
+ *
  * @param {string} roman
  * @returns {number} Defaults to -1 if not found.
  */
