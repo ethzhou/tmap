@@ -18,14 +18,10 @@ export default function SingleChord({ name, clef, pitches, scaleFactor }) {
 
     const renderer = new Renderer(div, Renderer.Backends.SVG);
     renderer.resize(122 * scaleFactor, 150 * scaleFactor);
-    const context = renderer.getContext();
-    context.scale(scaleFactor, scaleFactor);
 
     const stave = new Stave(0, 0, 120, {
       space_above_staff_ln: 5,
     });
-    stave.addClef(clef);
-    stave.setContext(context).draw();
 
     const printedNotes = [
       new StaveNote({
@@ -66,7 +62,12 @@ export default function SingleChord({ name, clef, pitches, scaleFactor }) {
     voice.addTickables(printedNotes);
     // console.log(voice);
 
+    const context = renderer.getContext();
+    context.scale(scaleFactor, scaleFactor);
     new Formatter().joinVoices([voice]).format([voice], 350);
+
+    stave.addClef(clef);
+    stave.setContext(context).draw();
 
     voice.draw(context, stave);
   }, [clef, pitches]);
