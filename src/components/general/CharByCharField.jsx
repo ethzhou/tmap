@@ -29,6 +29,7 @@ export default function CharByCharField({
           onChange={handleInputChange}
           // className="border-px m-0 aspect-square rounded-sm border-solid border-slate-500 bg-transparent text-center font-comic text-3xl text-slate-800 outline-0 dark:border-slate-400 dark:text-slate-200"
           className="char-field m-0 aspect-square border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 text-center font-comic text-5xl text-slate-800 outline-0 hover:border-orange-400 focus:border-solid focus:border-slate-800 dark:border-slate-400 dark:text-slate-200 dark:hover:border-sky-300 dark:focus:border-slate-200"
+          autoFocus={index === 0}
         />
       )),
   );
@@ -60,7 +61,7 @@ export default function CharByCharField({
       [...divRef.current.children].forEach(element => {
         element.value = "";
       });
-      divRef.current.children[0].focus();
+      divRef.current.firstChild.focus();
     }
   }
 
@@ -77,7 +78,7 @@ export default function CharByCharField({
       [...divRef.current.children].forEach(element => {
         element.value = "";
       });
-      divRef.current.children[0].focus();
+      divRef.current.firstChild.focus();
 
       return;
     }
@@ -122,11 +123,11 @@ export default function CharByCharField({
     }
   }
 
-  useEffect(() => {
-    if (autoFocus) {
-      divRef.current.firstChild.focus();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (autoFocus) {
+  //     divRef.current.firstChild.focus();
+  //   }
+  // }, []);
 
   return (
     <>
