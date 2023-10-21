@@ -1,4 +1,4 @@
-export const COLOR_CHORD_SELECT = "#f00";
+export const COLOR_CHORD_SELECT = "#db2777";
 
 export function clamp(x, lower, upper) {
   return Math.max(lower, Math.min(x, upper));
@@ -10,7 +10,7 @@ export function randInt(min, max) {
 
 /**
  * Compose a two-dimensional index into one-dimension (row-major).
- * 
+ *
  * @param {Array<number>} i The row and column.
  * @param {number} rowLength
  * @param {boolean} fromOne Whether input and output indices count are 1-based (otherwise 0-based).
@@ -24,7 +24,7 @@ export function composeIndex(I, rowLength, fromOne = false) {
 
 /**
  * Decompose a one-dimensional (row-major) index into two-dimensions.
- * 
+ *
  * @param {number} i The index.
  * @param {number} rowLength
  * @param {boolean} fromOne Whether input and output indices count are 1-based (otherwise 0-based).
@@ -32,7 +32,7 @@ export function composeIndex(I, rowLength, fromOne = false) {
  */
 export function decomposeIndex(i, rowLength, fromOne = false) {
   const rowIndex = Math.floor((i - fromOne) / rowLength) + fromOne;
-  const columnIndex = (i + rowLength - fromOne) % rowLength + fromOne;
+  const columnIndex = ((i + rowLength - fromOne) % rowLength) + fromOne;
 
   return [rowIndex, columnIndex];
 }
