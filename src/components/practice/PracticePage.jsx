@@ -49,8 +49,8 @@ export default function PracticePage() {
                     to="interval-reading"
                     className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
                   >
-                    <div className="px-4">
-                      <div className="font-display mb-4 mt-20 px-4 text-xl">
+                    <div className="flex h-full w-full flex-col items-center px-4">
+                      <div className="mb-4 mt-20 px-4 font-display text-xl">
                         Interval Reading
                       </div>
                       <svg
@@ -77,8 +77,8 @@ export default function PracticePage() {
                     to="interval-dictation"
                     className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
                   >
-                    <div className="px-4">
-                      <div className="font-display mb-4 mt-20 px-4 text-xl">
+                    <div className="flex h-full w-full flex-col items-center px-4">
+                      <div className="mb-4 mt-20 px-4 font-display text-xl">
                         Interval Dictation
                       </div>
                       <svg
@@ -105,8 +105,8 @@ export default function PracticePage() {
                     to="four-part-harmony"
                     className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
                   >
-                    <div className="px-4">
-                      <div className="font-display mb-4 mt-20 px-4 text-xl">
+                    <div className="flex h-full w-full flex-col items-center px-4">
+                      <div className="mb-4 mt-20 px-4 font-display text-xl">
                         Four-Part Harmony
                       </div>
                       <svg
@@ -137,8 +137,8 @@ export default function PracticePage() {
                     to=""
                     className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
                   >
-                    <div className="px-4">
-                      <div className="font-display mb-4 mt-20 text-xl">
+                    <div className="flex h-full w-full flex-col items-center px-4">
+                      <div className="mb-4 mt-20 font-display text-xl">
                         Something Else
                       </div>
                       <svg
