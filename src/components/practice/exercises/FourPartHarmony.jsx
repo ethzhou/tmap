@@ -628,8 +628,8 @@ export default function FourPartHarmony() {
   return (
     <>
       <div className="my-20 flex justify-center">
-        <div className="flex w-[60rem] flex-col justify-center gap-1">
-          <div className="overflow-auto">
+        <div className="flex w-[48rem] flex-col justify-center gap-1">
+          <div className="thin-scrollbar overflow-auto">
             {parts[0].length && (
               <FourPartProgression {...parameters} scaleFactor={1} />
             )}
@@ -644,7 +644,7 @@ export default function FourPartHarmony() {
               onKeyDown={handleKeyDown}
               onMouseOver={event => event.target.focus()}
               autoFocus
-              className="m-0 mr-1.5 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-800 outline-0 hover:border-orange-400 focus:border-solid focus:border-slate-800 dark:border-slate-400 dark:text-slate-200 dark:hover:border-sky-300 dark:focus:border-slate-200"
+              className="m-0 mx-1.5 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-800 outline-0 hover:border-orange-400 focus:border-solid focus:border-slate-800 dark:border-slate-400 dark:text-slate-200 dark:hover:border-sky-300 dark:focus:border-slate-200"
             />
             <button type="button" onClick={playAudio}>
               <div>play audio</div>
