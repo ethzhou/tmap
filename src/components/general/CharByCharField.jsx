@@ -138,9 +138,14 @@ export default function CharByCharField({
         </div>
         <button
           onClick={submit}
-          className="absolute -right-10 top-8 aspect-square border-none bg-transparent"
+          className="group absolute -right-10 top-8 flex aspect-square cursor-pointer select-none flex-col items-start justify-center border-none bg-transparent"
         >
-          <div className="text-3xl text-slate-500 dark:text-slate-600">↜</div>
+          <div className="text-3xl leading-none text-slate-600 dark:text-slate-500">
+            ↜
+          </div>
+          <div className="pointer-events-none absolute -bottom-2 font-comic text-xs text-slate-600 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-slate-500">
+            submit
+          </div>
         </button>
       </div>
     </>
