@@ -4,6 +4,7 @@ export default function CharByCharField({
   length,
   doClearOnSubmit,
   submitEventType,
+  autoFocus,
 }) {
   function handleMouseMoveLightPos(event) {
     const target = event.currentTarget;
@@ -120,6 +121,12 @@ export default function CharByCharField({
       return;
     }
   }
+
+  useEffect(() => {
+    if (autoFocus) {
+      divRef.current.firstChild.focus();
+    }
+  }, []);
 
   return (
     <>

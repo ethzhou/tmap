@@ -109,6 +109,7 @@ export default function IntervalDictation() {
               doClearOnSubmit={true}
               submitEventType={"IntervalDictationSubmit"}
               style={{ height: "2rem" }}
+              autoFocus={true}
             />
           </>
         )

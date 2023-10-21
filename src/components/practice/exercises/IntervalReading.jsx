@@ -5,6 +5,7 @@ import { randInt } from "../../../utils/utils";
 import Interval from "../../../classes/Interval";
 import CharByCharField from "../../general/CharByCharField";
 import IntervalExercise from "./IntervalExercise";
+import { useEffect, useRef } from "react";
 
 export default function IntervalReading() {
   const { parameters, stopwatch, record } = useExercise(
@@ -84,6 +85,7 @@ export default function IntervalReading() {
               doClearOnSubmit={true}
               submitEventType={"IntervalReadingSubmit"}
               style={{ height: "2rem" }}
+              autoFocus={true}
             />
           </>
         )
