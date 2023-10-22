@@ -187,7 +187,6 @@ export default class Key {
    */
   leadingTone() {
     const tone = this.pitch.scaleTone(7);
-    console.log(`leading tone`, tone);
 
     return tone;
   }
