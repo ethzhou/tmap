@@ -71,13 +71,6 @@ export default function FourPartHarmony() {
     inputRef.current.focus();
   }, []);
 
-  // Submit
-
-  function submit(event) {
-    parseInput(inputRef.current.value);
-    inputRef.current.value = "";
-  }
-
   // #region Parameter saves and loads
 
   function save() {
@@ -182,6 +175,13 @@ export default function FourPartHarmony() {
 
   // #endregion
 
+  // Submit
+
+  function submit(event) {
+    parseInput(inputRef.current.value);
+    inputRef.current.value = "";
+  }
+
   // Lookup table of functions by first character of input
   const responseTable = {
     // Chord before
@@ -217,7 +217,7 @@ export default function FourPartHarmony() {
    * @param {string} inputStr The first character determines the resulting procedure.
    */
   function parseInput(inputStr) {
-    console.log(`Parsing input ${inputStr}`);
+    // console.log(`Parsing input ${inputStr}`);
     const response = responseTable[inputStr[0]];
     if (response) response(inputStr);
   }
@@ -339,7 +339,7 @@ export default function FourPartHarmony() {
   }
 
   function clear(selection) {
-    console.log(selection);
+    // console.log("Clearing", selection);
     setParts(parts => {
       const newParts = [...parts];
 
@@ -358,7 +358,7 @@ export default function FourPartHarmony() {
    * @param {number} last Included.
    */
   function clearRange(first, last, voices) {
-    console.log(`clearing ${first} ${last}`);
+    console.log(`Clearing ${first} ${last}`);
     for (let iChord = first; iChord <= last; iChord++) {
       const targetSelection = createSelection(iChord, voices);
       clear(targetSelection);
@@ -575,7 +575,6 @@ export default function FourPartHarmony() {
 
   function responseChordAnalyses(inputStr) {
     const args = inputStr.slice(1).split(" ");
-    console.log(args);
 
     const analyses = args.map(item =>
       item === "%" ? null : ChordAnalysis.fromString(item),
