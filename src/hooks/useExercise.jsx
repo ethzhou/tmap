@@ -16,7 +16,7 @@ export default function useExercise(
   const [record, setRecord] = useState({ score: 0, history: [] });
 
   const stopwatch = useStopwatch({
-    autoStart: true, // TODO change when ready for it
+    autoStart: true,
   });
 
   const [parameters, setParameters] = useState();
