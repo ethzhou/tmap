@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import Pitch from "../../../classes/Pitch";
-import FourPartProgression from "../../music/FourPartProgression";
+import Pitch from "../../../../classes/Pitch";
+import FourPartProgression from "../../../music/FourPartProgression";
 import {
   clamp,
   composeIndex,
   decomposeIndex,
   randInt,
-} from "../../../utils/utils";
+} from "../../../../utils/utils";
 import {
   isValidNoteDuration,
   isValidTime,
   calculateNoteDuration,
-} from "../../../utils/musicUtils";
+} from "../../../../utils/musicUtils";
 import FourPartHarmonyEvaluation from "./FourPartHarmonyEvaluation";
-import Key from "../../../classes/Key";
-import ChordAnalysis from "../../../classes/ChordAnalysis";
-import PianoPlayer from "../../../classes/PianoPlayer";
+import Key from "../../../../classes/Key";
+import ChordAnalysis from "../../../../classes/ChordAnalysis";
+import PianoPlayer from "../../../../classes/PianoPlayer";
 import { Link } from "react-router-dom";
-import StopwatchDisplay from "../../general/StopwatchDisplay";
+import StopwatchDisplay from "../../../general/StopwatchDisplay";
 
 // #region Test parts
 

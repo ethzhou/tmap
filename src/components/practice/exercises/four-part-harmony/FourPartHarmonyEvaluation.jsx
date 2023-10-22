@@ -1,13 +1,13 @@
-import ChordAnalysis from "../../../classes/ChordAnalysis";
-import Key from "../../../classes/Key";
-import Pitch from "../../../classes/Pitch";
+import ChordAnalysis from "../../../../classes/ChordAnalysis";
+import Key from "../../../../classes/Key";
+import Pitch from "../../../../classes/Pitch";
 import {
   MAJOR_ROMAN,
   MINOR_ROMAN,
   VOICE_RANGES,
-} from "../../../utils/musicUtils";
-import ProgressionError from "../../../classes/ProgressionError";
-import Interval from "../../../classes/Interval";
+} from "../../../../utils/musicUtils";
+import ProgressionError from "../../../../classes/ProgressionError";
+import Interval from "../../../../classes/Interval";
 
 /**
  * @callback EvaluationFunction

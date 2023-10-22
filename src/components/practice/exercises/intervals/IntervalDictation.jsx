@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import useExercise from "../../../hooks/useExercise";
-import PianoPlayer from "../../../classes/PianoPlayer";
-import Pitch from "../../../classes/Pitch";
-import Interval from "../../../classes/Interval";
-import { randInt } from "../../../utils/utils";
-import CharByCharField from "../../general/CharByCharField";
+import useExercise from "../../../../hooks/useExercise";
+import PianoPlayer from "../../../../classes/PianoPlayer";
+import Pitch from "../../../../classes/Pitch";
+import Interval from "../../../../classes/Interval";
+import { randInt } from "../../../../utils/utils";
+import CharByCharField from "../../../general/CharByCharField";
 import IntervalExercise from "./IntervalExercise";
 
 const pianoPlayer = new PianoPlayer();

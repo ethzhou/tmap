@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import StopwatchDisplay from "../../general/StopwatchDisplay";
+import StopwatchDisplay from "../../../general/StopwatchDisplay";
 
 export default function IntervalExercise({ name, record, exerciseContent }) {
   return (
