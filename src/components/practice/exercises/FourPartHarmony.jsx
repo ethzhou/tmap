@@ -16,6 +16,8 @@ import FourPartHarmonyEvaluation from "./FourPartHarmonyEvaluation";
 import Key from "../../../classes/Key";
 import ChordAnalysis from "../../../classes/ChordAnalysis";
 import PianoPlayer from "../../../classes/PianoPlayer";
+import { useStopwatch } from "react-timer-hook";
+import { Link } from "react-router-dom";
 
 // #region Test parts
 
@@ -48,6 +50,10 @@ const pianoPlayer = new PianoPlayer();
 export default function FourPartHarmony() {
   const inputRef = useRef();
 
+  const stopwatch = useStopwatch({
+    autoStart: true,
+  });
+
   const [parts, setParts] = useState([[], [], [], []]);
 
   const [chordAnalyses, setChordAnalyses] = useState([]);
@@ -68,6 +74,13 @@ export default function FourPartHarmony() {
     loadParameters();
     inputRef.current.focus();
   }, []);
+
+  // Submit
+
+  function submit(event) {
+    parseInput(inputRef.current.value);
+    inputRef.current.value = "";
+  }
 
   // #region Parameter saves and loads
 
@@ -594,8 +607,7 @@ export default function FourPartHarmony() {
   function handleKeyDown(event) {
     // Submission
     if (event.key === "Enter") {
-      parseInput(inputRef.current.value);
-      inputRef.current.value = "";
+      submit();
 
       return;
     }
@@ -629,30 +641,84 @@ export default function FourPartHarmony() {
     <>
       <div className="my-20 flex justify-center">
         <div className="flex w-[48rem] flex-col justify-center gap-1">
-          <div className="thin-scrollbar overflow-auto">
-            {parts[0].length && (
-              <FourPartProgression {...parameters} scaleFactor={1} />
-            )}
-          </div>
-          <div className="flex gap-[2px]">
-            <div className="font-text text-4xl text-slate-800 dark:text-slate-200">
-              &gt;
+          <nav className="flex items-baseline gap-2">
+            <Link
+              to=""
+              className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
+            >
+              <div>Four Part Harmony</div>
+            </Link>
+            <Link
+              to="/tmap/practice"
+              className="group h-8 font-comic text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
+            >
+              <div className="nav-up">
+                {/* <div className="back"> */}
+                (Practice)
+              </div>
+            </Link>
+            <div className="self-bottom h-[2px] flex-auto bg-pink-600"></div>
+            <div className="font-mono text-2xl text-slate-700 no-underline dark:text-slate-200">
+              {stopwatch.days !== 0 && <span>{stopwatch.days}:</span>}
+              {(stopwatch.days !== 0 || stopwatch.hours !== 0) && (
+                <span>{String(stopwatch.hours).padStart(2, "0")}:</span>
+              )}
+              {(stopwatch.days !== 0 ||
+                stopwatch.hours !== 0 ||
+                stopwatch.minutes !== 0) && (
+                <span>{String(stopwatch.minutes).padStart(2, "0")}:</span>
+              )}
+              {(stopwatch.days !== 0 ||
+                stopwatch.hours !== 0 ||
+                stopwatch.minutes !== 0 ||
+                stopwatch.seconds !== 0 ||
+                stopwatch.totalSeconds === 0) && (
+                <span>{String(stopwatch.seconds).padStart(2, "0")}</span>
+              )}
             </div>
+            <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-600"></div>
+          </nav>
+          <div className="my-2 rounded-lg border-solid border-orange-200 px-2 py-4 shadow-inner shadow-rose-300 dark:border-violet-900 dark:shadow-md dark:shadow-sky-950">
+            <div className="thin-scrollbar overflow-auto">
+              {parts[0].length && (
+                <FourPartProgression {...parameters} scaleFactor={1} />
+              )}
+            </div>
+          </div>
+          <div
+            id="baguette-magique"
+            className="group relative mb-5 flex gap-0.5"
+          >
+            <label className="mr-1 font-text text-4xl text-slate-500 group-focus-within:text-slate-700 group-[:has(input:not(:placeholder-shown))]:text-slate-700 dark:text-slate-600 dark:group-focus-within:text-slate-400 dark:group-[:has(input:not(:placeholder-shown))]:text-slate-400">
+              &gt;
+            </label>
             <input
               ref={inputRef}
               type="text"
               onKeyDown={handleKeyDown}
               onMouseOver={event => event.target.focus()}
               autoFocus
-              className="m-0 mx-1.5 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-800 outline-0 hover:border-orange-400 focus:border-solid focus:border-slate-800 dark:border-slate-400 dark:text-slate-200 dark:hover:border-sky-300 dark:focus:border-slate-200"
+              placeholder=" "
+              className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 hover:border-orange-400 focus:border-solid focus:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:hover:border-sky-300 dark:focus:border-slate-400"
             />
-            <button type="button" onClick={playAudio}>
-              <div>play audio</div>
-            </button>
-            <button type="button" onClick={save}>
-              <div>save</div>
+            <button
+              onClick={submit}
+              className="group/submit-button relative bottom-0.5 flex aspect-square cursor-pointer select-none flex-col items-start justify-center border-none bg-transparent"
+            >
+              <div className="text-3xl leading-none text-slate-600 dark:text-slate-500">
+                ↜
+              </div>
+              <div className="pointer-events-none absolute -bottom-1 font-comic text-[0.60rem] text-slate-600 opacity-0 transition-opacity duration-200 group-hover/submit-button:opacity-100 dark:text-slate-500">
+                submit
+              </div>
             </button>
           </div>
+          <button type="button" onClick={playAudio}>
+            <div>play audio</div>
+          </button>
+          <button type="button" onClick={save}>
+            <div>save</div>
+          </button>
           <FourPartHarmonyEvaluation
             parts={parts}
             analyses={chordAnalyses}
