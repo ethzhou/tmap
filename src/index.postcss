@@ -69,17 +69,17 @@ html.dark {
 .home-card::before {
   background: radial-gradient(
     800px circle at var(--light-x) var(--light-y),
-    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 0.25),
     transparent 45%
   );
 }
 
 .home-card::after {
   background: radial-gradient(
-    300px circle at var(--light-x) var(--light-y),
-    rgba(254, 219, 103, 0.9),
-    rgba(236, 159, 78, 0.9) 50%,
-    transparent 60%
+    260px circle at var(--light-x) var(--light-y),
+    rgba(254, 219, 103, 0.9) 30%,
+    rgba(236, 159, 78, 0.9) 70%,
+    transparent 100%
   );
 }
 
@@ -118,15 +118,6 @@ html.dark {
   );
 }
 
-.char-field:hover {
-  background: radial-gradient(
-    380px circle at var(--light-x) 200%,
-    rgba(236, 159, 78, 0.9),
-    rgba(254, 219, 103, 0.9) 15%,
-    transparent 32%
-  );
-}
-
 html.dark {
   .practice-card::before {
     background: radial-gradient(
@@ -138,12 +129,24 @@ html.dark {
 
   .practice-card::after {
     background: radial-gradient(
-      1000px circle at var(--light-x) var(--light-y),
-      rgba(208, 133, 255, 0.9),
-      transparent 20%
+      400px circle at var(--light-x) var(--light-y),
+      rgba(91, 178, 255, 0.9) 20%,
+      rgba(141, 47, 199, 0.9) 50%,
+      transparent 100%
     );
   }
+}
 
+.char-field:hover {
+  background: radial-gradient(
+    380px circle at var(--light-x) 200%,
+    rgba(236, 159, 78, 0.9),
+    rgba(254, 219, 103, 0.9) 15%,
+    transparent 32%
+  );
+}
+
+html.dark {
   .char-field:hover {
     background: radial-gradient(
       400px circle at var(--light-x) -350%,
