@@ -1,7 +1,11 @@
 import ChordAnalysis from "../../../classes/ChordAnalysis";
 import Key from "../../../classes/Key";
 import Pitch from "../../../classes/Pitch";
-import { MAJOR_ROMAN, MINOR_ROMAN, VOICE_RANGES } from "../../../utils/musicUtils";
+import {
+  MAJOR_ROMAN,
+  MINOR_ROMAN,
+  VOICE_RANGES,
+} from "../../../utils/musicUtils";
 import ProgressionError from "../../../classes/ProgressionError";
 import Interval from "../../../classes/Interval";
 
@@ -19,25 +23,33 @@ import Interval from "../../../classes/Interval";
 /**
  * @param {Object} props
  * @param {Object} parts
- * @returns 
+ * @returns
  */
-export default function FourPartHarmonyEvaluation({ parts, analyses, tonality }) {
+export default function FourPartHarmonyEvaluation({
+  parts,
+  analyses,
+  tonality,
+}) {
   /**
    * Array of provided chords, each in BTAS order.
    * @type {Array<Array<Pitch | Null>>}
    */
-  const chords = parts[0].map((_, i) => 
-    parts.map(part => part[i])
-  );
+  const chords = parts[0].map((_, i) => parts.map(part => part[i]));
 
   /**
    * Array of triads.
    * @type {Array<Array<Pitch>>}
    */
-  const triads = analyses.map(analysis => 
-    analysis ? tonality.triad(analysis.roman, analysis.isSeventh(), analysis.accidental) : null
+  const triads = analyses.map(analysis =>
+    analysis
+      ? tonality.triad(
+          analysis.roman,
+          analysis.isSeventh(),
+          analysis.accidental,
+        )
+      : null,
   );
-  
+
   /**
    * Array of the occurances of pitches in a chord keeping track of the voices using each pitch name.
    * For example, [{ "F": [0, 3], "C": [1], "A": [2] }].
@@ -49,8 +61,7 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
     charts.push(counts);
 
     chords[i].forEach((pitch, iVoice) => {
-      if (!pitch)
-        return;
+      if (!pitch) return;
 
       const pitchName = pitch.toName();
       if (!counts.has(pitchName)) {
@@ -71,9 +82,11 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
     for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
       const intervalsFromVoice = [];
       for (let iVoice2 = iVoice1 + 1; iVoice2 < 4; iVoice2++) {
-        const interval = chords[i][iVoice1] && chords[i][iVoice2] ? chords[i][iVoice1].interval(chords[i][iVoice2])
-          : null;
-        
+        const interval =
+          chords[i][iVoice1] && chords[i][iVoice2]
+            ? chords[i][iVoice1].interval(chords[i][iVoice2])
+            : null;
+
         intervalsFromVoice.push(interval);
       }
 
@@ -84,17 +97,21 @@ export default function FourPartHarmonyEvaluation({ parts, analyses, tonality })
   }
 
   const errors = [];
-  evaluations.forEach(evaluation => 
-    errors.push(...evaluation(chords, intervals, analyses, tonality, triads, charts))
+  evaluations.forEach(evaluation =>
+    errors.push(
+      ...evaluation(chords, intervals, analyses, tonality, triads, charts),
+    ),
   );
 
   // console.log(errors);
 
   return (
     <div>
-      { errors.map((error, i) => <p key={i}>{ error.toElement() }</p>) }
+      {errors.map((error, i) => (
+        <p key={i}>{error.toElement()}</p>
+      ))}
     </div>
-  )
+  );
 }
 
 /** @type {Array<EvaluationFunction>} */
@@ -102,65 +119,73 @@ const evaluations = [
   // Spelling
 
   // The voices are in their ranges
-  (chords) => {
+  chords => {
     const errors = [];
-    
+
     chords.forEach((chord, i) => {
       chord.forEach((pitch, iVoice) => {
-        if (!pitch)
-          return;
+        if (!pitch) return;
 
         const range = VOICE_RANGES[iVoice];
         if (!pitch.isLowerThan(range[0]) && !pitch.isHigherThan(range[1]))
           return;
 
-        errors.push(new ProgressionError("voice-out-of-range", [
-          { i, voices: [iVoice] },
-        ]));
+        errors.push(
+          new ProgressionError("voice-out-of-range", [{ i, voices: [iVoice] }]),
+        );
       });
     });
 
     return errors;
   },
   // Consecutive upper voices are within an octave
-  (chords) => {
+  chords => {
     const errors = [];
 
     chords.forEach((chord, i) => {
       for (let iVoice = 2; iVoice < 4; iVoice++) {
-        if (!chord[iVoice - 1] || !chord[iVoice])
-          continue;
-          
+        if (!chord[iVoice - 1] || !chord[iVoice]) continue;
+
         if (Math.abs(chord[iVoice - 1]?.halfstepsTo(chord[iVoice])) < 12)
           continue;
-        
-        errors.push(new ProgressionError("upper-spacing", [
-          { i, voices: [iVoice - 1, iVoice] },
-        ]));
+
+        errors.push(
+          new ProgressionError("upper-spacing", [
+            { i, voices: [iVoice - 1, iVoice] },
+          ]),
+        );
       }
     });
 
     return errors;
   },
   // The voices do not cross
-  (chords) => {
+  chords => {
     const errors = [];
-    
+
     chords.forEach((chord, i) => {
       for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
-        if (!chord[iVoice1])
-          continue;
-        
+        if (!chord[iVoice1]) continue;
+
         for (let iVoice2 = iVoice1 + 1; iVoice2 < 4; iVoice2++) {
-          if (!chord[iVoice2])
+          if (!chord[iVoice2]) continue;
+
+          if (
+            [false, true].every(
+              considerAccidentals =>
+                !chord[iVoice1].isHigherThan(
+                  chord[iVoice2],
+                  considerAccidentals,
+                ),
+            )
+          )
             continue;
 
-          if ([false, true].every(considerAccidentals => !chord[iVoice1].isHigherThan(chord[iVoice2], considerAccidentals)))
-            continue;
-
-        errors.push(new ProgressionError("crossed-voices", [
-            { i, voices: [iVoice1, iVoice2] },
-          ]));
+          errors.push(
+            new ProgressionError("crossed-voices", [
+              { i, voices: [iVoice1, iVoice2] },
+            ]),
+          );
         }
       }
     });
@@ -172,15 +197,18 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
+      if (!analysis) return;
+
+      if (
+        (tonality.mode === "minor" ? MINOR_ROMAN : MAJOR_ROMAN).includes(
+          analysis.roman,
+        )
+      )
         return;
 
-      if ((tonality.mode === "minor" ? MINOR_ROMAN : MAJOR_ROMAN).includes(analysis.roman))
-        return;
-
-      errors.push(new ProgressionError("miscased-roman", [
-        { i, voices: [-1] },
-      ]));
+      errors.push(
+        new ProgressionError("miscased-roman", [{ i, voices: [-1] }]),
+      );
     });
 
     return errors;
@@ -190,15 +218,13 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
+      if (!analysis) return;
 
-      if (analysis.inversion() > -1)
-        return;
+      if (analysis.inversion() > -1) return;
 
-      errors.push(new ProgressionError("invalid-arabic", [
-        { i, voices: [-1] },
-      ]));
+      errors.push(
+        new ProgressionError("invalid-arabic", [{ i, voices: [-1] }]),
+      );
     });
 
     return errors;
@@ -208,20 +234,17 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
+      if (!analysis) return;
 
-      const triadPitchNames = triads[i].map(pitch => pitch.toName())
+      const triadPitchNames = triads[i].map(pitch => pitch.toName());
       chords[i].forEach((pitch, iVoice) => {
-        if (!pitch)
-          return;
+        if (!pitch) return;
 
-        if (triadPitchNames.includes(pitch.toName()))
-          return;
+        if (triadPitchNames.includes(pitch.toName())) return;
 
-        errors.push(new ProgressionError("non-chordal-tone", [
-          { i, voices: [iVoice] },
-        ]));
+        errors.push(
+          new ProgressionError("non-chordal-tone", [{ i, voices: [iVoice] }]),
+        );
       });
     });
 
@@ -232,19 +255,15 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
-      
+      if (!analysis) return;
+
       const bass = analysis.bass(tonality);
       // Check whether the bass note is the same pitch name as the correct bass
-      if (chords[i][0]?.isSameNameAs(bass))
-        return;
+      if (chords[i][0]?.isSameNameAs(bass)) return;
 
-      errors.push(new ProgressionError("bass-mismatch", [
-        { i, voices: [0] },
-      ]));
+      errors.push(new ProgressionError("bass-mismatch", [{ i, voices: [0] }]));
     });
-    
+
     return errors;
   },
   // There is a root
@@ -252,16 +271,14 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
-      
-      const root = triads[i][0];
-      if (charts[i].get(root.toName())?.length)
-        return;
+      if (!analysis) return;
 
-      errors.push(new ProgressionError("missing-root", [
-        { i, voices: [0, 1, 2, 3] },
-      ]));
+      const root = triads[i][0];
+      if (charts[i].get(root.toName())?.length) return;
+
+      errors.push(
+        new ProgressionError("missing-root", [{ i, voices: [0, 1, 2, 3] }]),
+      );
     });
 
     return errors;
@@ -271,16 +288,14 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
-      
-      const third = triads[i][1];
-      if (charts[i].get(third.toName())?.length)
-        return;
+      if (!analysis) return;
 
-      errors.push(new ProgressionError("missing-third", [
-        { i, voices: [0, 1, 2, 3] },
-      ]));
+      const third = triads[i][1];
+      if (charts[i].get(third.toName())?.length) return;
+
+      errors.push(
+        new ProgressionError("missing-third", [{ i, voices: [0, 1, 2, 3] }]),
+      );
     });
 
     return errors;
@@ -290,17 +305,18 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
-      
+      if (!analysis) return;
+
       const fifth = triads[i][2];
       // const [third, fifth] = [1, 2].map(item => triads[i][item]);
       if (charts[i].get(fifth.toName())?.length || !analysis.inversion())
         return;
 
-      errors.push(new ProgressionError("non-root-missing-fifth", [
-        { i, voices: [0, 1, 2, 3] },
-      ]))
+      errors.push(
+        new ProgressionError("non-root-missing-fifth", [
+          { i, voices: [0, 1, 2, 3] },
+        ]),
+      );
     });
 
     return errors;
@@ -310,20 +326,17 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
+      if (!analysis) return;
 
-      if (!analysis.isSeventh())
-        return;
-      
+      if (!analysis.isSeventh()) return;
+
       const seventh = triads[i][3];
       const seventhEntries = charts[i].get(seventh.toName());
-      if (seventhEntries && seventhEntries.length)
-        return;
+      if (seventhEntries && seventhEntries.length) return;
 
-      errors.push(new ProgressionError("missing-seventh", [
-        { i, voices: [0, 1, 2, 3] },
-      ]));
+      errors.push(
+        new ProgressionError("missing-seventh", [{ i, voices: [0, 1, 2, 3] }]),
+      );
     });
 
     return errors;
@@ -336,12 +349,13 @@ const evaluations = [
       const leadingTone = tonality.leadingTone();
       const leadingToneEntries = charts[i].get(leadingTone.toName());
 
-      if (!leadingToneEntries || leadingToneEntries.length < 2)
-        return;
-    
-      errors.push(new ProgressionError("double-leading", [
-        { i, voices: leadingToneEntries },
-      ]))
+      if (!leadingToneEntries || leadingToneEntries.length < 2) return;
+
+      errors.push(
+        new ProgressionError("double-leading", [
+          { i, voices: leadingToneEntries },
+        ]),
+      );
     });
 
     return errors;
@@ -351,21 +365,18 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (!analysis)
-        return;
-      
+      if (!analysis) return;
+
       const seventh = triads[i][3];
       // Do not evaluate non-seventh chords
-      if (!seventh)
-        return;
+      if (!seventh) return;
 
       const seventhEntries = charts[i].get(seventh.toName());
-      if (!seventhEntries || seventhEntries.length < 2)
-        return;
+      if (!seventhEntries || seventhEntries.length < 2) return;
 
-      errors.push(new ProgressionError("double-seventh", [
-        { i, voices: seventhEntries },
-      ]));
+      errors.push(
+        new ProgressionError("double-seventh", [{ i, voices: seventhEntries }]),
+      );
     });
 
     return errors;
@@ -375,16 +386,16 @@ const evaluations = [
     const errors = [];
 
     analyses.forEach((analysis, i) => {
-      if (analysis?.arabic !== "64")
-        return;
+      if (analysis?.arabic !== "64") return;
 
       const fifth = triads[i][2];
-      if (charts[i].get(fifth.toName())?.length === 2)
-        return;
+      if (charts[i].get(fifth.toName())?.length === 2) return;
 
-      errors.push(new ProgressionError("64-not-double-fifth", [
-        { i, voices: [0, 1, 2, 3] },
-      ]));
+      errors.push(
+        new ProgressionError("64-not-double-fifth", [
+          { i, voices: [0, 1, 2, 3] },
+        ]),
+      );
     });
 
     return errors;
@@ -395,12 +406,12 @@ const evaluations = [
   // The progression begins with the tonic chord
   (chords, intervals, analyses) => {
     const errors = [];
-    
+
     const analysis = analyses[0];
     if (!analysis || analysis.degree !== 1) {
-      errors.push(new ProgressionError("begin-not-tonic", [
-        { i: 0, voices: [-1] },
-      ]));
+      errors.push(
+        new ProgressionError("begin-not-tonic", [{ i: 0, voices: [-1] }]),
+      );
     }
 
     return errors;
@@ -408,12 +419,14 @@ const evaluations = [
   // The progression ends with the tonic chord
   (chords, intervals, analyses) => {
     const errors = [];
-    
+
     const analysis = analyses.at(-1);
     if (!analysis || analysis.degree !== 1) {
-      errors.push(new ProgressionError("end-not-tonic", [
-        { i: analyses.length - 1, voices: [-1] },
-      ]));
+      errors.push(
+        new ProgressionError("end-not-tonic", [
+          { i: analyses.length - 1, voices: [-1] },
+        ]),
+      );
     }
 
     return errors;
@@ -423,16 +436,16 @@ const evaluations = [
     const errors = [];
 
     for (let i = 1; i < analyses.length; i++) {
-      if (!analyses[i - 1] || !analyses[i])
-        continue;
+      if (!analyses[i - 1] || !analyses[i]) continue;
 
-      if (analyses[i - 1].degree !== 5 || analyses[i].degree !== 4)
-        continue;
+      if (analyses[i - 1].degree !== 5 || analyses[i].degree !== 4) continue;
 
-      errors.push(new ProgressionError("v-iv", [
-        { i: i - 1, voices: [-1] },
-        { i, voices: [-1] },
-      ]));
+      errors.push(
+        new ProgressionError("v-iv", [
+          { i: i - 1, voices: [-1] },
+          { i, voices: [-1] },
+        ]),
+      );
     }
 
     return errors;
@@ -442,43 +455,39 @@ const evaluations = [
     const errors = [];
 
     for (let i = 0; i < analyses.length; i++) {
-      if (analyses[i]?.arabic !== "64")
-        continue;
+      if (analyses[i]?.arabic !== "64") continue;
 
-      const isCadential = 
+      const isCadential =
         // The chord is a I chord three chords from the end
-        i === analyses.length - 3
-          && analyses[i].degree === 1
+        i === analyses.length - 3 &&
+        analyses[i].degree === 1 &&
         // It resolves to a root position V chord
-          && analyses[i + 1]?.degree === 5
-          && analyses[i + 1]?.inversion() === 0;
-      if (isCadential)
-        continue;
+        analyses[i + 1]?.degree === 5 &&
+        analyses[i + 1]?.inversion() === 0;
+      if (isCadential) continue;
 
-      const isPassing = 
+      const isPassing =
         // The chord is approached by and resolves down a fifth (relative I-V64-I6 pattern)
-        analyses[i - 1]?.movementTo(analyses[i]) === 5
-          && analyses[i + 1]?.movementTo(analyses[i]) === 5
+        analyses[i - 1]?.movementTo(analyses[i]) === 5 &&
+        analyses[i + 1]?.movementTo(analyses[i]) === 5 &&
         // Exactly one neighboring chord is inverted
-          && ((analyses[i - 1]?.inversion() === 0 && analyses[i + 1]?.inversion() === 1)
-            || (analyses[i - 1]?.inversion() === 1 && analyses[i + 1]?.inversion() === 0));
-      if (isPassing)
-        continue;
+        ((analyses[i - 1]?.inversion() === 0 &&
+          analyses[i + 1]?.inversion() === 1) ||
+          (analyses[i - 1]?.inversion() === 1 &&
+            analyses[i + 1]?.inversion() === 0));
+      if (isPassing) continue;
 
-      const isNeighbor = 
+      const isNeighbor =
         // The chord is approached by and resolves down a fourth (relative I-IV64-I pattern)
-        analyses[i - 1]?.movementTo(analyses[i]) === 4
-          && analyses[i + 1]?.movementTo(analyses[i]) === 4
+        analyses[i - 1]?.movementTo(analyses[i]) === 4 &&
+        analyses[i + 1]?.movementTo(analyses[i]) === 4 &&
         // Neither neighbor chord is inverted
-          && !analyses[i - 1]?.inversion()
-          && !analyses[i + 1]?.inversion();
-      if (isNeighbor)
-        continue;
+        !analyses[i - 1]?.inversion() &&
+        !analyses[i + 1]?.inversion();
+      if (isNeighbor) continue;
 
-      errors.push(new ProgressionError("bad-64", [
-        { i, voices: [-1] },
-      ]));
-    };
+      errors.push(new ProgressionError("bad-64", [{ i, voices: [-1] }]));
+    }
 
     return errors;
   },
@@ -488,13 +497,19 @@ const evaluations = [
 
     const secondLast = analyses.at(-2);
     const last = analyses.at(-1);
-    if (![4, 5].includes(secondLast?.degree) || 1 !== last?.degree || last.inversion()) {
-      errors.push(new ProgressionError("bad-cadence", [
-        { i: analyses.length - 2, voices: [-1] },
-        { i: analyses.length - 1, voices: [-1] },
-      ]));
+    if (
+      ![4, 5].includes(secondLast?.degree) ||
+      1 !== last?.degree ||
+      last.inversion()
+    ) {
+      errors.push(
+        new ProgressionError("bad-cadence", [
+          { i: analyses.length - 2, voices: [-1] },
+          { i: analyses.length - 1, voices: [-1] },
+        ]),
+      );
     }
-    
+
     return errors;
   },
 
@@ -505,18 +520,15 @@ const evaluations = [
     const errors = [];
 
     for (let i = 1; i < analyses.length; i++) {
-      if (!analyses[i - 1] || !analyses[i])
-        continue;
+      if (!analyses[i - 1] || !analyses[i]) continue;
 
       // This rule does not apply when the chord does not change
-      if (analyses[i - 1].degree === analyses[i].degree)
-        continue;
+      if (analyses[i - 1].degree === analyses[i].degree) continue;
 
       for (let iVoice = 1; iVoice < 4; iVoice++) {
         // The pitch from the previous chord in the consecutive pair (i - 1, i)
         const pitch = chords[i - 1][iVoice];
-        if (!pitch)
-          continue;
+        if (!pitch) continue;
 
         // The entries in the chart of the previous chord
         const entriesPrev = charts[i - 1].get(pitch.toName());
@@ -524,39 +536,39 @@ const evaluations = [
         const entries = charts[i].get(pitch.toName());
 
         // The rule does not apply if the tone is not in the current chord (i.e. it is not a common tone)
-        if (!entries)
-          continue;
+        if (!entries) continue;
 
         // Otherwise, the tone appears, so check that the tone appears on some voice on both chords
-        if (entries.some(entry => entriesPrev.includes(entry)))
-          continue;
+        if (entries.some(entry => entriesPrev.includes(entry))) continue;
 
-        errors.push(new ProgressionError("common-not-held", [
-          { i: i - 1, voices: [iVoice] },
-          { i, voices: entries },
-        ]));
+        errors.push(
+          new ProgressionError("common-not-held", [
+            { i: i - 1, voices: [iVoice] },
+            { i, voices: entries },
+          ]),
+        );
       }
     }
 
     return errors;
   },
   // Upper voices are primarily stepwise
-  (chords) => {
+  chords => {
     const errors = [];
 
     for (let i = 1; i < chords.length; i++) {
       for (let iVoice = 1; iVoice < 4; iVoice++) {
-        if (!chords[i - 1][iVoice] || !chords[i][iVoice])
-          continue;
+        if (!chords[i - 1][iVoice] || !chords[i][iVoice]) continue;
 
         const spaceDistance = chords[i - 1][iVoice].spacesTo(chords[i][iVoice]);
-        if (Math.abs(spaceDistance) < 3)
-          continue;
+        if (Math.abs(spaceDistance) < 3) continue;
 
-        errors.push(new ProgressionError("voice-leap", [
-          { i: i - 1, voices: [iVoice] },
-          { i, voices: [iVoice] },
-        ]));
+        errors.push(
+          new ProgressionError("voice-leap", [
+            { i: i - 1, voices: [iVoice] },
+            { i, voices: [iVoice] },
+          ]),
+        );
       }
     }
 
@@ -573,21 +585,21 @@ const evaluations = [
           const intervalPrevious = intervals[i - 1][iVoice1][delVoice];
           const interval = intervals[i][iVoice1][delVoice];
 
-          if (!intervalPrevious || !interval)
-            continue;
+          if (!intervalPrevious || !interval) continue;
 
           if (intervalPrevious.quality !== "P" || interval.quality !== "P")
             continue;
 
-          if (intervalPrevious.simple !== 5 || interval.simple !== 5)
-            continue;
+          if (intervalPrevious.simple !== 5 || interval.simple !== 5) continue;
 
           const iVoice2 = iVoice1 + delVoice + 1;
 
-          errors.push(new ProgressionError("parallel-fifths", [
-            { i: i - 1, voices: [iVoice1, iVoice2] },
-            { i, voices: [iVoice1, iVoice2] },
-          ]));
+          errors.push(
+            new ProgressionError("parallel-fifths", [
+              { i: i - 1, voices: [iVoice1, iVoice2] },
+              { i, voices: [iVoice1, iVoice2] },
+            ]),
+          );
         }
       }
     }
@@ -605,21 +617,21 @@ const evaluations = [
           const intervalPrevious = intervals[i - 1][iVoice1][delVoice];
           const interval = intervals[i][iVoice1][delVoice];
 
-          if (!intervalPrevious || !interval)
-            continue;
+          if (!intervalPrevious || !interval) continue;
 
           if (intervalPrevious.quality !== "P" || interval.quality !== "P")
             continue;
 
-          if (intervalPrevious.simple !== 8 || interval.simple !== 8)
-            continue;
+          if (intervalPrevious.simple !== 8 || interval.simple !== 8) continue;
 
           const iVoice2 = iVoice1 + delVoice + 1;
 
-          errors.push(new ProgressionError("parallel-octaves", [
-            { i: i - 1, voices: [iVoice1, iVoice2] },
-            { i, voices: [iVoice1, iVoice2] },
-          ]));
+          errors.push(
+            new ProgressionError("parallel-octaves", [
+              { i: i - 1, voices: [iVoice1, iVoice2] },
+              { i, voices: [iVoice1, iVoice2] },
+            ]),
+          );
         }
       }
     }
@@ -637,21 +649,21 @@ const evaluations = [
         const intervalPrevious = intervals[i - 1][0][delVoice];
         const interval = intervals[i][0][delVoice];
 
-        if (!intervalPrevious || !interval)
-          continue;
+        if (!intervalPrevious || !interval) continue;
 
         if (intervalPrevious.quality !== "d" || interval.quality !== "P")
           continue;
 
-        if (intervalPrevious.simple !== 5 || interval.simple !== 5)
-          continue;
+        if (intervalPrevious.simple !== 5 || interval.simple !== 5) continue;
 
         const iVoiceUpper = delVoice + 1;
 
-        errors.push(new ProgressionError("d5-P5-not-upper", [
-          { i: i - 1, voices: [iVoice1, iVoiceUpper] },
-          { i, voices: [iVoice1, iVoiceUpper] },
-        ]));
+        errors.push(
+          new ProgressionError("d5-P5-not-upper", [
+            { i: i - 1, voices: [iVoice1, iVoiceUpper] },
+            { i, voices: [iVoice1, iVoiceUpper] },
+          ]),
+        );
       }
     }
 
@@ -668,25 +680,28 @@ const evaluations = [
           const intervalPrevious = intervals[i - 1][iVoice1][delVoice];
           const interval = intervals[i][iVoice1][delVoice];
 
-          if (!intervalPrevious || !interval)
-            continue;
+          if (!intervalPrevious || !interval) continue;
 
           if (intervalPrevious.quality !== "d" || interval.quality !== "P")
             continue;
 
-          if (intervalPrevious.simple !== 5 || interval.simple !== 5)
-            continue;
+          if (intervalPrevious.simple !== 5 || interval.simple !== 5) continue;
 
-          if (analyses[i - 1].degree === 1 && analyses[i - 1].inversion() === 0
-            || analyses[i].degree === 1 && analyses[i].inversion() === 1)
+          if (
+            (analyses[i - 1].degree === 1 &&
+              analyses[i - 1].inversion() === 0) ||
+            (analyses[i].degree === 1 && analyses[i].inversion() === 1)
+          )
             continue;
 
           const iVoice2 = iVoice1 + delVoice + 1;
 
-          errors.push(new ProgressionError("d5-P5-not-passing", [
-            { i: i - 1, voices: [iVoice1, iVoice2] },
-            { i, voices: [iVoice1, iVoice2] },
-          ]));
+          errors.push(
+            new ProgressionError("d5-P5-not-passing", [
+              { i: i - 1, voices: [iVoice1, iVoice2] },
+              { i, voices: [iVoice1, iVoice2] },
+            ]),
+          );
         }
       }
     }
@@ -702,29 +717,26 @@ const evaluations = [
       const intervalPrevious = intervals[i - 1][0][2];
       const interval = intervals[i][0][2];
 
-      if (!intervalPrevious || !interval)
-        continue;
+      if (!intervalPrevious || !interval) continue;
 
-      if (interval.quality !== "P")
-        continue;
+      if (interval.quality !== "P") continue;
 
-      if (interval.simple !== 5)
-        continue;
-      
+      if (interval.simple !== 5) continue;
+
       const spaceDistanceBass = chords[i - 1][0].spacesTo(chords[i][0]);
       const spaceDistanceSoprano = chords[i - 1][3].spacesTo(chords[i][3]);
 
       // Contrary or oblique motion is okay
-      if (spaceDistanceBass * spaceDistanceSoprano <= 0)
-        continue;
+      if (spaceDistanceBass * spaceDistanceSoprano <= 0) continue;
 
-      if (Math.abs(spaceDistanceSoprano) < 2)
-        continue;
+      if (Math.abs(spaceDistanceSoprano) < 2) continue;
 
-      errors.push(new ProgressionError("hidden-fifth-soprano-not-step", [
-        { i: i - 1, voices: [0, 3] },
-        { i, voices: [0, 3] },
-      ]));
+      errors.push(
+        new ProgressionError("hidden-fifth-soprano-not-step", [
+          { i: i - 1, voices: [0, 3] },
+          { i, voices: [0, 3] },
+        ]),
+      );
     }
 
     return errors;
@@ -738,59 +750,64 @@ const evaluations = [
       const intervalPrevious = intervals[i - 1][0][2];
       const interval = intervals[i][0][2];
 
-      if (!intervalPrevious || !interval)
-        continue;
+      if (!intervalPrevious || !interval) continue;
 
-      if (interval.quality !== "P")
-        continue;
+      if (interval.quality !== "P") continue;
 
-      if (interval.simple !== 8)
-        continue;
-      
+      if (interval.simple !== 8) continue;
+
       const spaceDistanceBass = chords[i - 1][0].spacesTo(chords[i][0]);
       const spaceDistanceSoprano = chords[i - 1][3].spacesTo(chords[i][3]);
 
       // Contrary or oblique motion is okay
-      if (spaceDistanceBass * spaceDistanceSoprano <= 0)
-        continue;
+      if (spaceDistanceBass * spaceDistanceSoprano <= 0) continue;
 
-      if (Math.abs(spaceDistanceSoprano) < 2)
-        continue;
+      if (Math.abs(spaceDistanceSoprano) < 2) continue;
 
-      errors.push(new ProgressionError("hidden-octave-soprano-not-step", [
-        { i: i - 1, voices: [0, 3] },
-        { i, voices: [0, 3] },
-      ]));
+      errors.push(
+        new ProgressionError("hidden-octave-soprano-not-step", [
+          { i: i - 1, voices: [0, 3] },
+          { i, voices: [0, 3] },
+        ]),
+      );
     }
 
     return errors;
   },
   // There are no overlapping voices (n.b. overlapping voices are not the same as crossed voices)
-  (chords) => {
+  chords => {
     const errors = [];
 
     for (let i = 1; i < chords.length; i++) {
       for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
-        if (!chords[i][iVoice1])
-          continue;
+        if (!chords[i][iVoice1]) continue;
 
         for (let iVoice2Previous = 0; iVoice2Previous < 4; iVoice2Previous++) {
-          if (iVoice1 === iVoice2Previous)
+          if (iVoice1 === iVoice2Previous) continue;
+
+          if (!chords[i - 1][iVoice2Previous]) continue;
+
+          if (
+            [false, true].every(considerAccidentals =>
+              iVoice1 < iVoice2Previous
+                ? !chords[i][iVoice1].isHigherThan(
+                    chords[i - 1][iVoice2Previous],
+                    considerAccidentals,
+                  )
+                : !chords[i][iVoice1].isLowerThan(
+                    chords[i - 1][iVoice2Previous],
+                    considerAccidentals,
+                  ),
+            )
+          )
             continue;
 
-          if (!chords[i - 1][iVoice2Previous])
-            continue;
-
-          if ([false, true].every(considerAccidentals => 
-            iVoice1 < iVoice2Previous ? !chords[i][iVoice1].isHigherThan(chords[i - 1][iVoice2Previous], considerAccidentals)
-              : !chords[i][iVoice1].isLowerThan(chords[i - 1][iVoice2Previous], considerAccidentals)
-          ))
-            continue;
-
-          errors.push(new ProgressionError("overlapping-voices", [
-            { i: i - 1, voices: [iVoice2Previous] },
-            { i, voices: [iVoice1] },
-          ]));
+          errors.push(
+            new ProgressionError("overlapping-voices", [
+              { i: i - 1, voices: [iVoice2Previous] },
+              { i, voices: [iVoice1] },
+            ]),
+          );
         }
       }
     }
@@ -804,72 +821,78 @@ const evaluations = [
     const leadingToneName = tonality.leadingTone().toName();
 
     chords.forEach((chord, i) => {
-      if (analyses[i]?.degree === 1 && analyses[i]?.isSeventh())
-        return;
+      if (analyses[i]?.degree === 1 && analyses[i]?.isSeventh()) return;
 
       chord.forEach((pitch, iVoice) => {
-        if (!pitch)
-          return;
+        if (!pitch) return;
 
-        if (pitch.toName() !== leadingToneName)
-          return;
+        if (pitch.toName() !== leadingToneName) return;
 
         // The next pitch in the voice
         const resolution = chords[i + 1][iVoice];
 
         // Leading tones should resolve to a halfstep up
-        if (resolution && pitch.halfstepsTo(resolution) === 1)
-          return;
+        if (resolution && pitch.halfstepsTo(resolution) === 1) return;
 
-        errors.push(new ProgressionError("unresolved-seventh", [
-          { i, voices: [iVoice] },
-          { i: i + 1, voices: [iVoice] },
-        ]));
+        errors.push(
+          new ProgressionError("unresolved-seventh", [
+            { i, voices: [iVoice] },
+            { i: i + 1, voices: [iVoice] },
+          ]),
+        );
       });
     });
 
     return errors;
   },
   // Voices do not leap by augmented seconds
-  (chords) => {
+  chords => {
     const errors = [];
 
     for (let i = 1; i < chords.length; i++) {
       for (let iVoice = 0; iVoice < 4; iVoice++) {
-        if (!chords[i - 1][iVoice] || !chords[i][iVoice])
-          continue;
-      
-        const melodicInterval = chords[i - 1][iVoice].interval(chords[i][iVoice]);
+        if (!chords[i - 1][iVoice] || !chords[i][iVoice]) continue;
+
+        const melodicInterval = chords[i - 1][iVoice].interval(
+          chords[i][iVoice],
+        );
         if (melodicInterval.quality !== "A" || melodicInterval.size !== 2)
           continue;
 
-        errors.push(new ProgressionError("augmented-second-leap", [
-          { i: i - 1, voices: [iVoice] },
-          { i: i, voices: [iVoice] },
-        ]));
+        errors.push(
+          new ProgressionError("augmented-second-leap", [
+            { i: i - 1, voices: [iVoice] },
+            { i: i, voices: [iVoice] },
+          ]),
+        );
       }
     }
 
     return errors;
   },
   // Voices do not leap by tritones
-  (chords) => {
+  chords => {
     const errors = [];
 
     const tritone = new Interval("A", 4);
 
     for (let i = 1; i < chords.length; i++) {
       for (let iVoice = 0; iVoice < 4; iVoice++) {
-        if (!chords[i - 1][iVoice] || !chords[i][iVoice])
-          continue;
-      
-        if (!chords[i - 1][iVoice].interval(chords[i][iVoice]).isEnharmonicTo(tritone, true))
+        if (!chords[i - 1][iVoice] || !chords[i][iVoice]) continue;
+
+        if (
+          !chords[i - 1][iVoice]
+            .interval(chords[i][iVoice])
+            .isEnharmonicTo(tritone, true)
+        )
           continue;
 
-        errors.push(new ProgressionError("tritone-leap", [
-          { i: i - 1, voices: [iVoice] },
-          { i: i, voices: [iVoice] },
-        ]));
+        errors.push(
+          new ProgressionError("tritone-leap", [
+            { i: i - 1, voices: [iVoice] },
+            { i: i, voices: [iVoice] },
+          ]),
+        );
       }
     }
 
