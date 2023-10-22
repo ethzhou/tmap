@@ -45,7 +45,7 @@ export default function IntervalDictation() {
     (event, parameters) => {
       const responseStr = event.detail.text;
       if (responseStr.length !== 2) {
-        if (event.detail.keyDownEvent.shiftKey) {
+        if (event.detail.event.shiftKey) {
           setPlayType(nextPlayType);
           return;
         }

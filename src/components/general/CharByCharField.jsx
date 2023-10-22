@@ -47,11 +47,11 @@ export default function CharByCharField({
       .join("");
   }
 
-  function submit(keyDownEvent) {
+  function submit(event) {
     const submitEvent = new CustomEvent(submitEventType, {
       detail: {
         text: getString(),
-        keyDownEvent,
+        event,
       },
     });
     document.dispatchEvent(submitEvent);
