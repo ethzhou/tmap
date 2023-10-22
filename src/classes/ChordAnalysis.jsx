@@ -84,7 +84,7 @@ export default class ChordAnalysis {
    * @returns {Pitch}
    */
   bass(key) {
-    return key.scaleTone(this.bassDegree());
+    return key.scaleTone(this.bassDegree(), true);
   }
 
   /**

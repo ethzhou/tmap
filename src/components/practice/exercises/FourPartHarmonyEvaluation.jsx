@@ -37,7 +37,7 @@ export default function FourPartHarmonyEvaluation({
   const chords = parts[0].map((_, i) => parts.map(part => part[i]));
 
   /**
-   * Array of triads.
+   * Array of triads. The seventh is included in a given triad if the matching analysis indicates a seventh chord.
    * @type {Array<Array<Pitch>>}
    */
   const triads = analyses.map(analysis =>
@@ -46,6 +46,7 @@ export default function FourPartHarmonyEvaluation({
           analysis.roman,
           analysis.isSeventh(),
           analysis.accidental,
+          true,
         )
       : null,
   );

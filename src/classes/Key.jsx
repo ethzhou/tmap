@@ -164,9 +164,14 @@ export default class Key {
    * Finds the requested scale tone of the major scale of the current pitch.
    *
    * @param {number} n Degree of the scale.
+   * @param {boolean} doMinorLeadingTone Whether to use the leading tone of the seventh degree of a minor scale.
    * @returns {Pitch}
    */
-  scaleTone(n) {
+  scaleTone(n, doMinorLeadingTone = false) {
+    if (n === 7 && doMinorLeadingTone) {
+      return this.leadingTone();
+    }
+
     return this.ionian.pitch.scaleTone(
       this.mode === "major"
         ? n
@@ -182,8 +187,7 @@ export default class Key {
    */
   leadingTone() {
     const tone = this.pitch.scaleTone(7);
-
-    tone.accidental += this.mode === "minor";
+    console.log(`leading tone`, tone);
 
     return tone;
   }
@@ -194,16 +198,19 @@ export default class Key {
    * @param {number | string} degree Arabic or roman numeral.
    * @param {boolean} isSeventh Whether to include the seventh.
    * @param {number} accidental Relatively applied to each pitch of the triad.
+   * @param {boolean} doMinorLeadingTone Whether to use the leading tone of the seventh degree of a minor scale.
    * @returns {Array<Pitch>}
    */
-  triad(degree, isSeventh = false, accidental = 0) {
+  triad(degree, isSeventh = false, accidental = 0, doMinorLeadingTone = false) {
     if (typeof degree === "string") {
       degree = romanToDegree(degree);
     }
 
     const pitches = Array(3 + isSeventh)
       .fill()
-      .map((_, i) => this.scaleTone(((degree + i * 2 - 1) % 7) + 1));
+      .map((_, i) =>
+        this.scaleTone(((degree + i * 2 - 1) % 7) + 1, doMinorLeadingTone),
+      );
     for (const pitch of pitches) {
       pitch.accidental += accidental;
       // // Prevent triple accidentals
