@@ -22,9 +22,9 @@ export default function IntervalExercise({ name, record, exerciseContent }) {
                 (Practice)
               </div>
             </Link>
-            <div className="self-bottom h-[2px] flex-auto bg-pink-600"></div>
+            <div className="self-bottom h-[2px] flex-auto bg-pink-400 dark:bg-pink-600"></div>
             <StopwatchDisplay />
-            <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-600"></div>
+            <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-400 dark:bg-pink-600"></div>
           </nav>
           <div className="mt-10 flex flex-col items-center">
             <div className="mb-6 font-display">

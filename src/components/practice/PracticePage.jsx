@@ -36,7 +36,7 @@ export default function PracticePage() {
                 <span className="h-full font-comic">)</span>
               </div>
             </Link>
-            <div className="self-bottom ml-2 h-[2px] flex-auto rounded-tr-full bg-pink-600"></div>
+            <div className="self-bottom ml-2 h-[2px] flex-auto rounded-tr-full bg-pink-400 dark:bg-pink-600"></div>
           </nav>
           <div
             onMouseMove={handleMouseMoveLightPos}

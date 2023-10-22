@@ -653,9 +653,9 @@ export default function FourPartHarmony() {
                 (Practice)
               </div>
             </Link>
-            <div className="self-bottom h-[2px] flex-auto bg-pink-600"></div>
+            <div className="self-bottom h-[2px] flex-auto bg-pink-400 dark:bg-pink-600"></div>
             <StopwatchDisplay />
-            <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-600"></div>
+            <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-400 dark:bg-pink-600"></div>
           </nav>
           <div className="my-2 rounded-lg border-solid border-orange-200 px-2 py-4 shadow-inner shadow-rose-300 dark:border-orange-300 dark:shadow-amber-800">
             <div className="thin-scrollbar overflow-auto">
