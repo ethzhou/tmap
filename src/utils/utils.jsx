@@ -36,3 +36,15 @@ export function decomposeIndex(i, rowLength, fromOne = false) {
 
   return [rowIndex, columnIndex];
 }
+
+/**
+ * Convert the name of an attribute into a prop key.
+ *
+ * @param {string} attributeName
+ * @returns {string}
+ */
+export function attributeToProp(attributeName) {
+  return attributeName.replaceAll(/-[a-z]/g, substring =>
+    substring[1].toUpperCase(),
+  );
+}

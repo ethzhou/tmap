@@ -16,9 +16,8 @@ import {
   GRAND_STAFF_STAVES,
   accidentalToCode,
 } from "../../utils/musicUtils";
-import { COLOR_CHORD_SELECT, decomposeIndex } from "../../utils/utils";
+import { attributeToProp, decomposeIndex } from "../../utils/utils";
 import ChordSymbol from "./ChordSymbol";
-import { renderToStaticMarkup } from "react-dom/server";
 import Pitch from "../../classes/Pitch";
 
 export default function FourPartProgression({
@@ -35,14 +34,14 @@ export default function FourPartProgression({
   const divId = name ? `vf-${name}` : "vf-canvas";
   const divRef = useRef();
 
-  const [chordSymbols, setChordSymbols] = useState([]);
+  const [chordSymbols, setChordSymbols] = useState();
 
   // Draw
   // Music construction done below
   useEffect(() => {
-    const div = document.getElementById(divId);
+    const divElement = document.getElementById(divId);
 
-    const renderer = new Renderer(div, Renderer.Backends.SVG);
+    const renderer = new Renderer(divElement, Renderer.Backends.SVG);
     const rendererWidth = 40 + noteStartX + measureCount * measureWidth;
     const rendererHeight = 360;
     renderer.resize(rendererWidth * scaleFactor, rendererHeight * scaleFactor);
@@ -119,9 +118,6 @@ export default function FourPartProgression({
 
     brace.setContext(context).draw();
     doubleBarline.setContext(context).draw();
-
-    // Draw chord analysis
-    displayChordAnalysis();
   });
 
   // #region Construction
@@ -413,54 +409,78 @@ export default function FourPartProgression({
 
   // #endregion
 
+  // #region Draw chord analyses
+
   function getNoteXPositions() {
     const staveNotes = music
       .map(measure => measure.voices[0].tickables)
       .flat()
       .slice(0, chordCount);
-    const xPositions = staveNotes.map(
-      staveNote => staveNote.getBoundingBox().x,
-    );
+    const xPositions = staveNotes.map(staveNote => {
+      console.log(staveNote.noteHeads[0]);
+      const boundingBox = staveNote.noteHeads[0].isRendered()
+        ? staveNote.noteHeads[0].getBoundingBox()
+        : staveNote.getBoundingBox();
+
+      // The text elements will align their left side with the center of the note's bounding box.
+      return boundingBox.x + boundingBox.w / 2;
+    });
 
     if (xPositions.length !== chordCount)
       throw console.warn("More chord symbol positions than chords.");
     return xPositions;
   }
 
+  useEffect(() => {
+    displayChordAnalysis();
+  }, [chordAnalyses]);
+
   function displayChordAnalysis() {
-    const svgElement = divRef.current.firstChild;
-    ["font-family", "font-size", "font-weight", "font-style"].forEach(
-      attribute => svgElement.removeAttribute(attribute),
-    );
-    svgElement.setAttribute("font-size", 20);
+    const vfSVGElement = divRef.current.lastChild;
 
     const xPositions = getNoteXPositions();
 
-    // Indicate the key
-    svgElement.innerHTML += `<text x=${
-      xPositions[0] - 60
-    } y="90%"><tspan>${tonality.toAnalysis()}:</tspan></text>`;
-    // Style
-    svgElement.lastChild.classList.add("font-text");
-
-    for (let iChord = 0; iChord < chordCount; iChord++) {
-      // Add each chord analysis
-      svgElement.innerHTML += renderToStaticMarkup(
-        <ChordSymbol
-          key={iChord}
-          analysis={chordAnalyses[iChord]}
-          x={xPositions[iChord]}
-          y="90%"
-          color={iChord === selection.iChord ? COLOR_CHORD_SELECT : "#000"}
-        />,
-      );
-      svgElement.lastChild.classList.add("font-text");
+    const svgAnalysisAttributes = {};
+    for (const attribute of vfSVGElement.attributes) {
+      if (attribute.name != "style")
+        svgAnalysisAttributes[attributeToProp(attribute.name)] =
+          attribute.value;
     }
+
+    setChordSymbols(() => (
+      <svg
+        {...svgAnalysisAttributes}
+        className="pointer-events-none absolute font-text text-[20px]"
+      >
+        <g className="pointer-events-auto">
+          <text x={xPositions[0] - 80} y="90%">
+            <tspan>{tonality.toAnalysis()}:</tspan>
+          </text>
+          {chordAnalyses.map((chordAnalysis, i) => (
+            <ChordSymbol
+              key={i}
+              analysis={chordAnalysis}
+              x={xPositions[i]}
+              y="90%"
+            />
+          ))}
+        </g>
+      </svg>
+    ));
   }
+
+  // #endregion
 
   return (
     <>
-      <div key={crypto.randomUUID()} ref={divRef} id={divId}></div>
+      <div
+        key={crypto.randomUUID()}
+        ref={divRef}
+        id={divId}
+        className="relative"
+      >
+        {chordSymbols}
+      </div>
     </>
   );
 }
