@@ -1,11 +1,7 @@
 import { Link } from "react-router-dom";
+import StopwatchDisplay from "../../general/StopwatchDisplay";
 
-export default function IntervalExercise({
-  name,
-  record,
-  stopwatch,
-  exerciseContent,
-}) {
+export default function IntervalExercise({ name, record, exerciseContent }) {
   return (
     <>
       <div className="my-16 flex justify-center">
@@ -27,24 +23,7 @@ export default function IntervalExercise({
               </div>
             </Link>
             <div className="self-bottom h-[2px] flex-auto bg-pink-600"></div>
-            <div className="font-mono text-2xl text-slate-700 no-underline dark:text-slate-200">
-              {stopwatch.days !== 0 && <span>{stopwatch.days}:</span>}
-              {(stopwatch.days !== 0 || stopwatch.hours !== 0) && (
-                <span>{String(stopwatch.hours).padStart(2, "0")}:</span>
-              )}
-              {(stopwatch.days !== 0 ||
-                stopwatch.hours !== 0 ||
-                stopwatch.minutes !== 0) && (
-                <span>{String(stopwatch.minutes).padStart(2, "0")}:</span>
-              )}
-              {(stopwatch.days !== 0 ||
-                stopwatch.hours !== 0 ||
-                stopwatch.minutes !== 0 ||
-                stopwatch.seconds !== 0 ||
-                stopwatch.totalSeconds === 0) && (
-                <span>{String(stopwatch.seconds).padStart(2, "0")}</span>
-              )}
-            </div>
+            <StopwatchDisplay />
             <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-600"></div>
           </nav>
           <div className="mt-10 flex flex-col items-center">

@@ -74,7 +74,6 @@ export default function IntervalReading() {
     <IntervalExercise
       name={"Interval Reading"}
       record={record}
-      stopwatch={stopwatch}
       exerciseContent={
         parameters && (
           <>

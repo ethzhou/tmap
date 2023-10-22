@@ -93,7 +93,6 @@ export default function IntervalDictation() {
     <IntervalExercise
       name={"Interval Dictation"}
       record={record}
-      stopwatch={stopwatch}
       exerciseContent={
         parameters && (
           <>

@@ -16,8 +16,8 @@ import FourPartHarmonyEvaluation from "./FourPartHarmonyEvaluation";
 import Key from "../../../classes/Key";
 import ChordAnalysis from "../../../classes/ChordAnalysis";
 import PianoPlayer from "../../../classes/PianoPlayer";
-import { useStopwatch } from "react-timer-hook";
 import { Link } from "react-router-dom";
+import StopwatchDisplay from "../../general/StopwatchDisplay";
 
 // #region Test parts
 
@@ -49,10 +49,6 @@ const pianoPlayer = new PianoPlayer();
 
 export default function FourPartHarmony() {
   const inputRef = useRef();
-
-  const stopwatch = useStopwatch({
-    autoStart: true,
-  });
 
   const [parts, setParts] = useState([[], [], [], []]);
 
@@ -658,24 +654,7 @@ export default function FourPartHarmony() {
               </div>
             </Link>
             <div className="self-bottom h-[2px] flex-auto bg-pink-600"></div>
-            <div className="font-mono text-2xl text-slate-700 no-underline dark:text-slate-200">
-              {stopwatch.days !== 0 && <span>{stopwatch.days}:</span>}
-              {(stopwatch.days !== 0 || stopwatch.hours !== 0) && (
-                <span>{String(stopwatch.hours).padStart(2, "0")}:</span>
-              )}
-              {(stopwatch.days !== 0 ||
-                stopwatch.hours !== 0 ||
-                stopwatch.minutes !== 0) && (
-                <span>{String(stopwatch.minutes).padStart(2, "0")}:</span>
-              )}
-              {(stopwatch.days !== 0 ||
-                stopwatch.hours !== 0 ||
-                stopwatch.minutes !== 0 ||
-                stopwatch.seconds !== 0 ||
-                stopwatch.totalSeconds === 0) && (
-                <span>{String(stopwatch.seconds).padStart(2, "0")}</span>
-              )}
-            </div>
+            <StopwatchDisplay />
             <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-600"></div>
           </nav>
           <div className="my-2 rounded-lg border-solid border-orange-200 px-2 py-4 shadow-inner shadow-rose-300 dark:border-violet-900 dark:shadow-md dark:shadow-sky-950">
