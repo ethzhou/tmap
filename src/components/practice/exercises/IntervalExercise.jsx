@@ -10,7 +10,7 @@ export default function IntervalExercise({
     <>
       <div className="my-16 flex justify-center">
         <div className="flex w-[48rem] flex-col justify-start gap-1">
-          <nav className="mb-10 flex items-baseline gap-2">
+          <nav className="flex items-baseline gap-2">
             <Link
               to=""
               className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
@@ -47,7 +47,7 @@ export default function IntervalExercise({
             </div>
             <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-600"></div>
           </nav>
-          <div className="flex flex-col items-center">
+          <div className="mt-10 flex flex-col items-center">
             <div className="mb-6 font-display">
               <span className="inline-block min-w-[72px] text-right font-display text-6xl text-slate-700 dark:text-slate-300">
                 {record.score}
