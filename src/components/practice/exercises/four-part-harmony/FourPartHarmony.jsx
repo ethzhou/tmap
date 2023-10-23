@@ -658,9 +658,11 @@ export default function FourPartHarmony() {
           </nav>
           <div className="my-2 rounded-lg border-solid border-orange-200 px-2 py-4 shadow-inner shadow-rose-300 dark:border-orange-300 dark:shadow-amber-800">
             <div className="thin-scrollbar overflow-auto">
-              {parts[0].length && (
-                <FourPartProgression {...parameters} scaleFactor={1} />
-              )}
+              <div>
+                {parts[0].length && (
+                  <FourPartProgression {...parameters} scaleFactor={1} />
+                )}
+              </div>
             </div>
           </div>
           <div
