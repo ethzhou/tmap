@@ -678,8 +678,9 @@ export default function FourPartHarmony() {
               onKeyDown={handleKeyDown}
               onMouseOver={event => event.target.focus()}
               autoFocus
-              placeholder=" "
-              className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 hover:border-orange-400 focus:border-solid focus:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:hover:border-sky-300 dark:focus:border-slate-400"
+              // If ever the placeholder text should be removed, use " " rather than "" so that :placeholder-shown selects as intended.
+              placeholder="Voici votre baguette magique."
+              className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-slate-400 hover:border-orange-400 focus:border-solid focus:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus:border-slate-400"
             />
             <button
               onClick={submit}
