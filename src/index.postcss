@@ -10,45 +10,50 @@
 @tailwind components;
 @tailwind utilities;
 
-html.dark * {
-  scrollbar-color: red;
-}
-
+/* Scrollbar */
 /* https://css-tricks.com/the-current-state-of-styling-scrollbars-in-css/ */
 
 html {
-  /* --scrollbarBG: #c59145; */
-  --thumbBG: #ebb987aa;
+  --track-bg: #f1f1f1;
+  --thumb-bg: #ebb987aa;
+  &.dark {
+    --track-bg: #272746;
+    --thumb-bg: #d3c0fc99;
+  }
+
+  * {
+    /* scrollbar-width: thin; */
+    scrollbar-color: var(--thumb-bg) var(--track-bg);
+  }
+
+  & ::-webkit-scrollbar {
+    width: 0.35rem;
+    height: 0.35rem;
+  }
+
+  & ::-webkit-scrollbar-thumb {
+    background-color: var(--thumb-bg);
+    border-radius: 6px;
+  }
+
+  & ::-webkit-scrollbar-track {
+    background-color: var(--track-bg);
+    border-radius: 6px;
+  }
 }
 
-html.dark {
-  /* --scrollbarBG: #302b42; */
-  --thumbBG: #b89ef399;
-}
+.thin-scrollbar {
+  transform: scaleY(-1);
 
-::-webkit-scrollbar {
-  width: 0.25rem;
-  height: 0.25rem;
-}
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.2rem;
+  }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
-}
-
-::-webkit-scrollbar-track {
-  background: var(--scrollbarBG);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--thumbBG);
-  border-radius: 6px;
-  border: 3px solid var(--scrollbarBG);
-}
-
-.thin-scrollbar::-webkit-scrollbar {
-  width: 0.125rem;
-  height: 0.125rem;
+  /* Because of this implementation, wrap .thin-scrollbar contents in one element. */
+  & > * {
+    transform: scaleY(-1);
+  }
 }
 
 /* Navigate Up arrows */
