@@ -43,7 +43,7 @@ export default function FourPartProgression({
 
     const renderer = new Renderer(divElement, Renderer.Backends.SVG);
     const rendererWidth = 40 + noteStartX + measureCount * measureWidth;
-    const rendererHeight = 360;
+    const rendererHeight = 310;
     renderer.resize(rendererWidth * scaleFactor, rendererHeight * scaleFactor);
 
     const context = renderer.getContext();
@@ -125,7 +125,7 @@ export default function FourPartProgression({
   // Values
 
   const staveX = 20;
-  const staveY = 60;
+  const staveY = 30;
 
   const { beatsPerMeasure, valuePerBeat } = timeSignature;
   const timeSignatureString = `${beatsPerMeasure}/${valuePerBeat}`;
@@ -411,6 +411,10 @@ export default function FourPartProgression({
 
   // #region Draw chord analyses
 
+  useEffect(() => {
+    displayChordSymbols("95%");
+  }, [chordAnalyses]);
+
   function getNoteXPositions() {
     const staveNotes = music
       .map(measure => measure.voices[0].tickables)
@@ -431,11 +435,12 @@ export default function FourPartProgression({
     return xPositions;
   }
 
-  useEffect(() => {
-    displayChordAnalysis();
-  }, [chordAnalyses]);
-
-  function displayChordAnalysis() {
+  /**
+   * Adds the chord symbols to the SVG.
+   *
+   * @param {string} y HTML attribute of the `text` elements to be drawn in the SVG.
+   */
+  function displayChordSymbols(y) {
     const vfSVGElement = divRef.current.lastChild;
 
     const xPositions = getNoteXPositions();
@@ -453,7 +458,7 @@ export default function FourPartProgression({
         className="pointer-events-none absolute font-text text-[20px]"
       >
         <g className="pointer-events-auto">
-          <text x={xPositions[0] - 80} y="90%">
+          <text x={xPositions[0] - 80} y={y}>
             <tspan>{tonality.toAnalysis()}:</tspan>
           </text>
           {chordAnalyses.map((chordAnalysis, i) => (
@@ -461,7 +466,7 @@ export default function FourPartProgression({
               key={i}
               analysis={chordAnalysis}
               x={xPositions[i]}
-              y="90%"
+              y={y}
             />
           ))}
         </g>
