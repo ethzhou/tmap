@@ -413,7 +413,7 @@ export default function FourPartProgression({
 
   useEffect(() => {
     displayChordSymbols("95%");
-  }, [chordAnalyses]);
+  }, [chordAnalyses, tonality]);
 
   function getNoteXPositions() {
     const staveNotes = music
