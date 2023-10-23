@@ -421,7 +421,6 @@ export default function FourPartProgression({
       .flat()
       .slice(0, chordCount);
     const xPositions = staveNotes.map(staveNote => {
-      console.log(staveNote.noteHeads[0]);
       const boundingBox = staveNote.noteHeads[0].isRendered()
         ? staveNote.noteHeads[0].getBoundingBox()
         : staveNote.getBoundingBox();
