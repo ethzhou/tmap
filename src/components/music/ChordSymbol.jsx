@@ -39,7 +39,7 @@ export default function ChordSymbol({ analysis, x, y, move }) {
             </tspan>
           </>
         ) : (
-          "."
+          "·"
         )}
       </text>
     </g>
