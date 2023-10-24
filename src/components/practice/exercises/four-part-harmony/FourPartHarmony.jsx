@@ -686,7 +686,7 @@ export default function FourPartHarmony() {
               autoFocus
               // If ever the placeholder text should be removed, use " " rather than "" so that :placeholder-shown selects as intended.
               placeholder="Voici votre baguette magique."
-              className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-slate-400 hover:border-orange-400 focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
+              className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-xs placeholder:text-slate-300 placeholder:transition-all placeholder:duration-75 hover:border-orange-400 focus:placeholder:text-3xl focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
             />
             <button
               onClick={submit}
@@ -711,7 +711,7 @@ export default function FourPartHarmony() {
           </button>
           <div ref={fphEvalDivRef} className="mt-4 flex flex-col gap-2">
             <div className="flex items-baseline">
-              <div className="font-display text-2xl font-bold text-red-500 dark:text-red-500">
+              <div className="font-display text-2xl text-red-500 dark:text-red-500">
                 errors
               </div>
               <div className="flex-auto"></div>
