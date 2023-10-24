@@ -138,7 +138,9 @@ export default class Interval {
    */
   halfsteps() {
     const halfsteps =
-      MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS[this.simple - 1] +
+      (this.size === 8
+        ? 1
+        : MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS[this.simple - 1]) +
       Math.floor((this.size - 1) / 7) * 11 +
       Interval.qualityToAccidental(this.quality, this.size);
 
