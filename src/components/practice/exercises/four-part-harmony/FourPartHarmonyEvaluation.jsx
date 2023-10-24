@@ -8,6 +8,7 @@ import {
 } from "../../../../utils/musicUtils";
 import ProgressionError from "../../../../classes/ProgressionError";
 import Interval from "../../../../classes/Interval";
+import ErrorDisplay from "./ErrorDisplay";
 
 /**
  * @callback EvaluationFunction
@@ -29,6 +30,7 @@ export default function FourPartHarmonyEvaluation({
   parts,
   analyses,
   tonality,
+  sort,
 }) {
   /**
    * Array of provided chords, each in BTAS order.
@@ -104,16 +106,29 @@ export default function FourPartHarmonyEvaluation({
     ),
   );
 
-  // console.log(errors);
+  errors.sort(sortings[sort]);
 
   return (
-    <div>
-      {errors.map((error, i) => (
-        <p key={i}>{error.toElement()}</p>
-      ))}
+    <div className="flex flex-col gap-1">
+      {errors.length !== 0 ? (
+        errors.map((error, i) => (
+          <ErrorDisplay key={i} progressionError={error} />
+        ))
+      ) : (
+        <div className="no-errors px-6 py-2 font-display text-slate-700 dark:text-slate-300">
+          none!
+        </div>
+      )}
     </div>
   );
 }
+
+const sortings = {
+  type: (a, b) => a.type - b.type,
+  chord: (a, b) =>
+    a.concerns[0].i - b.concerns[0].i || a.concerns[1]?.i - b.concerns[1]?.i,
+  severity: (a, b) => a.severity - b.severity,
+};
 
 /** @type {Array<EvaluationFunction>} */
 const evaluations = [

@@ -66,6 +66,10 @@ export default function FourPartHarmony() {
     voices: [0, 1, 2, 3],
   });
 
+  const [sort, setSort] = useState("type");
+
+  const fphEvalDivRef = useRef();
+
   useEffect(() => {
     loadParameters();
     inputRef.current.focus();
@@ -174,13 +178,6 @@ export default function FourPartHarmony() {
   }
 
   // #endregion
-
-  // Submit
-
-  function submit(event) {
-    parseInput(inputRef.current.value);
-    inputRef.current.value = "";
-  }
 
   // Lookup table of functions by first character of input
   const responseTable = {
@@ -622,6 +619,15 @@ export default function FourPartHarmony() {
     pianoPlayer.playParts(parts, 0.85, 0.85);
   }
 
+  function submit(event) {
+    parseInput(inputRef.current.value);
+    inputRef.current.value = "";
+  }
+
+  function toggleCheck(event) {
+    fphEvalDivRef.current.classList.toggle("hidden");
+  }
+
   const parameters = {
     parts,
     chordAnalyses,
@@ -680,7 +686,7 @@ export default function FourPartHarmony() {
               autoFocus
               // If ever the placeholder text should be removed, use " " rather than "" so that :placeholder-shown selects as intended.
               placeholder="Voici votre baguette magique."
-              className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-slate-400 hover:border-orange-400 focus:border-solid focus:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus:border-slate-400"
+              className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-slate-400 hover:border-orange-400 focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
             />
             <button
               onClick={submit}
@@ -700,11 +706,49 @@ export default function FourPartHarmony() {
           <button type="button" onClick={save}>
             <div>save</div>
           </button>
-          <FourPartHarmonyEvaluation
-            parts={parts}
-            analyses={chordAnalyses}
-            tonality={tonality}
-          />
+          <button type="button" onClick={toggleCheck}>
+            <div>toggle check</div>
+          </button>
+          <div ref={fphEvalDivRef} className="mt-4 flex flex-col gap-2">
+            <div className="flex items-baseline">
+              <div className="font-display text-2xl font-bold text-red-500 dark:text-red-500">
+                errors
+              </div>
+              <div className="flex-auto"></div>
+              <div className="text-md mr-2 flex align-baseline font-hand text-slate-400 transition-transform before:translate-x-0 before:duration-500 before:content-['sort_by__('] after:translate-x-0 after:duration-500 after:content-[')'] hover:before:-translate-x-2 hover:after:translate-x-2 dark:text-slate-600">
+                <button
+                  onClick={() => setSort(() => "type")}
+                  className="group cursor-pointer border-none bg-transparent"
+                >
+                  <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                    type
+                  </div>
+                </button>
+                <button
+                  onClick={() => setSort(() => "chord")}
+                  className="group cursor-pointer border-none bg-transparent"
+                >
+                  <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                    chord
+                  </div>
+                </button>
+                <button
+                  onClick={() => setSort(() => "severity")}
+                  className="group cursor-pointer border-none bg-transparent"
+                >
+                  <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                    severity
+                  </div>
+                </button>
+              </div>
+            </div>
+            <FourPartHarmonyEvaluation
+              parts={parts}
+              analyses={chordAnalyses}
+              tonality={tonality}
+              sort={sort}
+            />
+          </div>
         </div>
       </div>
     </>

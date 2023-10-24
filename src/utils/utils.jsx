@@ -38,6 +38,16 @@ export function decomposeIndex(i, rowLength, fromOne = false) {
 }
 
 /**
+ * Casts the first character of a string to upper case.
+ *
+ * @param {string} string
+ * @returns {string}
+ */
+export function capitalize(s) {
+  return s && s[0].toUpperCase() + s.slice(1);
+}
+
+/**
  * Convert the name of an attribute into a prop key.
  *
  * @param {string} attributeName
