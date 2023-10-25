@@ -18,6 +18,7 @@ import ChordAnalysis from "../../../../classes/ChordAnalysis";
 import PianoPlayer from "../../../../classes/PianoPlayer";
 import { Link } from "react-router-dom";
 import StopwatchDisplay from "../../../general/StopwatchDisplay";
+import BaguetteTip from "./BaguetteTip";
 
 // #region Test parts
 
@@ -641,8 +642,8 @@ export default function FourPartHarmony() {
   return (
     <>
       <div className="my-20 flex justify-center">
-        <div className="flex w-[48rem] flex-col justify-center gap-1">
-          <nav className="flex items-baseline gap-2">
+        <div className="grid grid-cols-[1fr_48rem_1fr] justify-center gap-x-6 gap-y-2">
+          <nav className="col-start-2 col-end-3 flex items-baseline gap-2">
             <Link
               to=""
               className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
@@ -662,92 +663,139 @@ export default function FourPartHarmony() {
             <StopwatchDisplay />
             <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-400 dark:bg-pink-600"></div>
           </nav>
-          <div className="my-2 rounded-lg border-solid border-orange-200 px-2 py-4 shadow-inner shadow-rose-300 dark:border-orange-300 dark:shadow-amber-800">
-            <div className="thin-scrollbar overflow-auto">
-              <div>
-                {parts[0].length && (
-                  <FourPartProgression {...parameters} scaleFactor={1} />
-                )}
+          <div className="col-start-2 col-end-3 flex flex-col gap-1">
+            <div className="rounded-lg border-solid border-orange-200 px-2 py-4 shadow-inner shadow-rose-300 dark:border-orange-300 dark:shadow-amber-800">
+              <div className="thin-scrollbar overflow-auto">
+                <div>
+                  {parts[0].length && (
+                    <FourPartProgression {...parameters} scaleFactor={1} />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            id="baguette-magique"
-            className="group relative mb-5 flex gap-0.5"
-          >
-            <label className="mr-1 font-text text-4xl text-slate-500 group-focus-within:text-slate-700 group-[:has(input:not(:placeholder-shown))]:text-slate-700 dark:text-slate-600 dark:group-focus-within:text-slate-400 dark:group-[:has(input:not(:placeholder-shown))]:text-slate-400">
-              &gt;
-            </label>
-            <input
-              ref={inputRef}
-              type="text"
-              onKeyDown={handleKeyDown}
-              onMouseOver={event => event.target.focus()}
-              autoFocus
-              // If ever the placeholder text should be removed, use " " rather than "" so that :placeholder-shown selects as intended.
-              placeholder="Voici votre baguette magique."
-              className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-xs placeholder:text-slate-300 placeholder:transition-all placeholder:duration-75 hover:border-orange-400 focus:placeholder:text-3xl focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
-            />
-            <button
-              onClick={submit}
-              className="group/submit-button relative bottom-0.5 flex aspect-square cursor-pointer select-none flex-col items-start justify-center border-none bg-transparent"
+            <div
+              id="baguette-magique"
+              className="group relative mb-5 flex gap-0.5"
             >
-              <div className="text-3xl leading-none text-slate-600 dark:text-slate-500">
-                ↜
-              </div>
-              <div className="pointer-events-none absolute -bottom-1 font-comic text-[0.60rem] text-slate-600 opacity-0 transition-opacity duration-200 group-hover/submit-button:opacity-100 dark:text-slate-500">
-                submit
-              </div>
+              <label className="mr-1 font-text text-4xl text-slate-500 group-focus-within:text-slate-700 group-[:has(input:not(:placeholder-shown))]:text-slate-700 dark:text-slate-600 dark:group-focus-within:text-slate-400 dark:group-[:has(input:not(:placeholder-shown))]:text-slate-400">
+                &gt;
+              </label>
+              <input
+                ref={inputRef}
+                type="text"
+                onKeyDown={handleKeyDown}
+                onMouseOver={event => event.target.focus()}
+                autoFocus
+                // If ever the placeholder text should be removed, use " " rather than "" so that :placeholder-shown selects as intended.
+                placeholder="Voici votre baguette magique."
+                className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-xs placeholder:text-slate-300 placeholder:transition-all placeholder:duration-75 hover:border-orange-400 focus:placeholder:text-3xl focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
+              />
+              <button
+                onClick={submit}
+                className="group/submit-button relative bottom-0.5 flex aspect-square cursor-pointer select-none flex-col items-start justify-center border-none bg-transparent"
+              >
+                <div className="text-3xl leading-none text-slate-600 dark:text-slate-500">
+                  ↜
+                </div>
+                <div className="pointer-events-none absolute -bottom-1 font-comic text-[0.60rem] text-slate-600 opacity-0 transition-opacity duration-200 group-hover/submit-button:opacity-100 dark:text-slate-500">
+                  submit
+                </div>
+              </button>
+            </div>
+            <button type="button" onClick={playAudio}>
+              <div>play audio</div>
             </button>
-          </div>
-          <button type="button" onClick={playAudio}>
-            <div>play audio</div>
-          </button>
-          <button type="button" onClick={save}>
-            <div>save</div>
-          </button>
-          <button type="button" onClick={toggleCheck}>
-            <div>toggle check</div>
-          </button>
-          <div ref={fphEvalDivRef} className="mt-4 flex flex-col gap-2">
-            <div className="flex items-baseline">
-              <div className="font-display text-2xl text-red-500 dark:text-red-500">
-                errors
+            <button type="button" onClick={save}>
+              <div>save</div>
+            </button>
+            <button type="button" onClick={toggleCheck}>
+              <div>toggle check</div>
+            </button>
+            <div ref={fphEvalDivRef} className="mt-4 flex flex-col gap-2">
+              <div className="flex items-baseline">
+                <div className="font-display text-2xl text-red-500 dark:text-red-500">
+                  errors
+                </div>
+                <div className="flex-auto"></div>
+                <div className="text-md mr-2 flex align-baseline font-hand text-slate-400 transition-transform before:translate-x-0 before:duration-500 before:content-['sort_by__('] after:translate-x-0 after:duration-500 after:content-[')'] hover:before:-translate-x-2 hover:after:translate-x-2 dark:text-slate-600">
+                  <button
+                    onClick={() => setSort(() => "type")}
+                    className="group cursor-pointer border-none bg-transparent"
+                  >
+                    <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                      type
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setSort(() => "chord")}
+                    className="group cursor-pointer border-none bg-transparent"
+                  >
+                    <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                      chord
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setSort(() => "severity")}
+                    className="group cursor-pointer border-none bg-transparent"
+                  >
+                    <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                      severity
+                    </div>
+                  </button>
+                </div>
               </div>
-              <div className="flex-auto"></div>
-              <div className="text-md mr-2 flex align-baseline font-hand text-slate-400 transition-transform before:translate-x-0 before:duration-500 before:content-['sort_by__('] after:translate-x-0 after:duration-500 after:content-[')'] hover:before:-translate-x-2 hover:after:translate-x-2 dark:text-slate-600">
-                <button
-                  onClick={() => setSort(() => "type")}
-                  className="group cursor-pointer border-none bg-transparent"
-                >
-                  <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
-                    type
-                  </div>
-                </button>
-                <button
-                  onClick={() => setSort(() => "chord")}
-                  className="group cursor-pointer border-none bg-transparent"
-                >
-                  <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
-                    chord
-                  </div>
-                </button>
-                <button
-                  onClick={() => setSort(() => "severity")}
-                  className="group cursor-pointer border-none bg-transparent"
-                >
-                  <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
-                    severity
-                  </div>
-                </button>
+              <FourPartHarmonyEvaluation
+                parts={parts}
+                analyses={chordAnalyses}
+                tonality={tonality}
+                sort={sort}
+              />
+            </div>
+          </div>
+          <div>
+            <div className="sticky top-2.5 mt-2">
+              <div className="mb-4 font-comic text-2xl text-slate-700 dark:text-slate-400">
+                tips
+              </div>
+              <div className="flex flex-col">
+                <BaguetteTip
+                  char="/"
+                  name="chordal input"
+                  example="/F2/A3/F4/D5"
+                />
+                <BaguetteTip char="`" name="navigation" example="`4`2`sbat" />
+                <BaguetteTip
+                  char="b/"
+                  name="bass input"
+                  example="b/f2 g2 a2 d2"
+                />
+                <BaguetteTip
+                  char="t/"
+                  name="tenor input"
+                  example="t/f3 g3 a3 d4"
+                />
+                <BaguetteTip
+                  char="a/"
+                  name="alto input"
+                  example="a/f4 g4 a4 d5"
+                />
+                <BaguetteTip
+                  char="s/"
+                  name="soprano input"
+                  example="s/f5 g5 a5 d5"
+                />
+                <BaguetteTip
+                  char=";"
+                  name="chord symbol input"
+                  example=";V65/iv iv"
+                />
+                <BaguetteTip char="!" name="key" example="!F#" />
+                <BaguetteTip char="@" name="time" example="@6/4 3" />
+                <BaguetteTip char="#" name="chord count" example="#9" />
+                <BaguetteTip char="~" name="all (!@#)" example="~A# 5/4 9 5" />
+                <BaguetteTip char="%" name="clear" example="%" />
               </div>
             </div>
-            <FourPartHarmonyEvaluation
-              parts={parts}
-              analyses={chordAnalyses}
-              tonality={tonality}
-              sort={sort}
-            />
           </div>
         </div>
       </div>
