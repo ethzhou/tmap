@@ -738,28 +738,28 @@ export default function FourPartHarmony() {
                 <BaguetteTip
                   char="/"
                   name="chordal input"
-                  example="/f2//a4/f5"
+                  example="/f2/c4/a4/f5"
                 />
                 <BaguetteTip char="`" name="navigation" example="`2`1`sbat" />
                 <BaguetteTip
                   char="b/"
                   name="bass input"
-                  example="b/f2 g2 a2 d2"
+                  example="b/f2 g2 a2 d2 e2"
                 />
                 <BaguetteTip
                   char="t/"
                   name="tenor input"
-                  example="t/f3 g3 a3 d3"
+                  example="t/f3 g3 a3 d3 e3"
                 />
                 <BaguetteTip
                   char="a/"
                   name="alto input"
-                  example="a/f4 g4 a4 d4"
+                  example="a/f4 g4 a4 d4 e4"
                 />
                 <BaguetteTip
                   char="s/"
                   name="soprano input"
-                  example="s/f5 g5 a5 d5"
+                  example="s/f5 g5 a5 d5 e5"
                 />
                 <BaguetteTip
                   char=";"
