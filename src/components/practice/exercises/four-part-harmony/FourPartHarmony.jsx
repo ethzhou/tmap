@@ -672,7 +672,7 @@ export default function FourPartHarmony() {
               {/* The double scaleY flips puts the scrollbar above the content instead of below it */}
               <div className="-scale-y-100 overflow-auto">
                 <div className="-scale-y-100">
-                  {parts[0].length && (
+                  {parts[0].length !== 0 && (
                     <FourPartProgression {...parameters} scaleFactor={1} />
                   )}
                 </div>
