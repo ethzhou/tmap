@@ -136,7 +136,7 @@ const sortings = {
 
 /** @type {Array<EvaluationFunction>} */
 const evaluations = [
-  // Spelling
+  // #region Spelling
 
   // The voices are in their ranges
   chords => {
@@ -421,7 +421,9 @@ const evaluations = [
     return errors;
   },
 
-  // Progression
+  // #endregion
+
+  // #region Progression
 
   // The progression begins with the tonic chord
   (chords, intervals, analyses) => {
@@ -533,7 +535,9 @@ const evaluations = [
     return errors;
   },
 
-  // Leading
+  // #endregion
+
+  // #region Leading
 
   // Common tones are held
   (chords, intervals, analyses, tonality, triads, charts) => {
@@ -918,6 +922,8 @@ const evaluations = [
 
     return errors;
   },
+
+  // #endregion
 ];
 
 /**
