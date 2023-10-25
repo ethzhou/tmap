@@ -9,7 +9,6 @@ export default function BaguetteTip({ char, name, example }) {
             },
           }),
         );
-        console.log("tipmouseenter event dispatched");
       }}
       className="group grid grid-cols-[1fr_6fr] items-baseline gap-2 pb-2"
     >
