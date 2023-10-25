@@ -767,8 +767,8 @@ export default function FourPartHarmony() {
                 />
                 <BaguetteTip char="!" name="key" example="!F#" />
                 <BaguetteTip char="@" name="time" example="@6/4 3" />
-                <BaguetteTip char="#" name="chord count" example="#9" />
-                <BaguetteTip char="~" name="all (!@#)" example="~A# 5/4 9 5" />
+                <BaguetteTip char="#" name="chord count" example="#7" />
+                <BaguetteTip char="~" name="all (!@#)" example="~A# 6/4 7 3" />
                 <BaguetteTip char="%" name="clear" example="%" />
               </div>
             </div>
