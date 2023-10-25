@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   Accidental,
   Beam,
+  Clef,
   Formatter,
   Fraction,
   Renderer,
@@ -122,7 +123,7 @@ export default function FourPartProgression({
 
   // #region Construction
 
-  // Values
+  // #region Define values
 
   const staveX = 20;
   const staveY = 30;
@@ -137,7 +138,9 @@ export default function FourPartProgression({
   const staveDistance = 115;
   const measureWidth = (chordsPerMeasure + 1) * 60;
 
-  // Determine accidentals
+  // #endregion
+
+  // #region Determine accidentals
 
   // Add each letter to the base accidentals lookup, i.e. the default accidentals in a measure
   const affectedLetters = tonality.affectedLetters();
@@ -227,7 +230,9 @@ export default function FourPartProgression({
     }
   }
 
-  // Create symbols
+  // #endregion
+
+  // #region Create grand staff
 
   const measureStaves = [];
 
@@ -239,12 +244,12 @@ export default function FourPartProgression({
     measureWidth,
   );
 
-  firstTrebleStave.addClef("treble");
-  firstBassStave.addClef("bass");
   firstTrebleStave
+    .addClef("treble")
     .addKeySignature(tonality.toVF())
     .addTimeSignature(timeSignatureString);
   firstBassStave
+    .addClef("bass")
     .addKeySignature(tonality.toVF())
     .addTimeSignature(timeSignatureString);
 
@@ -295,6 +300,10 @@ export default function FourPartProgression({
     measureStaves.at(-1).trebleStave,
     measureStaves.at(-1).bassStave,
   ).setType("boldDoubleRight");
+
+  // #endregion
+
+  // #region Create other musical symbols on staff
 
   // Add stave connectors
   const measureStavesAndConnectors = measureStaves.map(measure => {
@@ -405,7 +414,7 @@ export default function FourPartProgression({
     }
   }
 
-  // console.log("music", music);
+  // #endregion
 
   // #endregion
 
@@ -457,9 +466,11 @@ export default function FourPartProgression({
         className="pointer-events-none absolute font-text text-[20px]"
       >
         <g className="pointer-events-auto">
+          {/* Key indication */}
           <text x={xPositions[0] - 80} y={y}>
             <tspan>{tonality.toAnalysis()}:</tspan>
           </text>
+          {/* Symbols */}
           {chordAnalyses.map((chordAnalysis, i) => (
             <ChordSymbol
               key={i}
