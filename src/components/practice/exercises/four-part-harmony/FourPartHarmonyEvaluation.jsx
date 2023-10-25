@@ -840,10 +840,10 @@ const evaluations = [
 
     const leadingToneName = tonality.leadingTone().toName();
 
-    chords.forEach((chord, i) => {
+    for (let i = 1; i < chords.length - 1; i++) {
       if (analyses[i]?.degree === 1 && analyses[i]?.isSeventh()) return;
 
-      chord.forEach((pitch, iVoice) => {
+      chords[i - 1].forEach((pitch, iVoice) => {
         if (!pitch) return;
 
         if (pitch.toName() !== leadingToneName) return;
@@ -861,7 +861,7 @@ const evaluations = [
           ]),
         );
       });
-    });
+    }
 
     return errors;
   },
