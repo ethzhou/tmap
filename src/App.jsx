@@ -2,7 +2,7 @@ import { Link, Route, Routes } from "react-router-dom";
 import HomePage from "./components/HomePage";
 import LearnRoutes from "./components/routes/LearnRoutes";
 import PracticeRoutes from "./components/routes/PracticeRoutes";
-import SheetMusicTest from "./components/practice/exercises/SheetMusicTest";
+import SheetMusicTest from "./components/SheetMusicTest";
 import AboutRoutes from "./components/routes/AboutRoutes";
 import { useMediaQuery } from "react-responsive";
 import { createContext, useContext, useEffect, useState } from "react";
