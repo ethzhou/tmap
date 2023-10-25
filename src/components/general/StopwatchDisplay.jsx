@@ -7,7 +7,7 @@ export default function StopwatchDisplay({ stopwatch }) {
 
   return (
     <>
-      <div className="font-mono text-2xl text-slate-700 dark:text-slate-200">
+      <div className="font-mono text-2xl text-slate-700 dark:text-slate-300">
         {stopwatch.days !== 0 && <span>{stopwatch.days}:</span>}
         {(stopwatch.days !== 0 || stopwatch.hours !== 0) && (
           <span>{String(stopwatch.hours).padStart(2, "0")}:</span>
