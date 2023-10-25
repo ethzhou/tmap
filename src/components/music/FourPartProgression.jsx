@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   Accidental,
   Beam,
-  Clef,
   Formatter,
   Fraction,
   Renderer,
@@ -467,7 +466,7 @@ export default function FourPartProgression({
       >
         <g className="pointer-events-auto">
           {/* Key indication */}
-          <text x={xPositions[0] - 80} y={y}>
+          <text x={staveX + 42.9} y={y}>
             <tspan>{tonality.toAnalysis()}:</tspan>
           </text>
           {/* Symbols */}
