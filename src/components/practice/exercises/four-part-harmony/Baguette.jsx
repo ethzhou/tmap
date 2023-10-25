@@ -31,7 +31,9 @@ export default function Baguette({ defaultPlaceholder }) {
 
     if (event.key === "Tab") {
       if (inputRef.current.value === "") {
-        event.preventDefault();
+        if (placeholder !== "") {
+          event.preventDefault();
+        }
 
         inputRef.current.value = placeholder;
       }
@@ -60,7 +62,7 @@ export default function Baguette({ defaultPlaceholder }) {
     );
 
     inputRef.current.value = "";
-    setPlaceholder("");
+    setPlaceholder(() => "");
   }
 
   return (
