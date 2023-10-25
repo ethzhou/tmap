@@ -46,18 +46,16 @@ export default function App() {
   return (
     <>
       <ColorSchemeContext.Provider value={colorSchemeState}>
-        <div>
-          <Necklace />
-          <Routes>
-            <Route path="" element={<HomePage />} />
-            <Route path="learn/*" element={<LearnRoutes />} />
-            <Route path="practice/*" element={<PracticeRoutes />} />
-            <Route path="about/*" element={<AboutRoutes />} />
-            <Route path="sheet-music-test" element={<SheetMusicTest />} />
-            <Route path="*" element={<p>jajaja not a page</p>} />
-          </Routes>
-          <Belt />
-        </div>
+        <Necklace />
+        <Routes>
+          <Route path="" element={<HomePage />} />
+          <Route path="learn/*" element={<LearnRoutes />} />
+          <Route path="practice/*" element={<PracticeRoutes />} />
+          <Route path="about/*" element={<AboutRoutes />} />
+          <Route path="sheet-music-test" element={<SheetMusicTest />} />
+          <Route path="*" element={<p>jajaja not a page</p>} />
+        </Routes>
+        <Belt />
       </ColorSchemeContext.Provider>
     </>
   );
