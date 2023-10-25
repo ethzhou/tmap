@@ -7,9 +7,9 @@ export default function ErrorDisplay({ progressionError }) {
   return (
     <div
       tabIndex={0}
-      className="group relative cursor-pointer border-[1px] border-solid border-red-400 bg-rose-100 p-6 text-slate-700 shadow-md shadow-red-300 outline-0 transition-colors duration-300 last:rounded-b-md hover:border-violet-400 hover:bg-fuchsia-100 hover:shadow-violet-300 focus:border-sky-400 focus:bg-cyan-100 focus:shadow-sky-300 dark:border-red-500 dark:bg-rose-800 dark:text-slate-300 dark:shadow-red-800 dark:hover:border-violet-500 dark:hover:bg-fuchsia-800 dark:hover:shadow-violet-800  dark:focus:border-sky-500 dark:focus:bg-cyan-800 dark:focus:shadow-sky-800"
+      className="group relative cursor-pointer border-[1px] border-solid border-red-400 bg-rose-100 p-6 text-slate-700 shadow-md shadow-red-300 outline-0 transition-colors duration-300 last:rounded-b-md hover:border-violet-400 hover:bg-fuchsia-100 hover:shadow-violet-300 focus:border-sky-400 focus:bg-indigo-100 focus:shadow-sky-300 dark:border-red-500 dark:bg-rose-800 dark:text-slate-300 dark:shadow-red-800 dark:hover:border-violet-500 dark:hover:bg-fuchsia-800 dark:hover:shadow-violet-800  dark:focus:border-sky-500 dark:focus:bg-indigo-800 dark:focus:shadow-sky-800"
     >
-      <span className="group-hover:text- absolute right-4 top-6 align-baseline font-mono text-red-300 group-hover:text-violet-300 group-focus:text-sky-300 dark:text-rose-500 dark:group-hover:text-violet-500 dark:group-focus:text-cyan-500">
+      <span className="group-hover:text- absolute right-4 top-6 align-baseline font-mono text-red-300 group-hover:text-violet-300 group-focus:text-sky-300 dark:text-rose-500 dark:group-hover:text-violet-500 dark:group-focus:text-indigo-500">
         {errorData.type}
       </span>
       <span className="font-mono text-sm">At</span>
