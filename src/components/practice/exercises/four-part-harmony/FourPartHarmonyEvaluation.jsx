@@ -32,6 +32,8 @@ export default function FourPartHarmonyEvaluation({
   tonality,
   sort,
 }) {
+  // #region Create parameter arrays
+
   /**
    * Array of provided chords, each in BTAS order.
    * @type {Array<Array<Pitch | Null>>}
@@ -98,6 +100,8 @@ export default function FourPartHarmonyEvaluation({
 
     intervals.push(chordIntervals);
   }
+
+  // #endregion
 
   const errors = [];
   evaluations.forEach(evaluation =>
