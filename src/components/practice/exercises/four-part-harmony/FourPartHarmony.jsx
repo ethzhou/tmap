@@ -67,6 +67,10 @@ export default function FourPartHarmony() {
     voices: [0, 1, 2, 3],
   });
 
+  const [placeholder, setPlaceholder] = useState(
+    "Voici votre baguette magique.",
+  );
+
   const [sort, setSort] = useState("type");
 
   const fphEvalDivRef = useRef();
@@ -74,6 +78,10 @@ export default function FourPartHarmony() {
   useEffect(() => {
     loadParameters();
     inputRef.current.focus();
+    document.addEventListener("tipmouseenter", event => {
+      console.log(event.detail.example);
+      setPlaceholder(() => event.detail.example);
+    });
   }, []);
 
   // #region Parameter saves and loads
@@ -623,6 +631,7 @@ export default function FourPartHarmony() {
   function submit(event) {
     parseInput(inputRef.current.value);
     inputRef.current.value = "";
+    setPlaceholder("Voici votre baguette magique.");
   }
 
   function toggleCheck(event) {
@@ -684,11 +693,11 @@ export default function FourPartHarmony() {
                 ref={inputRef}
                 type="text"
                 onKeyDown={handleKeyDown}
-                onMouseOver={event => event.target.focus()}
+                onMouseEnter={event => event.target.focus()}
                 autoFocus
                 // If ever the placeholder text should be removed, use " " rather than "" so that :placeholder-shown selects as intended.
-                placeholder="Voici votre baguette magique."
-                className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-xs placeholder:text-slate-300 placeholder:transition-all placeholder:duration-75 hover:border-orange-400 focus:placeholder:text-3xl focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
+                placeholder={placeholder}
+                className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-slate-300 placeholder:transition-all placeholder:duration-75 hover:border-orange-400 focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
               />
               <button
                 onClick={submit}
