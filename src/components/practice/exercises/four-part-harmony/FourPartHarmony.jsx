@@ -669,8 +669,9 @@ export default function FourPartHarmony() {
           </nav>
           <div className="col-start-2 col-end-3 flex flex-col gap-1">
             <div className="rounded-lg border-solid border-orange-200 px-2 py-4 shadow-inner shadow-rose-300 dark:border-orange-300 dark:shadow-amber-800">
-              <div className="thin-scrollbar overflow-auto">
-                <div>
+              {/* The double scaleY flips puts the scrollbar above the content instead of below it */}
+              <div className="-scale-y-100 overflow-auto">
+                <div className="-scale-y-100">
                   {parts[0].length && (
                     <FourPartProgression {...parameters} scaleFactor={1} />
                   )}

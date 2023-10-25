@@ -42,20 +42,6 @@ html {
   }
 }
 
-.thin-scrollbar {
-  transform: scaleY(-1);
-
-  &::-webkit-scrollbar {
-    width: 0.2rem;
-    height: 0.2rem;
-  }
-
-  /* Because of this implementation, wrap .thin-scrollbar contents in one element. */
-  & > * {
-    transform: scaleY(-1);
-  }
-}
-
 /* Navigate Up arrows */
 
 .nav-up {
