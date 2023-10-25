@@ -753,7 +753,7 @@ export default function FourPartHarmony() {
             </div>
           </div>
           <div>
-            <div className="sticky top-2.5 mt-2">
+            <div className="sticky top-20 mt-0">
               <div className="mb-4 font-comic text-2xl text-slate-700 dark:text-slate-400">
                 Tips
               </div>
