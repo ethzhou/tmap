@@ -26,7 +26,7 @@ export default function PracticePage() {
               <div>Practice</div>
             </Link>
             <Link
-              to="/tmap/"
+              to="/tmap"
               className="group ml-2 text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
             >
               <div className="nav-up">

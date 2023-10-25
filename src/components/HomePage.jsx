@@ -24,7 +24,7 @@ export default function HomePage() {
         <div className="flex h-screen w-[40rem] flex-col justify-center gap-1">
           <nav className="flex items-baseline justify-between px-1">
             <Link
-              to="/tmap/"
+              to="/tmap"
               className="h-8 font-hand text-2xl text-slate-500 no-underline dark:text-slate-400 max-sm:text-xl"
             >
               <div>tmap&nbsp;♫</div>
