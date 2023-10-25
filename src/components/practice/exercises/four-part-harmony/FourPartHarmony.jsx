@@ -713,8 +713,8 @@ export default function FourPartHarmony() {
             </button>
             <div ref={fphEvalDivRef} className="mt-4 flex flex-col gap-2">
               <div className="flex items-baseline">
-                <div className="font-display text-2xl text-red-500 dark:text-red-500">
-                  errors
+                <div className="font-comic text-2xl text-red-500 dark:text-red-500">
+                  Errors
                 </div>
                 <div className="flex-auto"></div>
                 <div className="text-md mr-2 flex align-baseline font-hand text-slate-400 transition-transform before:translate-x-0 before:duration-500 before:content-['sort_by__('] after:translate-x-0 after:duration-500 after:content-[')'] hover:before:-translate-x-2 hover:after:translate-x-2 dark:text-slate-600">
@@ -755,7 +755,7 @@ export default function FourPartHarmony() {
           <div>
             <div className="sticky top-2.5 mt-2">
               <div className="mb-4 font-comic text-2xl text-slate-700 dark:text-slate-400">
-                tips
+                Tips
               </div>
               <div className="flex flex-col">
                 <BaguetteTip
