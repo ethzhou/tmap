@@ -19,6 +19,7 @@ import PianoPlayer from "../../../../classes/PianoPlayer";
 import { Link } from "react-router-dom";
 import StopwatchDisplay from "../../../general/StopwatchDisplay";
 import BaguetteTip from "./BaguetteTip";
+import Baguette from "./Baguette";
 
 // #region Test parts
 
@@ -67,22 +68,40 @@ export default function FourPartHarmony() {
     voices: [0, 1, 2, 3],
   });
 
-  const [placeholder, setPlaceholder] = useState(
-    "Voici votre baguette magique.",
-  );
-
   const [sort, setSort] = useState("type");
 
   const fphEvalDivRef = useRef();
 
   useEffect(() => {
     loadParameters();
-    inputRef.current.focus();
-    document.addEventListener("tipmouseenter", event => {
-      console.log(event.detail.example);
-      setPlaceholder(() => event.detail.example);
-    });
   }, []);
+
+  useEffect(() => {
+    document.addEventListener("baguettekeydown", handleBaguetteKeyDown);
+    document.addEventListener("baguettesubmit", handleBaguetteSubmit);
+
+    return () => {
+      document.removeEventListener("baguettekeydown", handleBaguetteKeyDown);
+      document.removeEventListener("baguettesubmit", handleBaguetteSubmit);
+    };
+  });
+
+  function handleBaguetteSubmit(event) {
+    parseInput(event.detail.inputString);
+  }
+
+  function handleBaguetteKeyDown(event) {
+    // Actions for an empty input field
+    if (event.detail.inputString === "") {
+      if (event.detail.event.key === "ArrowLeft") {
+        selectBefore();
+      } else if (event.detail.event.key === "ArrowRight") {
+        selectAfter();
+      }
+
+      return;
+    }
+  }
 
   // #region Parameter saves and loads
 
@@ -605,33 +624,9 @@ export default function FourPartHarmony() {
 
   // #endregion
 
-  function handleKeyDown(event) {
-    // Submission
-    if (event.key === "Enter") {
-      submit();
-
-      return;
-    }
-
-    // Actions for an empty input field
-    if (inputRef.current.value === "") {
-      if (event.key === "ArrowLeft") {
-        selectBefore();
-      } else if (event.key === "ArrowRight") {
-        selectAfter();
-      }
-    }
-  }
-
   function playAudio() {
     pianoPlayer.stop();
     pianoPlayer.playParts(parts, 0.85, 0.85);
-  }
-
-  function submit(event) {
-    parseInput(inputRef.current.value);
-    inputRef.current.value = "";
-    setPlaceholder("Voici votre baguette magique.");
   }
 
   function toggleCheck(event) {
@@ -682,35 +677,7 @@ export default function FourPartHarmony() {
                 </div>
               </div>
             </div>
-            <div
-              id="baguette-magique"
-              className="group relative mb-5 flex gap-0.5"
-            >
-              <label className="mr-1 font-text text-4xl text-slate-500 group-focus-within:text-slate-700 group-[:has(input:not(:placeholder-shown))]:text-slate-700 dark:text-slate-600 dark:group-focus-within:text-slate-400 dark:group-[:has(input:not(:placeholder-shown))]:text-slate-400">
-                &gt;
-              </label>
-              <input
-                ref={inputRef}
-                type="text"
-                onKeyDown={handleKeyDown}
-                onMouseEnter={event => event.target.focus()}
-                autoFocus
-                // If ever the placeholder text should be removed, use " " rather than "" so that :placeholder-shown selects as intended.
-                placeholder={placeholder}
-                className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-slate-300 placeholder:transition-all placeholder:duration-75 hover:border-orange-400 focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
-              />
-              <button
-                onClick={submit}
-                className="group/submit-button relative bottom-0.5 flex aspect-square cursor-pointer select-none flex-col items-start justify-center border-none bg-transparent"
-              >
-                <div className="text-3xl leading-none text-slate-600 dark:text-slate-500">
-                  ↜
-                </div>
-                <div className="pointer-events-none absolute -bottom-1 font-comic text-[0.60rem] text-slate-600 opacity-0 transition-opacity duration-200 group-hover/submit-button:opacity-100 dark:text-slate-500">
-                  submit
-                </div>
-              </button>
-            </div>
+            <Baguette />
             <button type="button" onClick={playAudio}>
               <div>play audio</div>
             </button>
