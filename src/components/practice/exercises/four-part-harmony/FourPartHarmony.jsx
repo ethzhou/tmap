@@ -678,7 +678,7 @@ export default function FourPartHarmony() {
                 </div>
               </div>
             </div>
-            <Baguette />
+            <Baguette defaultPlaceholder={"Voici votre baguette magique."} />
             <button type="button" onClick={playAudio}>
               <div>play audio</div>
             </button>

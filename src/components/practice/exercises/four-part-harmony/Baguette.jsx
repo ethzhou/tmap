@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function Baguette() {
+export default function Baguette({ defaultPlaceholder }) {
   const inputRef = useRef();
 
   useEffect(() => {
     inputRef.current.focus();
   });
 
-  const [placeholder, setPlaceholder] = useState(
-    "Voici votre baguette magique.",
-  );
+  const [placeholder, setPlaceholder] = useState("");
 
   useEffect(() => {
     document.addEventListener("tipmouseenter", handleTipMouseEnter);
@@ -52,7 +50,7 @@ export default function Baguette() {
     );
 
     inputRef.current.value = "";
-    setPlaceholder("Voici votre baguette magique.");
+    setPlaceholder("");
   }
 
   return (
@@ -67,7 +65,7 @@ export default function Baguette() {
         onMouseEnter={event => event.target.focus()}
         autoFocus
         // If ever the placeholder text should be removed, use " " rather than "" so that :placeholder-shown selects as intended.
-        placeholder={placeholder}
+        placeholder={placeholder || defaultPlaceholder || " "}
         className="m-0 flex-auto border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 px-1 text-end font-mono text-3xl text-slate-600 outline-0 placeholder:text-slate-300 placeholder:transition-all placeholder:duration-75 hover:border-orange-400 focus-visible:border-solid focus-visible:border-slate-600 dark:border-slate-600 dark:text-slate-400 dark:placeholder:text-slate-700 dark:hover:border-sky-300 dark:focus-visible:border-slate-400"
       />
       <button
