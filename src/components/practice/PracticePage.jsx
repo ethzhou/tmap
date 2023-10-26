@@ -23,7 +23,9 @@ export default function PracticePage() {
               to=""
               className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
             >
-              <div>Practice</div>
+              <div>
+                <h1 className="m-0 text-2xl font-normal">Practice</h1>
+              </div>
             </Link>
             <Link
               to="/tmap"

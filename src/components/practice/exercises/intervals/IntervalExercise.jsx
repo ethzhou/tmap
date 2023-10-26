@@ -11,7 +11,9 @@ export default function IntervalExercise({ name, record, exerciseContent }) {
               to=""
               className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
             >
-              <div>{name}</div>
+              <div>
+                <h1 className="m-0 text-2xl font-normal">{name}</h1>
+              </div>
             </Link>
             <Link
               to="/tmap/practice"

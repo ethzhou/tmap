@@ -27,7 +27,9 @@ export default function HomePage() {
               to="/tmap"
               className="h-8 font-hand text-2xl text-slate-500 no-underline dark:text-slate-400 max-sm:text-xl"
             >
-              <div>tmap&nbsp;♫</div>
+              <div>
+                <h1 className="m-0 text-2xl font-normal">tmap&nbsp;♫</h1>
+              </div>
             </Link>
             <div className="self-bottom ml-2 h-[2px] flex-auto rounded-tr-full bg-slate-500 dark:bg-slate-400"></div>
             <Link
