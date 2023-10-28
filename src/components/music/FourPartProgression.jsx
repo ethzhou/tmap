@@ -487,8 +487,6 @@ export default function FourPartProgression({
 
   // #endregion
 
-  console.log("FPPP refernednerd");
-
   return (
     <>
       <div
