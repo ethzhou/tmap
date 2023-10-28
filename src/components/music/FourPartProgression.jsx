@@ -36,90 +36,6 @@ export default function FourPartProgression({
 
   const [chordSymbols, setChordSymbols] = useState();
 
-  // Draw
-  // Music construction done below
-  useEffect(() => {
-    const divElement = document.getElementById(divId);
-
-    const renderer = new Renderer(divElement, Renderer.Backends.SVG);
-    const rendererWidth = 40 + noteStartX + measureCount * measureWidth;
-    const rendererHeight = 310;
-    renderer.resize(rendererWidth * scaleFactor, rendererHeight * scaleFactor);
-
-    const context = renderer.getContext();
-    context.scale(scaleFactor, scaleFactor);
-    const formatter = new Formatter();
-
-    for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
-      const {
-        trebleStave,
-        bassStave,
-        staveConnectorLeft,
-        staveConnectorRight,
-        voices,
-        beams,
-      } = music[iMeasure];
-
-      trebleStave.setContext(context).draw();
-      bassStave.setContext(context).draw();
-
-      staveConnectorLeft.setContext(context).draw();
-      staveConnectorRight.setContext(context).draw();
-
-      formatter.joinVoices([voices[0], voices[1]]);
-      formatter.joinVoices([voices[2], voices[3]]);
-
-      // Format all voices together
-      formatter.format(
-        voices,
-        measureWidth,
-        // { auto_beam: true, autobeam: true }
-      );
-
-      for (let iVoice = 0; iVoice < 4; iVoice++) {
-        const [iMeasureSelected, iChordSelected] = decomposeIndex(
-          selection.iChord,
-          chordsPerMeasure,
-        );
-
-        const measureContainsSelected =
-          iMeasure === iMeasureSelected && selection.voices.includes(iVoice);
-
-        // Method 1: First draw everything (later draw the selected notes)
-
-        // voices[iVoice].draw(context);
-
-        // Method 2: First draw everything but the selected notes (and later draw the selected notes)
-
-        const stave = iVoice < 2 ? bassStave : trebleStave;
-        const tickables = voices[iVoice].tickables;
-
-        tickables.forEach((tickable, i) => {
-          if (measureContainsSelected && i === iChordSelected) return;
-
-          tickable.setStave(stave).setContext(context).draw();
-        });
-
-        // Create a group for the selected notes and style it
-
-        const selectedGroup = context.openGroup();
-        tickables[iChordSelected]?.setStave(stave).setContext(context).draw();
-        context.closeGroup();
-
-        if (measureContainsSelected) {
-          selectedGroup.classList.add("vf-selected");
-        }
-      }
-
-      beams.forEach(beam => {
-        beam.setContext(context).draw();
-      });
-    }
-
-    brace.setContext(context).draw();
-    doubleBarline.setContext(context).draw();
-  });
-
   // #region Construction
 
   // #region Define values
@@ -417,6 +333,92 @@ export default function FourPartProgression({
 
   // #endregion
 
+  // #region Draw
+
+  useEffect(() => {
+    const divElement = document.getElementById(divId);
+
+    const renderer = new Renderer(divElement, Renderer.Backends.SVG);
+    const rendererWidth = 40 + noteStartX + measureCount * measureWidth;
+    const rendererHeight = 310;
+    renderer.resize(rendererWidth * scaleFactor, rendererHeight * scaleFactor);
+
+    const context = renderer.getContext();
+    context.scale(scaleFactor, scaleFactor);
+    const formatter = new Formatter();
+
+    for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
+      const {
+        trebleStave,
+        bassStave,
+        staveConnectorLeft,
+        staveConnectorRight,
+        voices,
+        beams,
+      } = music[iMeasure];
+
+      trebleStave.setContext(context).draw();
+      bassStave.setContext(context).draw();
+
+      staveConnectorLeft.setContext(context).draw();
+      staveConnectorRight.setContext(context).draw();
+
+      formatter.joinVoices([voices[0], voices[1]]);
+      formatter.joinVoices([voices[2], voices[3]]);
+
+      // Format all voices together
+      formatter.format(
+        voices,
+        measureWidth,
+        // { auto_beam: true, autobeam: true }
+      );
+
+      for (let iVoice = 0; iVoice < 4; iVoice++) {
+        const [iMeasureSelected, iChordSelected] = decomposeIndex(
+          selection.iChord,
+          chordsPerMeasure,
+        );
+
+        const measureContainsSelected =
+          iMeasure === iMeasureSelected && selection.voices.includes(iVoice);
+
+        // Method 1: First draw everything (later draw the selected notes)
+
+        // voices[iVoice].draw(context);
+
+        // Method 2: First draw everything but the selected notes (and later draw the selected notes)
+
+        const stave = iVoice < 2 ? bassStave : trebleStave;
+        const tickables = voices[iVoice].tickables;
+
+        tickables.forEach((tickable, i) => {
+          if (measureContainsSelected && i === iChordSelected) return;
+
+          tickable.setStave(stave).setContext(context).draw();
+        });
+
+        // Create a group for the selected notes and style it
+
+        const selectedGroup = context.openGroup();
+        tickables[iChordSelected]?.setStave(stave).setContext(context).draw();
+        context.closeGroup();
+
+        if (measureContainsSelected) {
+          selectedGroup.classList.add("vf-selected");
+        }
+      }
+
+      beams.forEach(beam => {
+        beam.setContext(context).draw();
+      });
+    }
+
+    brace.setContext(context).draw();
+    doubleBarline.setContext(context).draw();
+  });
+
+  // #endregion
+
   // #region Draw chord analyses
 
   useEffect(() => {
@@ -484,6 +486,8 @@ export default function FourPartProgression({
   }
 
   // #endregion
+
+  console.log("FPPP refernednerd");
 
   return (
     <>
