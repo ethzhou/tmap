@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import StopwatchDisplay from "../../../general/StopwatchDisplay";
 import BaguetteTip from "./BaguetteTip";
 import Baguette from "./Baguette";
+import FourPartProgressionDisplay from "./FourPartProgressionDisplay";
 
 // #region Test parts
 
@@ -50,8 +51,6 @@ import Baguette from "./Baguette";
 const pianoPlayer = new PianoPlayer();
 
 export default function FourPartHarmony() {
-  const inputRef = useRef();
-
   const [parts, setParts] = useState([[], [], [], []]);
 
   const [chordAnalyses, setChordAnalyses] = useState([]);
@@ -670,16 +669,7 @@ export default function FourPartHarmony() {
             <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-400 dark:bg-pink-600"></div>
           </nav>
           <div className="col-start-2 col-end-3 flex flex-col gap-1">
-            <div className="rounded-lg border-solid border-orange-200 px-2 py-4 shadow-inner shadow-rose-300 dark:border-orange-300 dark:shadow-amber-800">
-              {/* The double scaleY flips puts the scrollbar above the content instead of below it */}
-              <div className="-scale-y-100 overflow-auto">
-                <div className="-scale-y-100">
-                  {parts[0].length !== 0 && (
-                    <FourPartProgression {...parameters} scaleFactor={1} />
-                  )}
-                </div>
-              </div>
-            </div>
+            <FourPartProgressionDisplay {...parameters} />
             <Baguette defaultPlaceholder={"Voici votre baguette magique."} />
             <button type="button" onClick={playAudio}>
               <div>play audio</div>
