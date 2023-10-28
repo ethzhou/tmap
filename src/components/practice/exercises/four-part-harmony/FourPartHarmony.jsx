@@ -644,7 +644,7 @@ export default function FourPartHarmony() {
 
   return (
     <>
-      <div className="my-20 flex w-fit justify-center">
+      <div className="my-20 flex justify-center">
         <div className="grid grid-cols-[1fr_48rem_1fr] justify-center gap-x-6 gap-y-2">
           <nav className="col-start-2 col-end-3 flex items-baseline gap-2">
             <Link
