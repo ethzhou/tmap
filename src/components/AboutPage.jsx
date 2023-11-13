@@ -41,8 +41,8 @@ export default function AboutPage() {
               </h2>
               <p>
                 Presently, the four-part harmony practice page is almost
-                completely dependent on keyboard input. This is, arguably,{" "}
-                <em className="font-hand">terrible—</em>
+                completely dependent on keyboard input. This is arguably
+                terrible—
               </p>
               <p>
                 I believe, though, in the optional only-keyboard approach,
