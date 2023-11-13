@@ -5,7 +5,7 @@ export default function PracticeCard({
   blurb,
   to,
   svgViewBox,
-  graphicHRef,
+  graphicSource,
 }) {
   return (
     <>
@@ -28,9 +28,7 @@ export default function PracticeCard({
                     viewBox={svgViewBox}
                     className="fill-slate-600 stroke-slate-600 dark:fill-slate-300 dark:stroke-slate-300"
                   >
-                    <use
-                      href={new URL(graphicHRef, import.meta.url).href}
-                    ></use>
+                    <use href={graphicSource}></use>
                   </svg>
                 </div>
                 <div className="mt-10 font-text">{blurb}</div>

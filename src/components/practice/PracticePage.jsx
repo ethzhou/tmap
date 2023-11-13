@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import PracticeCard from "./PracticeCard";
+import intervalReadingGraphic from "../../assets/interval-reading.svg";
 
 export default function PracticePage() {
   function handleMouseMoveLightPos(event) {
@@ -50,14 +51,14 @@ export default function PracticePage() {
               blurb={"Okay."}
               to={"interval-reading"}
               svgViewBox={"0 0 160 120"}
-              graphicHRef={"/src/assets/interval-reading.svg#graphic"}
+              graphicSource={`${intervalReadingGraphic}#graphic`}
             />
             <PracticeCard
               name={"Interval Dictation"}
               blurb={"hm–⁠hm… hm… hm…"}
               to={"interval-dictation"}
               svgViewBox={"0 0 160 120"}
-              graphicHRef={"/src/assets/interval-dictation.svg#graphic"}
+              graphicHRef={""}
             />
             <PracticeCard
               name={"Four-Part Harmony"}
@@ -70,14 +71,14 @@ export default function PracticePage() {
               }
               to={"four-part-harmony"}
               svgViewBox={"0 0 160 120"}
-              graphicHRef={"/src/assets/four-part-harmony.svg#graphic"}
+              graphicHRef={""}
             />
             <PracticeCard
               name={"Something Else"}
               blurb={"what's the lorem ipsum of music"}
               to={""}
               svgViewBox={"0 0 160 120"}
-              graphicHRef={"/src/assets/something-else.svg#graphic"}
+              graphicHRef={""}
             />
           </div>
         </div>
