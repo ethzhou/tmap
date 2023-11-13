@@ -137,7 +137,6 @@ const errorTable = {
     type: "d5-P5-not-passing",
     message:
       "the d5 to P5 is ascending but not passing between an I chord and an I6 chord",
-    type: "the d5 to P5 is ascending but not passing between an I chord and an I6 chord",
   },
   "hidden-fifth-soprano-not-step": {
     type: "hidden-fifth-soprano-not-step",
