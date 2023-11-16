@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Accidental,
   Beam,
@@ -33,6 +33,8 @@ export default function FourPartProgression({
 }) {
   const divId = name ? `vf-${name}` : "vf-canvas";
   const divRef = useRef();
+
+  const dimensions = useRef();
 
   const [chordSymbols, setChordSymbols] = useState();
 
@@ -149,94 +151,98 @@ export default function FourPartProgression({
 
   // #region Create grand staff
 
-  const measureStaves = [];
+  const grandStaff = useMemo(() => {
+    const measureStaves = [];
 
-  // The first measure is special, since it holds the clef, key signature, and time signature; it is created separately.
-  const firstTrebleStave = new Stave(staveX, staveY, measureWidth);
-  const firstBassStave = new Stave(
-    staveX,
-    staveY + staveDistance,
-    measureWidth,
-  );
-
-  firstTrebleStave
-    .addClef("treble")
-    .addKeySignature(tonality.toVF())
-    .addTimeSignature(timeSignatureString);
-  firstBassStave
-    .addClef("bass")
-    .addKeySignature(tonality.toVF())
-    .addTimeSignature(timeSignatureString);
-
-  // Align the first notes of the staves
-  // noteStartX is a value measuring from the border of the canvas
-  const noteStartX = Math.max(
-    firstTrebleStave.getNoteStartX(),
-    firstBassStave.getNoteStartX(),
-  );
-  // relativeNoteStartX is a value measuring from the start of the stave
-  const relativeNoteStartX = noteStartX - staveX;
-  firstTrebleStave.setNoteStartX(noteStartX);
-  firstBassStave.setNoteStartX(noteStartX);
-  firstTrebleStave.setWidth(firstTrebleStave.getWidth() + relativeNoteStartX);
-  firstBassStave.setWidth(firstBassStave.getWidth() + relativeNoteStartX);
-
-  // Add staves to array
-  measureStaves.push({
-    trebleStave: firstTrebleStave,
-    bassStave: firstBassStave,
-  });
-  for (let i = 1; i < measureCount; i++) {
-    // Create more staves, one per measure, each starting where the last ended
-    const trebleStave = new Stave(
-      noteStartX + i * measureWidth,
-      staveY,
-      measureWidth,
-    );
-    const bassStave = new Stave(
-      noteStartX + i * measureWidth,
+    // The first measure is special, since it holds the clef, key signature, and time signature; it is created separately.
+    const firstTrebleStave = new Stave(staveX, staveY, measureWidth);
+    const firstBassStave = new Stave(
+      staveX,
       staveY + staveDistance,
       measureWidth,
     );
 
-    measureStaves.push({ trebleStave, bassStave });
-  }
+    firstTrebleStave
+      .addClef("treble")
+      .addKeySignature(tonality.toVF())
+      .addTimeSignature(timeSignatureString);
+    firstBassStave
+      .addClef("bass")
+      .addKeySignature(tonality.toVF())
+      .addTimeSignature(timeSignatureString);
 
-  // Extend the last measures by just a bit
-  measureStaves.at(-1).trebleStave.setWidth(measureWidth + 14);
-  measureStaves.at(-1).bassStave.setWidth(measureWidth + 14);
-  // Brace for the first measure (the rest of the barlines are set later)
+    // Align the first notes of the staves
+    // noteStartX is a value measuring from the border of the canvas
+    const noteStartX = Math.max(
+      firstTrebleStave.getNoteStartX(),
+      firstBassStave.getNoteStartX(),
+    );
+    // relativeNoteStartX is a value measuring from the start of the stave
+    const relativeNoteStartX = noteStartX - staveX;
+    firstTrebleStave.setNoteStartX(noteStartX);
+    firstBassStave.setNoteStartX(noteStartX);
+    firstTrebleStave.setWidth(firstTrebleStave.getWidth() + relativeNoteStartX);
+    firstBassStave.setWidth(firstBassStave.getWidth() + relativeNoteStartX);
+
+    // Add staves to array
+    measureStaves.push({
+      trebleStave: firstTrebleStave,
+      bassStave: firstBassStave,
+    });
+    for (let i = 1; i < measureCount; i++) {
+      // Create more staves, one per measure, each starting where the last ended
+      const trebleStave = new Stave(
+        noteStartX + i * measureWidth,
+        staveY,
+        measureWidth,
+      );
+      const bassStave = new Stave(
+        noteStartX + i * measureWidth,
+        staveY + staveDistance,
+        measureWidth,
+      );
+
+      measureStaves.push({ trebleStave, bassStave });
+    }
+
+    // Extend the last measures by just a bit
+    measureStaves.at(-1).trebleStave.setWidth(measureWidth + 14);
+    measureStaves.at(-1).bassStave.setWidth(measureWidth + 14);
+
+    // Add stave connectors
+    const measureStavesAndConnectors = measureStaves.map(measure => {
+      const { trebleStave, bassStave } = measure;
+      const staveConnectorLeft = new StaveConnector(
+        trebleStave,
+        bassStave,
+      ).setType("singleLeft");
+      const staveConnectorRight = new StaveConnector(
+        trebleStave,
+        bassStave,
+      ).setType("singleRight"); // Not necessary
+
+      return { ...measure, staveConnectorLeft, staveConnectorRight };
+    });
+
+    return measureStavesAndConnectors;
+  }, [tonality, timeSignature, chordCount, chordsPerMeasure]);
+
+  // Brace for the first measure
   const brace = new StaveConnector(
-    measureStaves[0].trebleStave,
-    measureStaves[0].bassStave,
+    grandStaff[0].trebleStave,
+    grandStaff[0].bassStave,
   ).setType("brace");
   // Double barline for the last measure
   const doubleBarline = new StaveConnector(
-    measureStaves.at(-1).trebleStave,
-    measureStaves.at(-1).bassStave,
+    grandStaff.at(-1).trebleStave,
+    grandStaff.at(-1).bassStave,
   ).setType("boldDoubleRight");
-
   // #endregion
 
   // #region Create other musical symbols on staff
 
-  // Add stave connectors
-  const measureStavesAndConnectors = measureStaves.map(measure => {
-    const { trebleStave, bassStave } = measure;
-    const staveConnectorLeft = new StaveConnector(
-      trebleStave,
-      bassStave,
-    ).setType("singleLeft");
-    const staveConnectorRight = new StaveConnector(
-      trebleStave,
-      bassStave,
-    ).setType("singleRight"); // Not necessary
-
-    return { ...measure, staveConnectorLeft, staveConnectorRight };
-  });
-
   // Add notes (voices) and beams
-  const music = measureStavesAndConnectors.map((measure, iMeasure) => {
+  const music = grandStaff.map((measure, iMeasure) => {
     const { trebleStave, bassStave } = measure;
 
     const voices = [];
@@ -335,17 +341,24 @@ export default function FourPartProgression({
 
   // #region Draw
 
+  // Draw grand staff
   useEffect(() => {
-    const divElement = document.getElementById(divId);
+    console.log("Drawing grand staff.");
+    console.log(music);
 
-    const renderer = new Renderer(divElement, Renderer.Backends.SVG);
-    const rendererWidth = 40 + noteStartX + measureCount * measureWidth;
+    const divCanvas = divRef.current.children[0];
+    console.log(divCanvas);
+
+    const renderer = new Renderer(divCanvas, Renderer.Backends.SVG);
+    const rendererWidth =
+      40 +
+      grandStaff[0].bassStave.getNoteStartX() +
+      measureCount * measureWidth;
     const rendererHeight = 310;
     renderer.resize(rendererWidth * scaleFactor, rendererHeight * scaleFactor);
 
     const context = renderer.getContext();
     context.scale(scaleFactor, scaleFactor);
-    const formatter = new Formatter();
 
     for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
       const {
@@ -353,8 +366,6 @@ export default function FourPartProgression({
         bassStave,
         staveConnectorLeft,
         staveConnectorRight,
-        voices,
-        beams,
       } = music[iMeasure];
 
       trebleStave.setContext(context).draw();
@@ -362,6 +373,37 @@ export default function FourPartProgression({
 
       staveConnectorLeft.setContext(context).draw();
       staveConnectorRight.setContext(context).draw();
+
+      brace.setContext(context).draw();
+      doubleBarline.setContext(context).draw();
+    }
+
+    dimensions.current = [rendererWidth, rendererHeight];
+  });
+
+  // Draw other symbols
+  useEffect(() => {
+    console.log("Drawing other symbols.");
+    console.log(music);
+
+    const divCanvas = divRef.current.children[1];
+    console.log(divCanvas);
+
+    const renderer = new Renderer(divCanvas, Renderer.Backends.SVG);
+    const rendererWidth =
+      40 +
+      grandStaff[0].bassStave.getNoteStartX() +
+      measureCount * measureWidth;
+    const rendererHeight = 310;
+    renderer.resize(rendererWidth * scaleFactor, rendererHeight * scaleFactor);
+
+    const context = renderer.getContext();
+    context.scale(scaleFactor, scaleFactor);
+
+    const formatter = new Formatter();
+
+    for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
+      const { trebleStave, bassStave, voices, beams } = music[iMeasure];
 
       formatter.joinVoices([voices[0], voices[1]]);
       formatter.joinVoices([voices[2], voices[3]]);
@@ -373,6 +415,7 @@ export default function FourPartProgression({
         // { auto_beam: true, autobeam: true }
       );
 
+      // Draw the notes
       for (let iVoice = 0; iVoice < 4; iVoice++) {
         const [iMeasureSelected, iChordSelected] = decomposeIndex(
           selection.iChord,
@@ -384,7 +427,7 @@ export default function FourPartProgression({
 
         // Method 1: First draw everything (later draw the selected notes)
 
-        // voices[iVoice].draw(context);
+        /* voices[iVoice].draw(context); */
 
         // Method 2: First draw everything but the selected notes (and later draw the selected notes)
 
@@ -398,12 +441,12 @@ export default function FourPartProgression({
         });
 
         // Create a group for the selected notes and style it
-
         const selectedGroup = context.openGroup();
         tickables[iChordSelected]?.setStave(stave).setContext(context).draw();
         context.closeGroup();
 
         if (measureContainsSelected) {
+          // The selected notes are styled in a style sheet
           selectedGroup.classList.add("vf-selected");
         }
       }
@@ -412,9 +455,6 @@ export default function FourPartProgression({
         beam.setContext(context).draw();
       });
     }
-
-    brace.setContext(context).draw();
-    doubleBarline.setContext(context).draw();
   });
 
   // #endregion
@@ -450,7 +490,7 @@ export default function FourPartProgression({
    * @param {string} y HTML attribute of the `text` elements to be drawn in the SVG.
    */
   function displayChordSymbols(y) {
-    const vfSVGElement = divRef.current.lastChild;
+    const vfSVGElement = divRef.current.children[0].firstChild;
 
     const xPositions = getNoteXPositions();
 
@@ -464,7 +504,7 @@ export default function FourPartProgression({
     setChordSymbols(() => (
       <svg
         {...svgAnalysisAttributes}
-        className="pointer-events-none absolute font-text text-[20px]"
+        className="pointer-events-none absolute left-0 top-0 font-text text-[20px]"
       >
         <g className="pointer-events-auto">
           {/* Key indication */}
@@ -494,8 +534,16 @@ export default function FourPartProgression({
         ref={divRef}
         id={divId}
         className="relative"
+        style={{
+          width: dimensions.current ? `${dimensions.current[0]}px` : undefined,
+          height: dimensions.current ? `${dimensions.current[1]}px` : undefined,
+        }}
       >
-        {chordSymbols}
+        {/* This is the div for the grand staff */}
+        <div></div>
+        {/* This is the div for the notes */}
+        <div className="absolute left-0 top-0"></div>
+        <div>{chordSymbols}</div>
       </div>
     </>
   );
