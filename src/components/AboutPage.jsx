@@ -32,7 +32,7 @@ export default function AboutPage() {
               <h2 className="font-display text-3xl font-normal">
                 <strong>tmap</strong> is the AP Music Theory tool I wanted
                 during my study. Despite this, the letters in its name are
-                completely coincidental to that of the course.
+                completely coincidental to those of the course.
               </h2>
             </section>
             <section>
