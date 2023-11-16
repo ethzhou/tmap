@@ -393,6 +393,28 @@ export default function FourPartProgression({
     const context = renderer.getContext();
     context.scale(scaleFactor, scaleFactor);
 
+    // If the two voices on a stave are both rests, then if the lower voice is selected and the upper is not, then the selection will not appear, so a determination of voices to display as selected happens here
+    const voicesDisplayedAsSelected = new Set();
+    for (const iVoice of selection.voices) {
+      voicesDisplayedAsSelected.add(iVoice);
+
+      if (iVoice !== 0 && iVoice !== 2) continue;
+
+      if (
+        parts[iVoice][selection.iChord] !== null ||
+        parts[iVoice + 1][selection.iChord] !== null
+      )
+        continue;
+
+      voicesDisplayedAsSelected.add(iVoice + 1);
+    }
+
+    // Decompose the selected index into measure and chord of the measure
+    const [iMeasureSelected, iChordSelected] = decomposeIndex(
+      selection.iChord,
+      chordsPerMeasure,
+    );
+
     const formatter = new Formatter();
 
     for (let iMeasure = 0; iMeasure < measureCount; iMeasure++) {
@@ -410,25 +432,21 @@ export default function FourPartProgression({
 
       // Draw the notes
       for (let iVoice = 0; iVoice < 4; iVoice++) {
-        const [iMeasureSelected, iChordSelected] = decomposeIndex(
-          selection.iChord,
-          chordsPerMeasure,
-        );
-
-        const measureContainsSelected =
-          iMeasure === iMeasureSelected && selection.voices.includes(iVoice);
-
         // Method 1: First draw everything (later draw the selected notes)
 
         /* voices[iVoice].draw(context); */
 
         // Method 2: First draw everything but the selected notes (and later draw the selected notes)
 
+        const voiceContainsSelectedInMeasure =
+          iMeasure === iMeasureSelected &&
+          voicesDisplayedAsSelected.has(iVoice);
+
         const stave = iVoice < 2 ? bassStave : trebleStave;
         const tickables = voices[iVoice].tickables;
 
         tickables.forEach((tickable, i) => {
-          if (measureContainsSelected && i === iChordSelected) return;
+          if (voiceContainsSelectedInMeasure && i === iChordSelected) return;
 
           tickable.setStave(stave).setContext(context).draw();
         });
@@ -438,7 +456,7 @@ export default function FourPartProgression({
         tickables[iChordSelected]?.setStave(stave).setContext(context).draw();
         context.closeGroup();
 
-        if (measureContainsSelected) {
+        if (voiceContainsSelectedInMeasure) {
           // The selected notes are styled in a style sheet
           selectedGroup.classList.add("vf-selected");
         }
