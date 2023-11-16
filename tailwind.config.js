@@ -5,13 +5,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        hand: ["Patrick Hand"],
-        display: ["Comfortaa"],
-        comic: ["Comic Neue"],
-        text: ["Raleway"],
-        mono: ["Nanum Gothic Coding"],
-        emoji: ["Noto Emoji"],
-        redacted: ["Redacted Script"],
+        hand: ['"Patrick Hand"'],
+        display: ['"Comfortaa"'],
+        comic: ['"Comic Neue"'],
+        text: ['"Raleway"'],
+        mono: ['"Nanum Gothic Coding"'],
+        emoji: ['"Noto Emoji"'],
+        redacted: ['"Redacted Script"'],
       },
     },
   },
