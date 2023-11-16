@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import tmapLogo from "../assets/tmap-logo.svg";
 
 export default function AboutPage() {
   return (
@@ -27,14 +28,19 @@ export default function AboutPage() {
             </Link>
             <div className="self-bottom ml-2 h-[2px] flex-auto rounded-tr-full bg-yellow-400 dark:bg-yellow-600"></div>
           </nav>
-          <main className="flex flex-col gap-12 font-text text-xl text-slate-700 dark:text-slate-300">
-            <section>
+          <main className="relative flex flex-col gap-12 font-text text-xl text-slate-700 dark:text-slate-300">
+            <section className="flex">
               <h2 className="font-display text-3xl font-normal">
                 <strong>tmap</strong> is the AP Music Theory tool I wanted
                 during my study. Despite this, the letters in its name are
                 completely coincidental to those of the course.
               </h2>
             </section>
+            <img
+              src={tmapLogo}
+              alt="tmap"
+              className="absolute bottom-8 right-20 -z-[1] w-[55%] opacity-10"
+            />
             <section>
               <h2 className="text-2xl">
                 Philosoph<span className="before:content-['icalit']">y</span>
