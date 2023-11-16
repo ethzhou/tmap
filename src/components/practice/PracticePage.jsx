@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import PracticeCard from "./PracticeCard";
-import intervalReadingGraphic from "../../assets/interval-reading.svg";
+import intervalReadingGraphic from "../../assets/practice/cards/interval-reading-graphic.svg";
+import intervalDictationGraphic from "../../assets/practice/cards/interval-dictation-graphic.svg";
+import fourPartHarmonyGraphic from "../../assets/practice/cards/four-part-harmony-graphic.svg";
 
 export default function PracticePage() {
   function handleMouseMoveLightPos(event) {
@@ -50,15 +52,20 @@ export default function PracticePage() {
               name={"Interval Reading"}
               blurb={"Okay."}
               to={"interval-reading"}
-              svgViewBox={"0 0 160 120"}
               graphicSource={`${intervalReadingGraphic}#graphic`}
+              svgAttributes={{ viewBox: "0 0 160 120" }}
             />
             <PracticeCard
               name={"Interval Dictation"}
               blurb={"hm–⁠hm… hm… hm…"}
               to={"interval-dictation"}
-              svgViewBox={"0 0 160 120"}
-              graphicHRef={""}
+              graphicSource={`${intervalDictationGraphic}#graphic`}
+              svgAttributes={{
+                viewBox: "0 0 263.4 92.3",
+                fillOpacity: "0",
+                strokeWidth: "4.7px",
+                strokeLinecap: "round",
+              }}
             />
             <PracticeCard
               name={"Four-Part Harmony"}
@@ -70,15 +77,8 @@ export default function PracticePage() {
                 </>
               }
               to={"four-part-harmony"}
-              svgViewBox={"0 0 160 120"}
-              graphicHRef={""}
-            />
-            <PracticeCard
-              name={"Something Else"}
-              blurb={"what's the lorem ipsum of music"}
-              to={""}
-              svgViewBox={"0 0 160 120"}
-              graphicHRef={""}
+              graphicSource={`${fourPartHarmonyGraphic}#graphic`}
+              svgAttributes={{ viewBox: "0 0 196.9 88.6" }}
             />
           </div>
         </div>

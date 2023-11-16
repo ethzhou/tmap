@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
 
+/**
+ * Make sure `viewBox` of `svgAttributes` is set with the `use` element's source graphic in mind.
+ *
+ * For example, if the graphic reads html`viewBox="0 0 196.9 88.6"`, then ideally set `{ viewBox: "0 0 196.9 88.6" }`.
+ */
 export default function PracticeCard({
   name,
   blurb,
   to,
-  svgViewBox,
   graphicSource,
+  svgAttributes,
+  doFill,
 }) {
   return (
     <>
@@ -24,8 +30,7 @@ export default function PracticeCard({
                 <div className="flex h-[100px] w-[150px] content-center justify-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    // svgViewBox is likely "0 0 W H", where W and H are the width and height of the source graphic
-                    viewBox={svgViewBox}
+                    {...svgAttributes}
                     className="fill-slate-600 stroke-slate-600 dark:fill-slate-300 dark:stroke-slate-300"
                   >
                     <use href={graphicSource}></use>
