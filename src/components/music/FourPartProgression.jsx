@@ -237,6 +237,7 @@ export default function FourPartProgression({
     grandStaff.at(-1).trebleStave,
     grandStaff.at(-1).bassStave,
   ).setType("boldDoubleRight");
+
   // #endregion
 
   // #region Create other musical symbols on staff
@@ -343,11 +344,7 @@ export default function FourPartProgression({
 
   // Draw grand staff
   useEffect(() => {
-    console.log("Drawing grand staff.");
-    console.log(music);
-
     const divCanvas = divRef.current.children[0];
-    console.log(divCanvas);
 
     const renderer = new Renderer(divCanvas, Renderer.Backends.SVG);
     const rendererWidth =
@@ -383,11 +380,7 @@ export default function FourPartProgression({
 
   // Draw other symbols
   useEffect(() => {
-    console.log("Drawing other symbols.");
-    console.log(music);
-
     const divCanvas = divRef.current.children[1];
-    console.log(divCanvas);
 
     const renderer = new Renderer(divCanvas, Renderer.Backends.SVG);
     const rendererWidth =
