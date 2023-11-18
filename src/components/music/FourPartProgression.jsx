@@ -29,7 +29,7 @@ export default function FourPartProgression({
   chordCount,
   chordsPerMeasure,
   selection,
-  scaleFactor,
+  scaleFactor = 1,
 }) {
   const divId = name ? `vf-${name}` : "vf-canvas";
   const divRef = useRef();

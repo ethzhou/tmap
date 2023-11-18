@@ -9,7 +9,7 @@ import {
 } from "vexflow";
 import { accidentalToCode } from "../../utils/musicUtils";
 
-export default function SingleChord({ name, clef, pitches, scaleFactor }) {
+export default function SingleChord({ name, clef, pitches, scaleFactor = 1 }) {
   const divId = name ? `vf-${name}` : "vf-canvas";
 
   useEffect(() => {
