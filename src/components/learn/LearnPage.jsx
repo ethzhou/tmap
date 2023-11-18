@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import LearnCard from "./LearnCard";
 
 export default function Learn() {
+  const [searchParams, setSearchParams] = useSearchParams({
+    tags: "",
+  });
+
   function handleMouseMoveLightPos(event) {
     const target = event.currentTarget;
 
@@ -40,11 +45,20 @@ export default function Learn() {
           </nav>
           <div
             onMouseMove={handleMouseMoveLightPos}
-            className="group grid grid-flow-row-dense grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-1"
+            className="group flex flex-col gap-2"
           >
             <div className="font-text text-slate-700 dark:text-slate-300">
               under construction
             </div>
+            <LearnCard name={"Intervals"} tags={["intervals"]} />
+            <LearnCard
+              name={"Recognizing Intervals"}
+              tags={["intervals", "ear"]}
+            />
+            <LearnCard
+              name={"The Rules of Four-Part Harmony"}
+              tags={["four-part-harmony"]}
+            />
           </div>
         </div>
       </div>

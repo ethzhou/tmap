@@ -5,6 +5,7 @@
 @import url("https://fonts.googleapis.com/css?family=Nanum+Gothic+Coding&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Noto+Emoji&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Redacted+Script&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Thasadith&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -88,6 +89,44 @@ html.dark {
       1000px circle at var(--light-x) var(--light-y),
       rgba(133, 194, 255, 0.9),
       transparent 20%
+    );
+  }
+}
+
+.learn-card::before {
+  background: radial-gradient(
+    1000px circle at var(--light-x) var(--light-y),
+    rgba(255, 255, 255, 0.75),
+    transparent 100%
+  );
+}
+
+.learn-card::after {
+  background: linear-gradient(
+    rgb(255, 245, 212),
+    rgb(255, 245, 212) 20%,
+    rgb(247, 199, 148) 40%,
+    rgb(247, 199, 148) 50%,
+    rgb(255, 245, 212) 80%,
+    rgb(255, 245, 212) 100%
+  );
+}
+
+html.dark {
+  .learn-card::before {
+    background: radial-gradient(
+      1000px circle at var(--light-x) var(--light-y),
+      rgba(255, 255, 255, 0.15),
+      transparent 100%
+    );
+  }
+
+  .learn-card::after {
+    background: linear-gradient(
+      transparent,
+      rgba(91, 178, 255, 0.9),
+      rgba(74, 22, 130, 0.9),
+      transparent
     );
   }
 }

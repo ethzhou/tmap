@@ -7,6 +7,7 @@ export default {
       fontFamily: {
         hand: ['"Patrick Hand"'],
         display: ['"Comfortaa"'],
+        straight: ['"Thasadith"'],
         comic: ['"Comic Neue"'],
         text: ['"Raleway"'],
         mono: ['"Nanum Gothic Coding"'],
