@@ -39,7 +39,11 @@ export default function Learn() {
           <div className="font-text text-slate-700 dark:text-slate-300">
             under construction
           </div>
-          <LearnCard name={"Intervals"} to="intervals" tags={["intervals"]} />
+          <LearnCard
+            name={"Naming Intervals"}
+            to="naming-intervals"
+            tags={["intervals"]}
+          />
           <LearnCard
             name={"Recognizing Intervals"}
             tags={["intervals", "ear"]}
