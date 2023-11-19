@@ -74,5 +74,5 @@ export default function SingleChord({ name, clef, pitches, scaleFactor = 1 }) {
     voice.draw(context, stave);
   });
 
-  return <div key={crypto.randomUUID()} id={divId}></div>;
+  return <div key={crypto.randomUUID()} id={divId} className="vf-canvas"></div>;
 }

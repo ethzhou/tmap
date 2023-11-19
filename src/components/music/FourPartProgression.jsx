@@ -544,7 +544,7 @@ export default function FourPartProgression({
         key={crypto.randomUUID()}
         ref={divRef}
         id={divId}
-        className="relative"
+        className="vf-canvas relative"
         style={{
           width: dimensions.current ? `${dimensions.current[0]}px` : undefined,
           height: dimensions.current ? `${dimensions.current[1]}px` : undefined,
