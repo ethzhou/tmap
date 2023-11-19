@@ -14,7 +14,7 @@ export default function NamingIntervals() {
           strokeTwColorClass="bg-emerald-400 dark:bg-emerald-600"
           right={
             <span className="text-slate-700 dark:text-slate-300">
-              from 18 Nov 2023
+              on 18 Nov 2023
             </span>
           }
         />
@@ -24,7 +24,7 @@ export default function NamingIntervals() {
             letter and number.
           </p>
           <section>
-            <h2 className="font-comic text-4xl">Size</h2>
+            <h2 className="font-text text-4xl">Size</h2>
             <p>
               <strong>
                 The number is the number of letters away inclusively the higher
@@ -64,7 +64,7 @@ export default function NamingIntervals() {
             </div>
           </section>
           <section>
-            <h2 className="font-comic text-4xl">Quality</h2>
+            <h2 className="font-text text-4xl">Quality</h2>
             <p>
               <strong>
                 The quality of the interval is determined relative to the
