@@ -8,10 +8,10 @@ export default function PageHeader({
 }) {
   return (
     <>
-      <header className="flex items-baseline gap-2">
+      <header className="flex items-baseline gap-2 font-display">
         <Link
           to=""
-          className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
+          className="text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
         >
           <div>
             <h1 className="m-0 text-2xl font-normal">{heading}</h1>
@@ -21,7 +21,7 @@ export default function PageHeader({
           to={navUp.to}
           className="group text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
         >
-          <div className="nav-up font-comic">
+          <div className="nav-up">
             <span className="font-comic">(</span>
             {navUp.display}
             <span className="font-comic">)</span>

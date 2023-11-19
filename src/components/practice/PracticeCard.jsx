@@ -23,7 +23,7 @@ export default function PracticeCard({
               className="flex h-full w-full flex-col items-center text-slate-600 no-underline dark:text-slate-300"
             >
               <div className="flex h-full w-[94%] flex-col items-center">
-                <div className="mb-6 mt-20 px-4 font-display text-xl">
+                <div className="mb-6 mt-20 px-4 font-comic text-2xl">
                   {name}
                 </div>
                 {/* This div's height and width are independent of the SVG's */}
