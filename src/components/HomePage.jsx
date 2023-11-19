@@ -51,7 +51,7 @@ export default function HomePage() {
                   to="learn"
                   className="flex h-full w-full items-center justify-center text-slate-50 no-underline dark:text-slate-200"
                 >
-                  <div className="font-comic text-4xl">Learn</div>
+                  <div className="font-display text-3xl">Learn</div>
                 </Link>
               </div>
             </div>
@@ -61,7 +61,7 @@ export default function HomePage() {
                   to="practice"
                   className="flex h-full w-full items-center justify-center text-slate-50 no-underline dark:text-slate-200"
                 >
-                  <div className="font-comic text-4xl">Practice</div>
+                  <div className="font-display text-3xl">Practice</div>
                 </Link>
               </div>
             </div>
