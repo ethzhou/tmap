@@ -41,7 +41,7 @@ export default function Learn() {
           </div>
           <LearnCard
             name={"Naming Intervals"}
-            to="naming-intervals"
+            to={"naming-intervals"}
             tags={["intervals"]}
           />
           <LearnCard
