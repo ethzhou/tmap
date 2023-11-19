@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   Accidental,
   Formatter,
@@ -9,12 +9,12 @@ import {
 } from "vexflow";
 import { accidentalToCode } from "../../utils/musicUtils";
 
-export default function SingleChord({ name, clef, pitches, scaleFactor = 1 }) {
-  const divId = name ? `vf-${name}` : "vf-canvas";
+export default function SingleChord({ clef, pitches, scaleFactor = 1 }) {
+  const divRef = useRef();
 
   useEffect(() => {
     // Get the div returned by SingleChord
-    const div = document.getElementById(divId);
+    const div = divRef.current;
 
     const renderer = new Renderer(div, Renderer.Backends.SVG);
     renderer.resize(122 * scaleFactor, 150 * scaleFactor);
@@ -74,5 +74,7 @@ export default function SingleChord({ name, clef, pitches, scaleFactor = 1 }) {
     voice.draw(context, stave);
   });
 
-  return <div key={crypto.randomUUID()} id={divId} className="vf-canvas"></div>;
+  return (
+    <div key={crypto.randomUUID()} ref={divRef} className="vf-canvas"></div>
+  );
 }

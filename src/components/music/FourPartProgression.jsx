@@ -21,7 +21,6 @@ import ChordSymbol from "./ChordSymbol";
 import Pitch from "../../classes/Pitch";
 
 export default function FourPartProgression({
-  name,
   parts,
   chordAnalyses,
   tonality,
@@ -31,7 +30,6 @@ export default function FourPartProgression({
   selection,
   scaleFactor = 1,
 }) {
-  const divId = name ? `vf-${name}` : "vf-canvas";
   const divRef = useRef();
 
   const dimensions = useRef();
@@ -543,7 +541,6 @@ export default function FourPartProgression({
       <div
         key={crypto.randomUUID()}
         ref={divRef}
-        id={divId}
         className="vf-canvas relative"
         style={{
           width: dimensions.current ? `${dimensions.current[0]}px` : undefined,
