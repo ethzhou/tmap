@@ -1,7 +1,8 @@
 import { Routes, Route } from "react-router";
 import LearnPage from "../learn/LearnPage";
 import Lesson from "../learn/Lesson";
-import LearnLayout from "../learn/LearnLayout";
+import LearnLayout from "../layouts/LearnLayout";
+import IntervalsPage from "../learn/material/IntervalsPage";
 
 export default function LearnRoutes() {
   return (
@@ -9,7 +10,7 @@ export default function LearnRoutes() {
       <Routes>
         <Route element={<LearnLayout />}>
           <Route index element={<LearnPage />} />
-          <Route path=":lessonID" element={<Lesson />} />
+          <Route path="intervals" element={<IntervalsPage />} />
         </Route>
       </Routes>
     </>

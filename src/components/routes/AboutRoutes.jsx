@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import AboutPage from "../AboutPage";
-import AboutLayout from "../AboutLayout";
+import AboutLayout from "../layouts/AboutLayout";
 
 export default function AboutRoutes() {
   return (
