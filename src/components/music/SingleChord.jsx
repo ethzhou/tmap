@@ -25,7 +25,9 @@ export default function SingleChord({ name, clef, pitches, scaleFactor = 1 }) {
 
     const printedNotes = [
       new StaveNote({
-        keys: pitches.map(pitch => pitch.toVF()),
+        keys: pitches.map(pitch =>
+          typeof pitch === "string" ? pitch : pitch.toVF(),
+        ),
         duration: "w",
         clef: clef,
       }),
@@ -70,7 +72,7 @@ export default function SingleChord({ name, clef, pitches, scaleFactor = 1 }) {
     stave.setContext(context).draw();
 
     voice.draw(context, stave);
-  }, [clef, pitches]);
+  });
 
-  return <div key={pitches} id={divId}></div>;
+  return <div key={crypto.randomUUID()} id={divId}></div>;
 }
