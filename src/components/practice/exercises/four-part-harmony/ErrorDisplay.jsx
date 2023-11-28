@@ -19,7 +19,7 @@ export default function ErrorDisplay({ progressionError }) {
             key={i}
             className="error-container relative left-4 font-mono text-sm"
           >
-            measure {concern.i + 1} :{" "}
+            chord {concern.i + 1} :{" "}
             {concern.voices
               .map(iVoice => FOUR_VOICES[iVoice]?.toLowerCase() ?? "analysis")
               .join(", ")}{" "}
