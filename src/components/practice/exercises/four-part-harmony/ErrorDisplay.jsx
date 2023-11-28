@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import { FOUR_VOICES } from "../../../../utils/musicUtils";
-import { capitalize } from "../../../../utils/utils";
+import { capitalize, decomposeIndex } from "../../../../utils/utils";
+import { FPHContext } from "./FourPartHarmony";
 
 export default function ErrorDisplay({ progressionError }) {
   const errorData = errorTable[progressionError.type];
+
+  const { chordsPerMeasure } = useContext(FPHContext);
 
   return (
     <div
@@ -14,17 +18,28 @@ export default function ErrorDisplay({ progressionError }) {
       </span>
       <span className="font-mono text-sm">At</span>
       <div className="mb-2">
-        {progressionError.concerns.map((concern, i) => (
-          <div
-            key={i}
-            className="error-container relative left-4 font-mono text-sm"
-          >
-            chord {concern.i + 1} :{" "}
-            {concern.voices
-              .map(iVoice => FOUR_VOICES[iVoice]?.toLowerCase() ?? "analysis")
-              .join(", ")}{" "}
-          </div>
-        ))}
+        {progressionError.concerns.map((concern, i) => {
+          const [iMeasure, imChord] = decomposeIndex(
+            concern.i + 1,
+            chordsPerMeasure,
+            true,
+          );
+
+          return (
+            <div
+              key={i}
+              className="error-container relative left-4 font-mono text-sm"
+            >
+              `{iMeasure}`{imChord}`
+              {concern.voices.map(voice => (voice === -1 ? "" : "btas"[voice]))}{" "}
+              (chord {concern.i + 1} :{" "}
+              {concern.voices
+                .map(iVoice => FOUR_VOICES[iVoice]?.toLowerCase() ?? "analysis")
+                .join(", ")}
+              )
+            </div>
+          );
+        })}
       </div>
       <span className="text-md font-text">
         {capitalize(errorData.message)}.
