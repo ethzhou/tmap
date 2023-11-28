@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import Pitch from "../../../../classes/Pitch";
 import FourPartProgression from "../../../music/FourPartProgression";
 import {
@@ -47,6 +47,8 @@ import FourPartProgressionDisplay from "./FourPartProgressionDisplay";
 // };
 
 // #endregion
+
+export const FPHContext = createContext();
 
 const pianoPlayer = new PianoPlayer();
 
@@ -644,130 +646,138 @@ export default function FourPartHarmony() {
 
   return (
     <>
-      <div className="my-20 flex">
-        <div className="grid grid-cols-[1fr_48rem_1fr] justify-center gap-x-6 gap-y-2">
-          <nav className="col-start-2 col-end-3 flex items-baseline gap-2">
-            <Link
-              to=""
-              className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
-            >
-              <div>
-                <h1 className="m-0 text-2xl font-normal">Four-Part Harmony</h1>
-              </div>
-            </Link>
-            <Link
-              to="/tmap/practice"
-              className="group h-8 font-comic text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
-            >
-              <div className="nav-up">
-                {/* <div className="back"> */}
-                (Practice)
-              </div>
-            </Link>
-            <div className="self-bottom h-[2px] flex-auto bg-pink-400 dark:bg-pink-600"></div>
-            <StopwatchDisplay />
-            <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-400 dark:bg-pink-600"></div>
-          </nav>
-          <div className="col-start-2 col-end-3 flex flex-col gap-1">
-            <FourPartProgressionDisplay {...parameters} />
-            <Baguette defaultPlaceholder={"Voici votre baguette magique."} />
-            <button type="button" onClick={playAudio}>
-              <div>play audio</div>
-            </button>
-            <button type="button" onClick={save}>
-              <div>save</div>
-            </button>
-            <button type="button" onClick={toggleCheck}>
-              <div>toggle check</div>
-            </button>
-            <div ref={fphEvalDivRef} className="mt-4 flex flex-col gap-2">
-              <div className="flex items-baseline">
-                <div className="font-comic text-2xl text-red-500 dark:text-red-500">
-                  Errors
+      <FPHContext.Provider value={parameters}>
+        <div className="my-20 flex">
+          <div className="grid grid-cols-[1fr_48rem_1fr] justify-center gap-x-6 gap-y-2">
+            <nav className="col-start-2 col-end-3 flex items-baseline gap-2">
+              <Link
+                to=""
+                className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
+              >
+                <div>
+                  <h1 className="m-0 text-2xl font-normal">
+                    Four-Part Harmony
+                  </h1>
                 </div>
-                <div className="flex-auto"></div>
-                <div className="text-md mr-2 flex align-baseline font-hand text-slate-400 transition-transform before:translate-x-0 before:duration-500 before:content-['sort_by__('] after:translate-x-0 after:duration-500 after:content-[')'] hover:before:-translate-x-2 hover:after:translate-x-2 dark:text-slate-600">
-                  <button
-                    onClick={() => setSort(() => "type")}
-                    className="group cursor-pointer border-none bg-transparent"
-                  >
-                    <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
-                      type
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => setSort(() => "chord")}
-                    className="group cursor-pointer border-none bg-transparent"
-                  >
-                    <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
-                      chord
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => setSort(() => "severity")}
-                    className="group cursor-pointer border-none bg-transparent"
-                  >
-                    <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
-                      severity
-                    </div>
-                  </button>
+              </Link>
+              <Link
+                to="/tmap/practice"
+                className="group h-8 font-comic text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
+              >
+                <div className="nav-up">
+                  {/* <div className="back"> */}
+                  (Practice)
                 </div>
+              </Link>
+              <div className="self-bottom h-[2px] flex-auto bg-pink-400 dark:bg-pink-600"></div>
+              <StopwatchDisplay />
+              <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-400 dark:bg-pink-600"></div>
+            </nav>
+            <div className="col-start-2 col-end-3 flex flex-col gap-1">
+              <FourPartProgressionDisplay {...parameters} />
+              <Baguette defaultPlaceholder={"Voici votre baguette magique."} />
+              <button type="button" onClick={playAudio}>
+                <div>play audio</div>
+              </button>
+              <button type="button" onClick={save}>
+                <div>save</div>
+              </button>
+              <button type="button" onClick={toggleCheck}>
+                <div>toggle check</div>
+              </button>
+              <div ref={fphEvalDivRef} className="mt-4 flex flex-col gap-2">
+                <div className="flex items-baseline">
+                  <div className="font-comic text-2xl text-red-500 dark:text-red-500">
+                    Errors
+                  </div>
+                  <div className="flex-auto"></div>
+                  <div className="text-md mr-2 flex align-baseline font-hand text-slate-400 transition-transform before:translate-x-0 before:duration-500 before:content-['sort_by__('] after:translate-x-0 after:duration-500 after:content-[')'] hover:before:-translate-x-2 hover:after:translate-x-2 dark:text-slate-600">
+                    <button
+                      onClick={() => setSort(() => "type")}
+                      className="group cursor-pointer border-none bg-transparent"
+                    >
+                      <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                        type
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setSort(() => "chord")}
+                      className="group cursor-pointer border-none bg-transparent"
+                    >
+                      <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                        chord
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setSort(() => "severity")}
+                      className="group cursor-pointer border-none bg-transparent"
+                    >
+                      <div className="font-display text-slate-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300">
+                        severity
+                      </div>
+                    </button>
+                  </div>
+                </div>
+                <FourPartHarmonyEvaluation
+                  parts={parts}
+                  analyses={chordAnalyses}
+                  tonality={tonality}
+                  sort={sort}
+                />
               </div>
-              <FourPartHarmonyEvaluation
-                parts={parts}
-                analyses={chordAnalyses}
-                tonality={tonality}
-                sort={sort}
-              />
             </div>
-          </div>
-          <div>
-            <div className="sticky top-20 mt-0">
-              <div className="mb-4 font-comic text-2xl text-slate-700 dark:text-slate-400">
-                Tips
-              </div>
-              <div className="flex flex-col">
-                <BaguetteTip
-                  char="/"
-                  name="chordal input"
-                  example="/f2/c4/a4/f5"
-                />
-                <BaguetteTip char="`" name="navigation" example="`2`1`sbat" />
-                <BaguetteTip
-                  char="b/"
-                  name="bass input"
-                  example="b/f2 g2 a2 d2 e2"
-                />
-                <BaguetteTip
-                  char="t/"
-                  name="tenor input"
-                  example="t/f3 g3 a3 d3 e3"
-                />
-                <BaguetteTip
-                  char="a/"
-                  name="alto input"
-                  example="a/f4 g4 a4 d4 e4"
-                />
-                <BaguetteTip
-                  char="s/"
-                  name="soprano input"
-                  example="s/f5 g5 a5 d5 e5"
-                />
-                <BaguetteTip
-                  char=";"
-                  name="chord symbol input"
-                  example=";V65/iv iv"
-                />
-                <BaguetteTip char="!" name="key" example="!F#" />
-                <BaguetteTip char="@" name="time" example="@6/4 3" />
-                <BaguetteTip char="#" name="chord count" example="#7" />
-                <BaguetteTip char="~" name="all (!@#)" example="~A# 6/4 7 3" />
-                <BaguetteTip char="%" name="clear" example="%%" />
+            <div>
+              <div className="sticky top-20 mt-0">
+                <div className="mb-4 font-comic text-2xl text-slate-700 dark:text-slate-400">
+                  Tips
+                </div>
+                <div className="flex flex-col">
+                  <BaguetteTip
+                    char="/"
+                    name="chordal input"
+                    example="/f2/c4/a4/f5"
+                  />
+                  <BaguetteTip char="`" name="navigation" example="`2`1`sbat" />
+                  <BaguetteTip
+                    char="b/"
+                    name="bass input"
+                    example="b/f2 g2 a2 d2 e2"
+                  />
+                  <BaguetteTip
+                    char="t/"
+                    name="tenor input"
+                    example="t/f3 g3 a3 d3 e3"
+                  />
+                  <BaguetteTip
+                    char="a/"
+                    name="alto input"
+                    example="a/f4 g4 a4 d4 e4"
+                  />
+                  <BaguetteTip
+                    char="s/"
+                    name="soprano input"
+                    example="s/f5 g5 a5 d5 e5"
+                  />
+                  <BaguetteTip
+                    char=";"
+                    name="chord symbol input"
+                    example=";V65/iv iv"
+                  />
+                  <BaguetteTip char="!" name="key" example="!F#" />
+                  <BaguetteTip char="@" name="time" example="@6/4 3" />
+                  <BaguetteTip char="#" name="chord count" example="#7" />
+                  <BaguetteTip
+                    char="~"
+                    name="all (!@#)"
+                    example="~A# 6/4 7 3"
+                  />
+                  <BaguetteTip char="%" name="clear" example="%%" />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </FPHContext.Provider>
     </>
   );
 }
