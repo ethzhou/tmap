@@ -92,7 +92,7 @@ export default function Baguette({ defaultPlaceholder }) {
       />
       <button
         onClick={submit}
-        className="group/submit-button relative bottom-0.5 flex aspect-square cursor-pointer select-none flex-col items-start justify-center border-none bg-transparent"
+        className="group/submit-button relative bottom-0.5 flex aspect-square cursor-pointer select-none flex-col items-center justify-center border-none bg-transparent"
       >
         <div className="text-3xl leading-none text-slate-600 dark:text-slate-500">
           ↜

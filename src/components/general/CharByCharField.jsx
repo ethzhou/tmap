@@ -139,7 +139,7 @@ export default function CharByCharField({
         </div>
         <button
           onClick={submit}
-          className="group absolute -right-10 bottom-2 flex aspect-square cursor-pointer select-none flex-col items-start justify-center border-none bg-transparent"
+          className="group absolute -right-10 bottom-2 flex aspect-square cursor-pointer select-none flex-col items-center justify-center border-none bg-transparent"
         >
           <div className="text-3xl leading-none text-slate-600 dark:text-slate-500">
             ↜
