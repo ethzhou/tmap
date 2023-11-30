@@ -27,8 +27,8 @@ export default function CharByCharField({
           onKeyDown={handleInputKeyDown}
           onMouseMove={handleMouseMoveLightPos}
           onChange={handleInputChange}
-          // className="border-px m-0 aspect-square rounded-sm border-solid border-slate-500 bg-transparent text-center font-comic text-3xl text-slate-800 outline-0 dark:border-slate-400 dark:text-slate-200"
-          className="char-field m-0 aspect-square border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 text-center font-comic text-5xl text-slate-800 outline-0 hover:border-orange-400 focus-visible:border-solid focus-visible:border-slate-800 dark:border-slate-400 dark:text-slate-200 dark:hover:border-blue-400 dark:focus-visible:border-slate-200"
+          // className="border-px m-0 aspect-square rounded-sm border-solid border-slate-500 bg-transparent text-center font-comic text-3xl text-slate-800 outline-none dark:border-slate-400 dark:text-slate-200"
+          className="char-field m-0 aspect-square border-0 border-b-2 border-dashed border-slate-500 bg-transparent p-0 text-center font-comic text-5xl text-slate-800 outline-none hover:border-orange-400 focus-visible:border-solid focus-visible:border-slate-800 dark:border-slate-400 dark:text-slate-200 dark:hover:border-blue-400 dark:focus-visible:border-slate-200"
           autoFocus={index === 0}
         />
       )),
