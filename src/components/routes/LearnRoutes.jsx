@@ -13,7 +13,7 @@ export default function LearnRoutes() {
           <Route index element={<LearnPage />} />
           <Route path="naming-intervals" element={<NamingIntervals />} />
           <Route
-            path="recognizing-intervals"
+            path="recognizing-intervals-by-music"
             element={<RecognizingIntervalsByMusic />}
           />
         </Route>

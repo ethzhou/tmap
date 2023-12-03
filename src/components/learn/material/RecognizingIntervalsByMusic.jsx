@@ -27,6 +27,7 @@ export default function RecognizingIntervalsByMusic() {
               <nav className="mb-10 grid h-20 w-[70%] grid-cols-7 place-content-evenly place-items-center">
                 {data.map(({ interval }) => (
                   <a
+                    key={interval}
                     className="text-slate-500 no-underline before:mr-1 before:opacity-0 before:transition-opacity before:duration-300 before:content-['`'] hover:before:opacity-100 dark:text-slate-500"
                     href={`#${interval}`}
                   >

@@ -45,8 +45,8 @@ export default function Learn() {
             tags={["intervals"]}
           />
           <LearnCard
-            name={"Recognizing Intervals"}
-            to={"recognizing-intervals"}
+            name={"Recognizing Intervals by Music"}
+            to={"recognizing-intervals-by-music"}
             tags={["intervals", "ear"]}
           />
           <LearnCard
