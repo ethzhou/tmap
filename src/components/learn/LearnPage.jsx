@@ -46,6 +46,7 @@ export default function Learn() {
           />
           <LearnCard
             name={"Recognizing Intervals"}
+            to={"recognizing-intervals"}
             tags={["intervals", "ear"]}
           />
           <LearnCard
