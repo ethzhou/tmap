@@ -12,7 +12,7 @@ export default function RecognizingIntervalsByMusic() {
           strokeTwColorClass="bg-emerald-400 dark:bg-emerald-600"
           right={
             <span className="text-slate-700 dark:text-slate-300">
-              from 19 Nov 2023
+              from 2 Dec 2023
             </span>
           }
         />
