@@ -4,6 +4,7 @@ import Lesson from "../learn/Lesson";
 import LearnLayout from "../layouts/LearnLayout";
 import NamingIntervals from "../learn/material/NamingIntervals";
 import RecognizingIntervalsByMusic from "../learn/material/RecognizingIntervalsByMusic";
+import TheRulesOfFourPartHarmony from "../learn/material/TheRulesOfFourPartHarmony";
 
 export default function LearnRoutes() {
   return (
@@ -15,6 +16,10 @@ export default function LearnRoutes() {
           <Route
             path="recognizing-intervals-by-music"
             element={<RecognizingIntervalsByMusic />}
+          />
+          <Route
+            path="the-rules-of-four-part-harmony"
+            element={<TheRulesOfFourPartHarmony />}
           />
         </Route>
       </Routes>

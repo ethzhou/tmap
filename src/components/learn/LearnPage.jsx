@@ -51,6 +51,7 @@ export default function Learn() {
           />
           <LearnCard
             name={"The Rules of Four-Part Harmony"}
+            to={"the-rules-of-four-part-harmony"}
             tags={["four-part-harmony"]}
           />
         </div>

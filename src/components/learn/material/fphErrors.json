@@ -1,0 +1,175 @@
+{
+  "errorsByCategory": [
+    {
+      "category": "Spelling",
+      "errors": [
+        {
+          "type": "voice-out-of-range",
+          "message": "Voices stay within their respective ranges.",
+          "notes": [
+            "The bass range spans F2 to D4.",
+            "The tenor range spans C3 to A4.",
+            "The alto range spans F3 to D5.",
+            "The soprano range spans C4 to A5."
+          ]
+        },
+        {
+          "type": "upper-spacing",
+          "message": "Consecutive upper voices are within an octave.",
+          "notes": [
+            "The bass is not a part of this rule nor any reference to upper voices."
+          ]
+        },
+        {
+          "type": "crossed-voices",
+          "message": "Voices do not cross each other.",
+          "notes": [
+            "A lower voice is not higher than a higher voice in the same chord."
+          ]
+        },
+        {
+          "type": "miscased-roman",
+          "message": "Roman numerals are of the correct mode.",
+          "notes": [
+            "The capitalization of each roman numeral analysis pertains to whether the key is major or minor."
+          ]
+        },
+        {
+          "type": "invalid-arabic",
+          "message": "Arabic numerals are valid.",
+          "notes": [
+            "Arabic numerals are either missing or read 5/3, 7, 6/3, 6, 6/5, 6/4, 4/3, or 4/2."
+          ]
+        },
+        {
+          "type": "non-chordal-tone",
+          "message": "All tones are chordal."
+        },
+        {
+          "type": "bass-mismatch",
+          "message": "Bass notes match the note expected given their respective analyses."
+        },
+        {
+          "type": "missing-root",
+          "message": "The roots of chords are not missing."
+        },
+        {
+          "type": "missing-third",
+          "message": "The thirds of chords are not missing."
+        },
+        {
+          "type": "non-root-missing-fifth",
+          "message": "The fifths are not missing in chords that are not in root position."
+        },
+        {
+          "type": "missing-seventh",
+          "message": "The sevenths of seventh chords are not missing."
+        },
+        {
+          "type": "double-leading",
+          "message": "There are not two leading tones within a chord."
+        },
+        {
+          "type": "double-seventh",
+          "message": "The sevenths of chords are not doubled."
+        },
+        {
+          "type": "64-not-double-fifth",
+          "message": "The fifths of 6/4 chords are not doubled."
+        }
+      ]
+    },
+    {
+      "category": "Progression",
+      "errors": [
+        {
+          "type": "begin-not-tonic",
+          "message": "The progression begins with a tonic chord."
+        },
+        {
+          "type": "end-not-tonic",
+          "message": "The progression ends on a tonic chord."
+        },
+        {
+          "type": "v-iv",
+          "message": "V chords do not resolve to IV chords."
+        },
+        {
+          "type": "bad-64",
+          "message": "A 6/4 chord is a cadential, passing, or neighbor 6/4."
+        },
+        {
+          "type": "bad-cadence",
+          "message": "The final cadence is permitted.",
+          "notes": [
+            "The penultimate chord is either IV or V, thus respectively part of a plagal cadence or an authentic cadence."
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Leading",
+      "errors": [
+        {
+          "type": "common-not-held",
+          "message": "Common tones are held.",
+          "notes": [
+            "At least one note of each pitch class is held on a voice.",
+            "This does not apply between chords of the same type (e.g. V - V)."
+          ]
+        },
+        {
+          "type": "voice-leap",
+          "message": "Voices do not leap.",
+          "note": ["A leap is any motion of distance greater than a third."]
+        },
+        {
+          "type": "parallel-fifths",
+          "message": "There are no parallel fifths."
+        },
+        {
+          "type": "parallel-octaves",
+          "message": "There are parallel octaves."
+        },
+        {
+          "type": "d5-P5-not-upper",
+          "message": "A d5 to P5 is within the upper voices."
+        },
+        {
+          "type": "d5-P5-not-passing",
+          "message": "An ascending d5 to P5 is in passing between an I chord and an I6 chord."
+        },
+        {
+          "type": "hidden-fifth-soprano-not-step",
+          "message": "The soprano voice moves stepwise at a hidden fifth."
+        },
+        {
+          "type": "hidden-octave-soprano-not-step",
+          "message": "The soprano voice moves stepwise at a hidden octave."
+        },
+        {
+          "type": "overlapping-voices",
+          "message": "Voices do not overlap.",
+          "note": [
+            "A lower voice does not move to a note higher than the previous note of a higher voice.",
+            "A higher voice does not move to a note lower than the previous note of a lower voice."
+          ]
+        },
+        {
+          "type": "unresolved-seventh",
+          "message": "The sevenths of seventh chords are resolved.",
+          "notes": ["The sevenths of seventh chords resolve a step down."]
+        },
+        {
+          "type": "augmented-second-leap",
+          "message": "Voices do not leap by augmented seconds.",
+          "notes": ["Voices may leap minor thirds."]
+        },
+        {
+          "type": "tritone-leap",
+          "message": "Voices do not leap by tritones."
+        }
+      ]
+    }
+  ]
+}
