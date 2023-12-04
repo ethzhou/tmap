@@ -117,7 +117,7 @@ const errorTable = {
   },
   "v-iv": {
     type: "v-iv",
-    message: "the IV chord resolves to a V chord",
+    message: "the V chord resolves to a IV chord",
   },
   "bad-64": {
     type: "bad-64",
