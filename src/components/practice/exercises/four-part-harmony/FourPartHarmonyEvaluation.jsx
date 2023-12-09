@@ -843,12 +843,13 @@ const evaluations = [
     const errors = [];
 
     const leadingTone = tonality.leadingTone();
+    const leadingToneName = leadingTone.toName();
 
     for (let i = 1; i < chords.length; i++) {
       if (analyses[i - 1]?.degree === 1 && analyses[i - 1]?.isSeventh())
         continue;
 
-      const leadingToneEntries = charts[i - 1].get(leadingTone.toName());
+      const leadingToneEntries = charts[i - 1].get(leadingToneName);
 
       leadingToneEntries?.forEach(iVoice => {
         const pitch = chords[i - 1][iVoice];
