@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import NavUp from "./NavUp";
 
 export default function PageHeader({
   heading,
@@ -17,16 +18,9 @@ export default function PageHeader({
             <h1 className="m-0 text-2xl font-normal">{heading}</h1>
           </div>
         </Link>
-        <Link
-          to={navUp.to}
-          className="group text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
-        >
-          <div className="nav-up">
-            <span className="font-comic">(</span>
-            {navUp.display}
-            <span className="font-comic">)</span>
-          </div>
-        </Link>
+        <div className="text-2xl text-slate-400 dark:text-slate-700 max-sm:text-xl">
+          <NavUp to={navUp.to}>{navUp.display}</NavUp>
+        </div>
         {right ? (
           <>
             <div
