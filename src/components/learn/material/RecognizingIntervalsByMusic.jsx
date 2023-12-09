@@ -73,7 +73,7 @@ export default function RecognizingIntervalsByMusic() {
                                     <span>
                                       {`${movement ? `, ${movement}` : ""}${
                                         subtitle ? ` "${subtitle}"` : ""
-                                      }`}
+                                      } `}
                                     </span>
                                   </span>
                                   <span className="text-slate-400 dark:text-slate-600">
