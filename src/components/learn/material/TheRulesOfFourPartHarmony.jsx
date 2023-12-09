@@ -39,7 +39,7 @@ export default function TheRulesOfFourPartHarmony() {
                 </a>
               ))}
             </nav>
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-16">
               {errorsByCategory.map(({ category, errors }) => (
                 <section key={category}>
                   <div className="flex w-full items-baseline">
@@ -49,7 +49,7 @@ export default function TheRulesOfFourPartHarmony() {
                     <div className="h-px w-[30%] rounded-tr-full bg-slate-900 dark:bg-slate-100"></div>
                   </div>
                   {/* Start each category's list from where the last left off */}
-                  <ol start={ruleCounter} className="flex flex-col gap-12">
+                  <ol start={ruleCounter} className="ml-6 flex flex-col gap-11">
                     {errors.map(({ rule, notes }) => {
                       // Keep track of the list indexing
                       ruleCounter++;
