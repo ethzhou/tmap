@@ -1,6 +1,7 @@
 import PageHeader from "../../general/PageHeader";
 import PageLayout from "../../layouts/PageLayout";
 import { data } from "./piecesByInterval.json";
+import PracticeInvitation from "../../general/PracticeInvitation";
 
 export default function RecognizingIntervalsByMusic() {
   return (
@@ -11,9 +12,7 @@ export default function RecognizingIntervalsByMusic() {
           navUp={{ to: "/tmap/learn", display: "Learn" }}
           strokeTwColorClass="bg-emerald-400 dark:bg-emerald-600"
           right={
-            <span className="text-slate-700 dark:text-slate-300">
-              from 2 Dec 2023
-            </span>
+            <PracticeInvitation to={"/tmap/practice/interval-dictation"} />
           }
         />
         <main className="relative flex flex-col gap-12 font-text text-lg text-slate-700 dark:text-slate-300">

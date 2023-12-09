@@ -2,6 +2,7 @@ import React from "react";
 import PageHeader from "../../general/PageHeader";
 import PageLayout from "../../layouts/PageLayout";
 import fphErrors from "./fphErrors.json";
+import PracticeInvitation from "../../general/PracticeInvitation";
 
 export default function TheRulesOfFourPartHarmony() {
   const { errorsByCategory } = fphErrors;
@@ -15,11 +16,7 @@ export default function TheRulesOfFourPartHarmony() {
           heading={"The Rules of Four-Part Harmony"}
           navUp={{ to: "/tmap/learn", display: "Learn" }}
           strokeTwColorClass="bg-emerald-400 dark:bg-emerald-600"
-          right={
-            <span className="text-slate-700 dark:text-slate-300">
-              from 3 Dec 2023
-            </span>
-          }
+          right={<PracticeInvitation to={"/tmap/practice/four-part-harmony"} />}
         />
         <main className="relative flex flex-col gap-12 font-text text-lg text-slate-700 dark:text-slate-300">
           <p>
