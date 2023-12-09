@@ -847,7 +847,6 @@ const evaluations = [
     for (let i = 1; i < chords.length; i++) {
       if (analyses[i - 1]?.degree === 1 && analyses[i - 1]?.isSeventh())
         continue;
-      console.log(analyses[i - 1]?.degree, analyses[i - 1]?.isSeventh());
 
       const leadingToneEntries = charts[i - 1].get(leadingTone.toName());
 
