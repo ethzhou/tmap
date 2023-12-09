@@ -121,7 +121,7 @@
         {
           "type": "voice-leap",
           "rule": "Voices do not leap.",
-          "note": ["A leap is any motion of distance greater than a third."]
+          "notes": ["A leap is any motion of distance greater than a third."]
         },
         {
           "type": "parallel-fifths",
@@ -150,7 +150,7 @@
         {
           "type": "overlapping-voices",
           "rule": "Voices do not overlap.",
-          "note": [
+          "notes": [
             "A lower voice does not move to a note higher than the previous note of a higher voice.",
             "A higher voice does not move to a note lower than the previous note of a lower voice."
           ]
