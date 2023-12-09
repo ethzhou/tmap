@@ -169,6 +169,10 @@ const errorTable = {
     type: "unresolved-leading",
     message: "the leading tone is unresolved",
   },
+  "unresolved-seventh": {
+    type: "unresolved-seventh",
+    message: "the seventh is unresolved",
+  },
   "augmented-second-leap": {
     type: "augmented-second-leap",
     message: "the voice leaps an augmented second",

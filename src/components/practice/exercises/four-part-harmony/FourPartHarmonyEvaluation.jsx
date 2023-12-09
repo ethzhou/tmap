@@ -871,6 +871,38 @@ const evaluations = [
 
     return errors;
   },
+  // The seventh resolves down
+  (chords, intervals, analyses, tonality, triads, charts) => {
+    const errors = [];
+
+    for (let i = 1; i < chords.length; i++) {
+      if (!analyses[i - 1]) continue;
+
+      if (!analyses[i - 1].isSeventh()) continue;
+
+      const seventh = triads[i - 1][3];
+      const seventhEntries = charts[i - 1].get(seventh.toName());
+
+      seventhEntries?.forEach(iVoice => {
+        const pitch = chords[i - 1][iVoice];
+
+        // The next pitch in the voice
+        const resolution = chords[i][iVoice];
+
+        // Sevenths should resolve a space down
+        if (resolution && pitch.spacesTo(resolution) === -1) return;
+
+        errors.push(
+          new ProgressionError("unresolved-seventh", [
+            { i: i - 1, voices: [iVoice] },
+            { i, voices: [iVoice] },
+          ]),
+        );
+      });
+    }
+
+    return errors;
+  },
   // Voices do not leap by augmented seconds
   chords => {
     const errors = [];
