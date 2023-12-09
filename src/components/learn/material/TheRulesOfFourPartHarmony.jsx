@@ -28,7 +28,7 @@ export default function TheRulesOfFourPartHarmony() {
           </p>
           <section>
             <h2 className="font-text text-4xl">Rules</h2>
-            <nav className="relative mb-14 ml-12 flex flex-col gap-6 before:absolute before:-left-5 before:top-0 before:h-full before:w-px before:bg-slate-300 before:content-[''] dark:before:bg-slate-700">
+            <nav className="relative mb-20 ml-12 flex flex-col gap-6 before:absolute before:-left-5 before:top-0 before:h-full before:w-px before:bg-slate-300 before:content-[''] dark:before:bg-slate-700">
               {errorsByCategory.map(({ category }) => (
                 <a
                   key={category}
@@ -39,17 +39,14 @@ export default function TheRulesOfFourPartHarmony() {
                 </a>
               ))}
             </nav>
-            <div>
+            <div className="flex flex-col gap-8">
               {errorsByCategory.map(({ category, errors }) => (
-                <React.Fragment key={category}>
+                <section key={category}>
                   <h3 id={category} className="my-10 list-none">
                     {category}
                   </h3>
                   {/* Start each category's list from where the last left off */}
-                  <ol
-                    start={ruleCounter}
-                    className="mb-20 flex flex-col gap-12"
-                  >
+                  <ol start={ruleCounter} className="flex flex-col gap-12">
                     {errors.map(({ rule, notes }) => {
                       // Keep track of the list indexing
                       ruleCounter++;
@@ -69,7 +66,7 @@ export default function TheRulesOfFourPartHarmony() {
                       );
                     })}
                   </ol>
-                </React.Fragment>
+                </section>
               ))}
             </div>
           </section>
