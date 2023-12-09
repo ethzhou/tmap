@@ -156,6 +156,14 @@
           ]
         },
         {
+          "type": "unresolved-leading",
+          "message": "Leading tones are resolved.",
+          "notes": [
+            "Leading tones resolve a halfstep up to the tonic.",
+            "In a I7 chord, the seventh does not function as a leading tone, and it resolves down like all sevenths."
+          ]
+        },
+        {
           "type": "unresolved-seventh",
           "message": "The sevenths of seventh chords are resolved.",
           "notes": ["The sevenths of seventh chords resolve a step down."]
