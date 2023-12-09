@@ -19,10 +19,73 @@
           "composer": "Queen"
         },
         {
+          "name": "Danse Macabre",
+          "composer": "Saint-Saëns"
+        },
+        {
+          "name": "\"Jingle Bells\"",
+          "composer": "Pierpont"
+        },
+        {
+          "name": "The Nutcracker",
+          "subtitle": "March",
+          "composer": "Tchaikovsky"
+        },
+        {
+          "name": "Piano Concerto No. 1",
+          "movement": "I.",
+          "composer": "Rachmaninoff"
+        },
+        {
           "name": "The Planets",
           "movement": "I.",
           "subtitle": "Mars",
           "composer": "Holst"
+        },
+        {
+          "name": "Requiem",
+          "subtitle": "Dies Irae",
+          "composer": "Verdi"
+        },
+        {
+          "name": "The Rite of Spring",
+          "subtitle": "Augurs of Spring",
+          "composer": "Stravinsky"
+        },
+        {
+          "name": "The Rite of Spring",
+          "subtitle": "Dance of the Earth",
+          "composer": "Stravinsky"
+        },
+        {
+          "name": "The Rite of Spring",
+          "subtitle": "Dance of the Earth",
+          "composer": "Stravinsky"
+        },
+        {
+          "name": "The Rite of Spring",
+          "subtitle": "Evocation of the Ancestors",
+          "composer": "Stravinsky"
+        },
+        {
+          "name": "The Rite of Spring",
+          "subtitle": "Ritual Action of the Ancestors",
+          "composer": "Stravinsky"
+        },
+        {
+          "name": "The Rite of Spring",
+          "subtitle": "Sacrificial Dance",
+          "composer": "Stravinsky"
+        },
+        {
+          "name": "Serenade No. 13 \"Eine kleine Nachtmusik\"",
+          "movement": "II.",
+          "composer": "Mozart"
+        },
+        {
+          "name": "Symphonie fantastique",
+          "movement": "I.",
+          "composer": "Berlioz"
         },
         {
           "name": "Symphony No. 2",
@@ -38,6 +101,36 @@
           "name": "Symphony No. 3",
           "movement": "I.",
           "composer": "Sibelius"
+        },
+        {
+          "name": "Symphony No. 4",
+          "movement": "I.",
+          "composer": "Tchaikovsky"
+        },
+        {
+          "name": "Symphony No. 5 \"Reformation\"",
+          "movement": "I.",
+          "composer": "Mendelssohn",
+          "note": "Allegro con fuoco"
+        },
+        {
+          "name": "Symphony No. 5 \"Reformation\"",
+          "movement": "II.",
+          "composer": "Mendelssohn"
+        },
+        {
+          "name": "Symphony No. 5 \"Reformation\"",
+          "movement": "III.",
+          "composer": "Mendelssohn"
+        },
+        {
+          "name": "Violin Concerto",
+          "movement": "III.",
+          "composer": "Sibelius"
+        },
+        {
+          "name": "Warsaw Concerto",
+          "composer": "Addinsell"
         },
         {
           "name": "West Side Story",
@@ -59,6 +152,22 @@
           "motion": "ad"
         },
         {
+          "name": "\"Merry-Go-Round of Life\"",
+          "composer": "Hisaishi",
+          "motion": "ad"
+        },
+        {
+          "name": "The Nutcracker",
+          "subtitle": "Pas de Deux",
+          "composer": "Tchaikovsky",
+          "motion": "d"
+        },
+        {
+          "name": "Symphony No. 1",
+          "movement": "I.",
+          "composer": "Sibelius"
+        },
+        {
           "name": "Symphony No. 2",
           "movement": "I.",
           "composer": "Rachmaninoff",
@@ -71,8 +180,23 @@
           "motion": "ad"
         },
         {
+          "name": "Symphony No. 9 \"New World Symphony\"",
+          "movement": "IV.",
+          "composer": "Dvorak"
+        },
+        {
           "name": "\"Theme from 'Jaws'\"",
           "composer": "Williams"
+        },
+        {
+          "name": "Violin Concerto",
+          "movement": "III.",
+          "composer": "Sibelius",
+          "note": "violin"
+        },
+        {
+          "name": "\"Viva la Vida\"",
+          "composer": "Coldplay"
         }
       ],
       "gridRow": 2
@@ -83,6 +207,24 @@
       "pieces": [
         {
           "name": "\"Happy Birthday\""
+        },
+        {
+          "name": "The Nutcracker",
+          "subtitle": "Coffee",
+          "composer": "Tchaikovsky",
+          "motion": "ad"
+        },
+        {
+          "name": "Piano Concerto No. 2",
+          "movement": "I.",
+          "composer": "Rachmaninoff",
+          "motion": "ad",
+          "note": "piano"
+        },
+        {
+          "name": "Symphony No. 5",
+          "movement": "I.",
+          "composer": "Prokofiev"
         },
         {
           "name": "Symphony No. 7",
@@ -101,9 +243,45 @@
       "enharmonic": ["A2"],
       "pieces": [
         {
+          "name": "Miroirs",
+          "movement": "III.",
+          "subtitle": "Une barque sur l'océan",
+          "composer": "Ravel",
+          "motion": "d"
+        },
+        {
+          "name": "The Nutcracker",
+          "subtitle": "Dance of the Sugar Plum Fairy",
+          "composer": "Tchaikovsky",
+          "motion": "ad"
+        },
+        {
           "name": "Piano Concerto No. 3",
           "movement": "I.",
           "composer": "Beethoven"
+        },
+        {
+          "name": "Piano Concerto No. 3",
+          "movement": "I.",
+          "composer": "Rachmaninoff",
+          "note": "piano"
+        },
+        {
+          "name": "Symphony No. 5",
+          "movement": "II.",
+          "composer": "Prokofiev",
+          "motion": "ad"
+        },
+        {
+          "name": "Symphony No. 9 \"New World Symphony\"",
+          "movement": "II.",
+          "composer": "Dvorak",
+          "note": "English horn"
+        },
+        {
+          "name": "Violin Concerto No. 2",
+          "movement": "I.",
+          "composer": "Prokofiev"
         }
       ],
       "gridRow": 3
@@ -116,6 +294,12 @@
           "name": "The Four Seasons Concerto No. 1 \"Spring\"",
           "movement": "I.",
           "composer": "Vivaldi"
+        },
+        {
+          "name": "Symphony No. 4 \"Italian\"",
+          "movement": "I.",
+          "composer": "Mendelssohn",
+          "note": "violins"
         },
         {
           "name": "Symphony No. 4 \"The Prodigal Son\"",
@@ -155,9 +339,38 @@
           "composer": "Lurye"
         },
         {
+          "name": "\"Merry-Go-Round of Life\"",
+          "composer": "Hisaishi",
+          "motion": "ad",
+          "note": "main theme"
+        },
+        {
+          "name": "The Nutcracker",
+          "subtitle": "Waltz of the Flowers",
+          "composer": "Tchaikovsky"
+        },
+        {
+          "name": "Serenade No. 13 \"Eine kleine Nachtmusik\"",
+          "movement": "I.",
+          "composer": "Mozart",
+          "motion": "ad"
+        },
+        {
           "name": "Symphony No. 5",
           "movement": "I.",
           "composer": "Sibelius"
+        },
+        {
+          "name": "Symphony No. 9 \"New World Symphony\"",
+          "movement": "III.",
+          "composer": "Dvorak",
+          "note": "strings",
+          "motion": "d"
+        },
+        {
+          "name": "Violin Concerto No. 1",
+          "movement": "I.",
+          "composer": "Prokofiev"
         }
       ],
       "gridRow": 4
@@ -166,6 +379,12 @@
       "interval": "TT",
       "enharmonic": ["A4", "d5"],
       "pieces": [
+        {
+          "name": "Danse Macabre",
+          "composer": "Saint-Saëns",
+          "motion": "adh",
+          "note": "violin solo"
+        },
         {
           "name": "West Side Story",
           "subtitle": "Cool",
@@ -204,6 +423,12 @@
       "interval": "m6",
       "enharmonic": ["A5"],
       "pieces": [
+        {
+          "name": "Requiem",
+          "subtitle": "Lacrimosa",
+          "composer": "Mozart",
+          "note": "soprano"
+        },
         {
           "name": "Symphony No. 5",
           "movement": "I.",
@@ -273,6 +498,10 @@
           "movement": "III.",
           "subtitle": "Clair de Lune",
           "composer": "Debussy"
+        },
+        {
+          "name": "Warsaw Concerto",
+          "composer": "Addinsell"
         }
       ],
       "gridRow": 9
