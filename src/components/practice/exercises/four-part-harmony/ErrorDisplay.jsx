@@ -165,9 +165,9 @@ const errorTable = {
     type: "overlapping-voices",
     message: "the voices overlap",
   },
-  "unresolved-seventh": {
-    type: "unresolved-seventh",
-    message: "the seventh is unresolved",
+  "unresolved-leading": {
+    type: "unresolved-leading",
+    message: "the leading tone is unresolved",
   },
   "augmented-second-leap": {
     type: "augmented-second-leap",

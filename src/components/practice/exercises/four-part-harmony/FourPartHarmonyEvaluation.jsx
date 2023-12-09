@@ -844,8 +844,10 @@ const evaluations = [
 
     const leadingToneName = tonality.leadingTone().toName();
 
-    for (let i = 1; i < chords.length - 1; i++) {
-      if (analyses[i]?.degree === 1 && analyses[i]?.isSeventh()) return;
+    for (let i = 1; i < chords.length; i++) {
+      if (analyses[i - 1]?.degree === 1 && analyses[i - 1]?.isSeventh())
+        continue;
+      console.log(analyses[i - 1]?.degree, analyses[i - 1]?.isSeventh());
 
       chords[i - 1].forEach((pitch, iVoice) => {
         if (!pitch) return;
@@ -853,15 +855,15 @@ const evaluations = [
         if (pitch.toName() !== leadingToneName) return;
 
         // The next pitch in the voice
-        const resolution = chords[i + 1][iVoice];
+        const resolution = chords[i][iVoice];
 
         // Leading tones should resolve to a halfstep up
         if (resolution && pitch.halfstepsTo(resolution) === 1) return;
 
         errors.push(
-          new ProgressionError("unresolved-seventh", [
+          new ProgressionError("unresolved-leading", [
+            { i: i - 1, voices: [iVoice] },
             { i, voices: [iVoice] },
-            { i: i + 1, voices: [iVoice] },
           ]),
         );
       });
