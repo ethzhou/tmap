@@ -42,9 +42,12 @@ export default function TheRulesOfFourPartHarmony() {
             <div className="flex flex-col gap-8">
               {errorsByCategory.map(({ category, errors }) => (
                 <section key={category}>
-                  <h3 id={category} className="my-10 list-none">
-                    {category}
-                  </h3>
+                  <div className="flex w-full items-baseline">
+                    <h3 id={category} className="my-10 flex-auto list-none">
+                      {category}
+                    </h3>
+                    <div className="h-px w-[30%] rounded-tr-full bg-slate-900 dark:bg-slate-100"></div>
+                  </div>
                   {/* Start each category's list from where the last left off */}
                   <ol start={ruleCounter} className="flex flex-col gap-12">
                     {errors.map(({ rule, notes }) => {
