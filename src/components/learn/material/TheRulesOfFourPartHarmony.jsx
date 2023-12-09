@@ -50,12 +50,12 @@ export default function TheRulesOfFourPartHarmony() {
                     start={ruleCounter}
                     className="mb-20 flex flex-col gap-12"
                   >
-                    {errors.map(({ message, notes }) => {
+                    {errors.map(({ rule, notes }) => {
                       // Keep track of the list indexing
                       ruleCounter++;
                       return (
-                        <li key={message}>
-                          {message}
+                        <li key={rule}>
+                          {rule}
                           {notes ? (
                             <ul className="text-slate-600 marker:text-sm marker:content-['→___'] dark:text-slate-400">
                               {notes.map(note => (
