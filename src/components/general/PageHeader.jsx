@@ -34,7 +34,7 @@ export default function PageHeader({
                 strokeTwColorClass ?? ""
               }`}
             ></div>
-            <div className="font-mono text-2xl text-slate-700 dark:text-slate-300">
+            <div className="text-2xl text-slate-700 dark:text-slate-300">
               {right}
             </div>
             <div
