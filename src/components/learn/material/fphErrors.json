@@ -47,7 +47,7 @@
         },
         {
           "type": "bass-mismatch",
-          "rule": "Bass notes match the note expected given their respective analyses."
+          "rule": "Bass notes match the notes expected given their respective analyses."
         },
         {
           "type": "missing-root",
