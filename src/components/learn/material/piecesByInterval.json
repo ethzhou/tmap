@@ -33,6 +33,10 @@
         },
         {
           "name": "Piano Concerto No. 1",
+          "composer": "Prokofiev"
+        },
+        {
+          "name": "Piano Concerto No. 1",
           "movement": "I.",
           "composer": "Rachmaninoff"
         },
@@ -83,6 +87,11 @@
           "composer": "Mozart"
         },
         {
+          "name": "\"Sleigh Ride\"",
+          "composer": "Anderson",
+          "note": "main theme"
+        },
+        {
           "name": "Symphonie fantastique",
           "movement": "I.",
           "composer": "Berlioz"
@@ -90,6 +99,11 @@
         {
           "name": "Symphony No. 2",
           "movement": "I.",
+          "composer": "Sibelius"
+        },
+        {
+          "name": "Symphony No. 2",
+          "movement": "III.",
           "composer": "Sibelius"
         },
         {
@@ -103,9 +117,25 @@
           "composer": "Sibelius"
         },
         {
+          "name": "Symphony No. 3",
+          "movement": "III.",
+          "composer": "Sibelius",
+          "note": "chorale theme at rehearsal 12 following the scherzo"
+        },
+        {
+          "name": "Symphony No. 4 \"Italian\"",
+          "movement": "I.",
+          "composer": "Mendelssohn"
+        },
+        {
           "name": "Symphony No. 4",
           "movement": "I.",
           "composer": "Tchaikovsky"
+        },
+        {
+          "name": "Symphony No. 5",
+          "movement": "I.",
+          "composer": "Beethoven"
         },
         {
           "name": "Symphony No. 5 \"Reformation\"",
@@ -122,6 +152,10 @@
           "name": "Symphony No. 5 \"Reformation\"",
           "movement": "III.",
           "composer": "Mendelssohn"
+        },
+        {
+          "name": "Tzigane",
+          "composer": "Ravel"
         },
         {
           "name": "Violin Concerto",
@@ -152,6 +186,11 @@
           "motion": "ad"
         },
         {
+          "name": "\"The Box\"",
+          "composer": "Moore",
+          "motion": "d"
+        },
+        {
           "name": "\"Merry-Go-Round of Life\"",
           "composer": "Hisaishi",
           "motion": "ad"
@@ -165,7 +204,8 @@
         {
           "name": "Symphony No. 1",
           "movement": "I.",
-          "composer": "Sibelius"
+          "composer": "Sibelius",
+          "motion": "ad"
         },
         {
           "name": "Symphony No. 2",
@@ -192,7 +232,13 @@
           "name": "Violin Concerto",
           "movement": "III.",
           "composer": "Sibelius",
-          "note": "violin"
+          "note": "solo violin"
+        },
+        {
+          "name": "Violin Concerto",
+          "movement": "I.",
+          "composer": "Tchaikovsky",
+          "note": "solo violin"
         },
         {
           "name": "\"Viva la Vida\"",
@@ -219,7 +265,12 @@
           "movement": "I.",
           "composer": "Rachmaninoff",
           "motion": "ad",
-          "note": "piano"
+          "note": "solo piano"
+        },
+        {
+          "name": "Symphony No. 2",
+          "movement": "IV.",
+          "composer": "Sibelius"
         },
         {
           "name": "Symphony No. 5",
@@ -243,6 +294,11 @@
       "enharmonic": ["A2"],
       "pieces": [
         {
+          "name": "\"Hedwig's Theme\"",
+          "composer": "Williams",
+          "note": "skipping the anacrusis"
+        },
+        {
           "name": "Miroirs",
           "movement": "III.",
           "subtitle": "Une barque sur l'océan",
@@ -264,7 +320,7 @@
           "name": "Piano Concerto No. 3",
           "movement": "I.",
           "composer": "Rachmaninoff",
-          "note": "piano"
+          "note": "solo piano"
         },
         {
           "name": "Symphony No. 5",
@@ -314,6 +370,11 @@
           "motion": "d"
         },
         {
+          "name": "Symphony No. 5",
+          "movement": "IV.",
+          "composer": "Beethoven"
+        },
+        {
           "name": "\"Take on Me\"",
           "composer": "a-ha",
           "motion": "d",
@@ -333,6 +394,10 @@
         {
           "name": "Fanfare for the Common Man",
           "composer": "Copland"
+        },
+        {
+          "name": "\"Hedwig's Theme\"",
+          "composer": "Williams"
         },
         {
           "name": "\"The Magic School Bus\"",
@@ -383,7 +448,7 @@
           "name": "Danse Macabre",
           "composer": "Saint-Saëns",
           "motion": "adh",
-          "note": "violin solo"
+          "note": "solo violin"
         },
         {
           "name": "West Side Story",
@@ -454,6 +519,13 @@
       "enharmonic": ["A6"],
       "pieces": [
         {
+          "name": "Piano Concerto No. 4",
+          "movement": "I.",
+          "composer": "Rachmaninoff",
+          "motion": "ad",
+          "note": "melodic line between the piano and orchestra at the top of the phrase at rehearsal 29"
+        },
+        {
           "name": "West Side Story",
           "subtitle": "Somewhere",
           "composer": "Bernstein"
@@ -465,6 +537,13 @@
       "interval": "M7",
       "enharmonic": ["d8"],
       "pieces": [
+        {
+          "name": "Pictures at an Exhibition",
+          "movement": "9.",
+          "subtitle": "The Hut on Hen's Legs (Baba Yaga)",
+          "composer": "Mussorgsky",
+          "motion": "d"
+        },
         {
           "name": "\"Take on Me\"",
           "composer": "a-ha",
