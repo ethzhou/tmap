@@ -21,6 +21,7 @@ import StopwatchDisplay from "../../../general/StopwatchDisplay";
 import BaguetteTip from "./BaguetteTip";
 import Baguette from "./Baguette";
 import FourPartProgressionDisplay from "./FourPartProgressionDisplay";
+import NavUp from "../../../general/NavUp";
 
 // #region Test parts
 
@@ -644,6 +645,7 @@ export default function FourPartHarmony() {
     selection,
   };
 
+  /* TODO: use PageLayout and PageHeader components for this component */
   return (
     <>
       <FPHContext.Provider value={parameters}>
@@ -655,20 +657,14 @@ export default function FourPartHarmony() {
                 className="font-comic text-2xl text-slate-600 no-underline dark:text-slate-400 max-sm:text-2xl"
               >
                 <div>
-                  <h1 className="m-0 text-2xl font-normal">
+                  <h1 className="m-0 font-display text-2xl font-normal">
                     Four-Part Harmony
                   </h1>
                 </div>
               </Link>
-              <Link
-                to="/tmap/practice"
-                className="group h-8 font-comic text-2xl text-slate-400 no-underline dark:text-slate-700 max-sm:text-xl"
-              >
-                <div className="nav-up">
-                  {/* <div className="back"> */}
-                  (Practice)
-                </div>
-              </Link>
+              <div className="font-display text-2xl text-slate-400 dark:text-slate-700 max-sm:text-xl">
+                <NavUp to="/tmap/practice">Practice</NavUp>
+              </div>
               <div className="self-bottom h-[2px] flex-auto bg-pink-400 dark:bg-pink-600"></div>
               <StopwatchDisplay />
               <div className="self-bottom h-[2px] w-[8px] rounded-tr-full bg-pink-400 dark:bg-pink-600"></div>
