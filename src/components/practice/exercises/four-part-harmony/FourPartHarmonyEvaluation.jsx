@@ -603,6 +603,8 @@ const evaluations = [
     const errors = [];
 
     for (let i = 1; i < intervals.length; i++) {
+      if (!analyses[i - 1] || !analyses[i]) continue;
+
       // Parallel fifths in repeated harmony are not functionally parallel
       if (analyses[i - 1].degree === analyses[i].degree) continue;
 
@@ -638,6 +640,8 @@ const evaluations = [
     const errors = [];
 
     for (let i = 1; i < intervals.length; i++) {
+      if (!analyses[i - 1] || !analyses[i]) continue;
+
       // Parallel octave in repeated harmony are not functionally parallel
       if (analyses[i - 1].degree === analyses[i].degree) continue;
 
