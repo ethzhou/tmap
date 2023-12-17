@@ -603,6 +603,9 @@ const evaluations = [
     const errors = [];
 
     for (let i = 1; i < intervals.length; i++) {
+      // Parallel fifths in repeated harmony are not functionally parallel
+      if (analyses[i - 1].degree === analyses[i].degree) continue;
+
       for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
         // This loop uses change in voice index rather than voice index because of the way `intervals` is constructed (only records intervals between higher voices)
         for (let delVoice = 0; delVoice + iVoice1 < 3; delVoice++) {
@@ -635,6 +638,9 @@ const evaluations = [
     const errors = [];
 
     for (let i = 1; i < intervals.length; i++) {
+      // Parallel octave in repeated harmony are not functionally parallel
+      if (analyses[i - 1].degree === analyses[i].degree) continue;
+
       for (let iVoice1 = 0; iVoice1 < 4; iVoice1++) {
         // This loop uses change in voice index rather than voice index because of the way `intervals` is constructed (only records intervals between higher voices)
         for (let delVoice = 0; delVoice + iVoice1 < 3; delVoice++) {
