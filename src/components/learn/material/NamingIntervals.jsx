@@ -91,7 +91,7 @@ export default function NamingIntervals() {
                         <th>Symbol</th>
                       </tr>
                       <tr>
-                        <td>1</td>
+                        <td>+1</td>
                         <td>augmented</td>
                         <td>A</td>
                       </tr>
@@ -128,7 +128,7 @@ export default function NamingIntervals() {
                       <th>Symbol</th>
                     </tr>
                     <tr>
-                      <td>1</td>
+                      <td>+1</td>
                       <td>augmented</td>
                       <td>A</td>
                     </tr>
