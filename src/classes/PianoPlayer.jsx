@@ -1,4 +1,4 @@
-import { SplendidGrandPiano, Soundfont, Reverb } from "smplr";
+import { SplendidGrandPiano, Soundfont, Reverb } from "smplr"; // https://www.npmjs.com/package/smplr
 import Pitch from "./Pitch";
 
 export default class PianoPlayer {
@@ -16,7 +16,7 @@ export default class PianoPlayer {
 
   /**
    * Plays a note.
-   * 
+   *
    * @param {Pitch} pitch
    * @param {number} duration Duration in seconds.
    */
@@ -29,15 +29,14 @@ export default class PianoPlayer {
 
   /**
    * Plays notes.
-   * 
+   *
    * @param {Array<Pitch>} pitches
    * @param {number} notePlayDuration Duration in seconds.
    * @param {number} spacing Time between the start of each pitch. Measured in seconds.
    * @param {boolean} doStop Whether to first stop other audio from this player.
    */
   playNotes(pitches, notePlayDuration, spacing = 0, doStop = false) {
-    if (doStop)
-      this.piano.stop();
+    if (doStop) this.piano.stop();
     this.piano.loaded().then(piano => {
       const currentTime = this.context.currentTime;
       pitches.forEach((pitch, i) => {
@@ -51,24 +50,20 @@ export default class PianoPlayer {
   }
 
   /**
-   * 
+   *
    * @param {Array<Array<Pitch>>} parts
    * @param {number} notePlayDuration Duration of each chord's notes in seconds.
    * @param {*} spacing Time between the start of each pitch. Measured in seconds.
    * @param {*} doStop Whether to first stop other audio from this player.
    */
   playParts(parts, notePlayDuration, spacing = 0, doStop = false) {
-    if (doStop)
-      this.piano.stop();
+    if (doStop) this.piano.stop();
     this.piano.loaded().then(piano => {
-      const chords = parts[0].map((_, i) => 
-      parts.map(part => part[i])
-      );
+      const chords = parts[0].map((_, i) => parts.map(part => part[i]));
       const currentTime = this.context.currentTime;
       chords.forEach((chord, i) => {
-        chord.forEach((pitch) => {
-          if (!pitch)
-            return;
+        chord.forEach(pitch => {
+          if (!pitch) return;
           piano.start({
             note: pitch.toString(),
             duration: notePlayDuration,
