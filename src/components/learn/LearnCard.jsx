@@ -12,7 +12,7 @@ export default function LearnCard({ name, blurb, to, tags }) {
             <div className="relative items-baseline">
               <span className="z-[5] mb-1 mr-2 font-text text-2xl">{name}</span>
               <span className="absolute bottom-0 right-0 z-[4] flex gap-2 font-mono text-lg text-slate-300 transition-all duration-300 group-hover/card:text-slate-400 dark:text-slate-700 dark:group-hover/card:text-slate-400">
-                {tags.map(tag => (
+                {tags?.map(tag => (
                   <span key={tag}>#{tag}</span>
                 ))}
               </span>
