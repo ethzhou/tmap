@@ -77,8 +77,8 @@ export default function NamingIntervals() {
                 <h4>1, 4, 5, 8</h4>
                 <p>
                   If the size of the interval is 1, 4, 5, or 8, then the
-                  interval is <em>augmented</em>, <em>perfect</em>, or{" "}
-                  <em>diminished</em>.
+                  interval is <dfn>augmented</dfn>, <dfn>perfect</dfn>, or{" "}
+                  <dfn>diminished</dfn>.
                   <div className="flex justify-center">
                     <table className="[&_:is(th,td)]:px-4 [&_:is(th,td)]:py-1 [&_td:nth-child(1)]:text-end [&_td:nth-child(3)]:text-center [&_th]:text-start">
                       <tr className="align-bottom">
@@ -113,8 +113,8 @@ export default function NamingIntervals() {
                 <h4>2, 3, 6, 7</h4>
                 <p>
                   If the size of the interval is 2, 3, 6, or 7, then the
-                  interval is <em>augmented</em>, <em>major</em>, <em>minor</em>
-                  , or <em>diminished</em>.
+                  interval is <dfn>augmented</dfn>, <dfn>major</dfn>,{" "}
+                  <dfn>minor</dfn>, or <dfn>diminished</dfn>.
                 </p>
                 <div className="flex justify-center">
                   <table className="[&_:is(th,td)]:px-4 [&_:is(th,td)]:py-1 [&_td:nth-child(1)]:text-end [&_td:nth-child(3)]:text-center [&_th]:text-start">
@@ -153,11 +153,11 @@ export default function NamingIntervals() {
             </section>
             <p>
               A augmented, perfect, major, minor, and diminished qualities are
-              respectively denoted <em>A</em>, <em>P</em>, <em>M</em>,{" "}
-              <em>m</em>, and <em>d</em>. The full name is the quality followed
-              by the size; in speech, the size is typically expressed with an
-              ordinal number; <em>firsts</em> are instead <em>unisons</em>, and{" "}
-              <em>eighths</em> are instead <em>octaves</em>.
+              respectively denoted <dfn>A</dfn>, <dfn>P</dfn>, <dfn>M</dfn>,{" "}
+              <dfn>m</dfn>, and <dfn>d</dfn>. The full name is the quality
+              followed by the size. In speech, the size is typically expressed
+              with an ordinal number; firsts are instead <dfn>unisons</dfn>, and{" "}
+              eighths are instead <dfn>octaves</dfn>.
             </p>
             <section>
               <h3>Examples</h3>
