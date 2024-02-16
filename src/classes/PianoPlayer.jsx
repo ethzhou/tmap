@@ -17,12 +17,12 @@ export default class PianoPlayer {
   /**
    * Plays a note.
    *
-   * @param {Pitch} pitch
+   * @param {Pitch | String} pitch
    * @param {number} duration Duration in seconds.
    */
   playNote(pitch, duration) {
     this.piano.start({
-      note: pitch.toString(),
+      note: typeof pitch === "string" ? pitch : pitch.toString(),
       duration,
     });
   }
@@ -30,7 +30,7 @@ export default class PianoPlayer {
   /**
    * Plays notes.
    *
-   * @param {Array<Pitch>} pitches
+   * @param {Array<Pitch | String>} pitches
    * @param {number} notePlayDuration Duration in seconds.
    * @param {number} spacing Time between the start of each pitch. Measured in seconds.
    * @param {boolean} doStop Whether to first stop other audio from this player.
@@ -41,7 +41,7 @@ export default class PianoPlayer {
       const currentTime = this.context.currentTime;
       pitches.forEach((pitch, i) => {
         piano.start({
-          note: pitch.toString(),
+          note: typeof pitch === "string" ? pitch : pitch.toString(),
           duration: notePlayDuration,
           time: currentTime + i * spacing,
         });
