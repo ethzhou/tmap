@@ -73,7 +73,7 @@ export default function NamingIntervals() {
             </p>
             <section>
               <h3></h3>
-              <section className="pl-4 text-base">
+              <section className="px-4 text-base">
                 <h4>1, 4, 5, 8</h4>
                 <p>
                   If the size of the interval is 1, 4, 5, or 8, then the
@@ -109,7 +109,7 @@ export default function NamingIntervals() {
                   </div>
                 </p>
               </section>
-              <section className="pl-4 text-base">
+              <section className="px-4 text-base">
                 <h4>2, 3, 6, 7</h4>
                 <p>
                   If the size of the interval is 2, 3, 6, or 7, then the
