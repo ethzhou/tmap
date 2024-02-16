@@ -157,7 +157,7 @@ export default function NamingIntervals() {
               <em>m</em>, and <em>d</em>. The full name is the quality followed
               by the size; in speech, the size is typically expressed with an
               ordinal number; <em>firsts</em> are instead <em>unisons</em>, and{" "}
-              <em>eighths</em> are instead octaves.
+              <em>eighths</em> are instead <em>octaves</em>.
             </p>
             <section>
               <h3>Examples</h3>
