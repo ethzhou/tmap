@@ -1,6 +1,6 @@
 import PageHeader from "../../general/PageHeader";
 import PageLayout from "../../layouts/PageLayout";
-import PianoButton from "../../music/PitchButton";
+import PianoButton from "../../music/PianoButton";
 
 export default function NotesAndTheScale() {
   return (
