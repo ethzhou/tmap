@@ -1,6 +1,7 @@
 import PageHeader from "../../general/PageHeader";
 import PageLayout from "../../layouts/PageLayout";
 import PianoButton from "../../music/PianoButton";
+import ScaleDisplay from "../../music/ScaleDisplay";
 
 export default function NotesAndTheScale() {
   return (
@@ -115,23 +116,25 @@ export default function NotesAndTheScale() {
               goes to E and then another whole step up. The next letter is F,
               but F is only one half step above E.
             </p>
-            <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-              <span>D</span>
-              <span>_</span>
-              <span>E</span>
-              <span className="text-slate-800 dark:text-slate-200">F</span>
-              <span className="border border-solid border-slate-800 text-slate-800 dark:border-slate-200 dark:text-slate-200">
-                _
-              </span>
-              <span className="text-slate-800 dark:text-slate-200">G</span>
-              <span>_</span>
-              <span>A</span>
-              <span>_</span>
-              <span>B</span>
-              <span>C</span>
-              <span>_</span>
-              <span>D</span>
-            </div>
+            <ScaleDisplay
+              notes={[
+                "D",
+                "_",
+                "E",
+                "F",
+                "_",
+                "G",
+                "_",
+                "A",
+                "_",
+                "B",
+                "C",
+                "_",
+                "D",
+              ]}
+              selections={[4]}
+              highlights={[3, 4, 5]}
+            />
             <p>
               (Since each letter appears in order in a scale, the next note
               should be some F and not G, but in any case G is three half steps
@@ -141,21 +144,23 @@ export default function NotesAndTheScale() {
               These are the named and unnamed notes from A to A, where unnamed
               notes are reserved placeholders.
             </p>
-            <div className="flex justify-center gap-6 [&>span]:p-1">
-              <span>A</span>
-              <span>_</span>
-              <span>B</span>
-              <span>C</span>
-              <span>_</span>
-              <span>D</span>
-              <span>_</span>
-              <span>E</span>
-              <span>F</span>
-              <span>_</span>
-              <span>G</span>
-              <span>_</span>
-              <span>A</span>
-            </div>
+            <ScaleDisplay
+              notes={[
+                "A",
+                "_",
+                "B",
+                "C",
+                "_",
+                "D",
+                "_",
+                "E",
+                "F",
+                "_",
+                "G",
+                "_",
+                "A",
+              ]}
+            />
             <p>
               Neighboring notes may be constructed via <dfn>accidentals</dfn>.
               The standard accidentals are the <dfn>sharp</dfn> and{" "}
@@ -171,21 +176,24 @@ export default function NotesAndTheScale() {
               completes the D major scale, shown below by the notes of accented
               color.
             </p>
-            <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-              <span className="text-slate-800 dark:text-slate-200">D</span>
-              <span>_</span>
-              <span className="text-slate-800 dark:text-slate-200">E</span>
-              <span>F</span>
-              <span className="text-slate-800 dark:text-slate-200">F♯</span>
-              <span className="text-slate-800 dark:text-slate-200">G</span>
-              <span>_</span>
-              <span className="text-slate-800 dark:text-slate-200">A</span>
-              <span>_</span>
-              <span className="text-slate-800 dark:text-slate-200">B</span>
-              <span>C</span>
-              <span className="text-slate-800 dark:text-slate-200">C♯</span>
-              <span className="text-slate-800 dark:text-slate-200">D</span>
-            </div>
+            <ScaleDisplay
+              notes={[
+                "D",
+                "_",
+                "E",
+                "F",
+                "F♯",
+                "G",
+                "_",
+                "A",
+                "_",
+                "B",
+                "C",
+                "C♯",
+                "D",
+              ]}
+              highlights={[0, 2, 4, 5, 7, 9, 11, 12]}
+            />
             <section>
               <h3>Enharmonics</h3>
               <p>
@@ -214,124 +222,78 @@ export default function NotesAndTheScale() {
                   Consider the E major scale to be constructed; start with the
                   letters and traverse note by note.
                 </p>
-                <div className="flex justify-center gap-6 [&>span]:p-1">
-                  <span>E</span>
-                  <span>F</span>
-                  <span>G</span>
-                  <span>A</span>
-                  <span>B</span>
-                  <span>C</span>
-                  <span>D</span>
-                  <span>E</span>
-                </div>
-                <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-                  <span className="text-slate-800 dark:text-slate-200">E</span>
-                  <span>F</span>
-                  <span>G</span>
-                  <span>A</span>
-                  <span>B</span>
-                  <span>C</span>
-                  <span>D</span>
-                  <span>E</span>
-                </div>
+                <ScaleDisplay
+                  notes={["E", "F", "G", "A", "B", "C", "D", "E"]}
+                  gap={8}
+                />
+                <ScaleDisplay
+                  notes={["E", "F", "G", "A", "B", "C", "D", "E"]}
+                  highlights={[0]}
+                  gap={8}
+                />
                 <p>
                   The major scale first moves a whole step, but E to F is only a
                   half step; F is raised to F♯.
                 </p>
-                <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-                  <span className="text-slate-800 dark:text-slate-200">E</span>
-                  <span className="text-slate-800 dark:text-slate-200">F♯</span>
-                  <span>G</span>
-                  <span>A</span>
-                  <span>B</span>
-                  <span>C</span>
-                  <span>D</span>
-                  <span>E</span>
-                </div>
+                <ScaleDisplay
+                  notes={["E", "F♯", "G", "A", "B", "C", "D", "E"]}
+                  highlights={[0, 1]}
+                  gap={8}
+                />
                 <p>
                   Next, the major scale again moves a whole step, but F♯ to G is
                   only a half step; G is raised to G♯.
                 </p>
-                <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-                  <span className="text-slate-800 dark:text-slate-200">E</span>
-                  <span className="text-slate-800 dark:text-slate-200">F♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">G♯</span>
-                  <span>A</span>
-                  <span>B</span>
-                  <span>C</span>
-                  <span>D</span>
-                  <span>E</span>
-                </div>
+                <ScaleDisplay
+                  notes={["E", "F♯", "G♯", "A", "B", "C", "D", "E"]}
+                  highlights={[0, 1, 2]}
+                  gap={8}
+                />
                 <p>
                   The major scale then moves a half step. G♯ to A is just that,
                   so A is left natural.
                 </p>
-                <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-                  <span className="text-slate-800 dark:text-slate-200">E</span>
-                  <span className="text-slate-800 dark:text-slate-200">F♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">G♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">A</span>
-                  <span>B</span>
-                  <span>C</span>
-                  <span>D</span>
-                  <span>E</span>
-                </div>
+                <ScaleDisplay
+                  notes={["E", "F♯", "G♯", "A", "B", "C", "D", "E"]}
+                  highlights={[0, 1, 2, 3]}
+                  gap={8}
+                />
                 <p>
                   After that is a whole step, which A to B satisfies, so B is
                   left natural.
                 </p>
-                <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-                  <span className="text-slate-800 dark:text-slate-200">E</span>
-                  <span className="text-slate-800 dark:text-slate-200">F♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">G♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">A</span>
-                  <span className="text-slate-800 dark:text-slate-200">B</span>
-                  <span>C</span>
-                  <span>D</span>
-                  <span>E</span>
-                </div>
+                <ScaleDisplay
+                  notes={["E", "F♯", "G♯", "A", "B", "C", "D", "E"]}
+                  highlights={[0, 1, 2, 3, 4]}
+                  gap={8}
+                />
                 <p>
                   Another whole step follows. B to C is only a half step; C is
                   raised to C♯.
                 </p>
-                <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-                  <span className="text-slate-800 dark:text-slate-200">E</span>
-                  <span className="text-slate-800 dark:text-slate-200">F♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">G♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">A</span>
-                  <span className="text-slate-800 dark:text-slate-200">B</span>
-                  <span className="text-slate-800 dark:text-slate-200">C♯</span>
-                  <span>D</span>
-                  <span>E</span>
-                </div>
+                <ScaleDisplay
+                  notes={["E", "F♯", "G♯", "A", "B", "C♯", "D", "E"]}
+                  highlights={[0, 1, 2, 3, 4, 5]}
+                  gap={8}
+                />
                 <p>
                   Similarly, C♯ to D is only a half step where there is desired
                   a whole step; D is raised to D♯.
                 </p>
-                <div className="flex justify-center gap-6 text-slate-300 dark:text-slate-700 [&>span]:p-1">
-                  <span className="text-slate-800 dark:text-slate-200">E</span>
-                  <span className="text-slate-800 dark:text-slate-200">F♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">G♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">A</span>
-                  <span className="text-slate-800 dark:text-slate-200">B</span>
-                  <span className="text-slate-800 dark:text-slate-200">C♯</span>
-                  <span className="text-slate-800 dark:text-slate-200">D♯</span>
-                  <span>E</span>
-                </div>
+                <ScaleDisplay
+                  notes={["E", "F♯", "G♯", "A", "B", "C♯", "D♯", "E"]}
+                  highlights={[0, 1, 2, 3, 4, 5, 6]}
+                  gap={8}
+                />
                 <p>
                   Lastly, D♯ to E is the proper, final half step. All together,
                   this is the E major scale.
                 </p>
-                <div className="flex justify-center gap-6 text-slate-800 dark:text-slate-200 [&>span]:p-1">
-                  <span>E</span>
-                  <span>F♯</span>
-                  <span>G♯</span>
-                  <span>A</span>
-                  <span>B</span>
-                  <span>C♯</span>
-                  <span>D♯</span>
-                  <span>E</span>
-                </div>
+                <ScaleDisplay
+                  notes={["E", "F♯", "G♯", "A", "B", "C♯", "D♯", "E"]}
+                  highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
+                  gap={8}
+                />
               </section>
               <p>
                 There are such notes as C♭, enharmonic to B, and E♯, enharmonic
