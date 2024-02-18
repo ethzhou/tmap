@@ -39,6 +39,17 @@ export default function Learn() {
           <div className="font-text text-slate-700 dark:text-slate-300">
             under construction
           </div>
+          <LearnCard name={"Sound and Pitch"} to={"sound-and-pitch"} />
+          <LearnCard
+            name={"Notes and the Scale"}
+            to={"notes-and-the-scale"}
+            tags={["scales"]}
+          />
+          <LearnCard
+            name={"Exploring Scales"}
+            to={"exploring-scales"}
+            tags={["scales"]}
+          />
           <LearnCard
             name={"Naming Intervals"}
             to={"naming-intervals"}
