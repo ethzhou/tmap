@@ -18,7 +18,7 @@ export default function PianoButton({
             pitches,
             notePlayDuration ?? 1,
             spacing,
-            doStop,
+            doStop ?? true,
           );
         }}
       >
