@@ -17,9 +17,10 @@ export default function ScaleDisplay({
   return (
     <>
       <div
-        className={`flex items-baseline justify-center justify-items-center gap-${gap}${
+        className={`flex items-baseline justify-center justify-items-center${
           highlights ? " text-slate-300 dark:text-slate-700" : ""
         }`}
+        style={{ gap: `${gap / 4}rem` }}
       >
         {notes.map((note, i) => (
           <span
