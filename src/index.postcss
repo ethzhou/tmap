@@ -123,6 +123,10 @@ html.dark {
   }
 }
 
+.-active-note {
+  @apply relative text-green-600 before:absolute before:-left-4 before:top-3.5 before:h-2.5 before:w-6 before:bg-emerald-400/10 before:content-[''] dark:text-green-500 dark:before:bg-emerald-600/20;
+}
+
 .practice-card::before {
   background: radial-gradient(
     800px circle at var(--light-x) var(--light-y),
@@ -212,4 +216,34 @@ html.dark {
 
 ul li::marker {
   content: "-  ";
+}
+
+/* Editext */
+
+[editext="main-container"] {
+  @apply relative;
+}
+
+[editext="view-container"] {
+  @apply relative flex items-baseline;
+}
+
+div:has(> [editext="edit-button"]) {
+  @apply absolute -translate-x-full;
+}
+
+[editext="edit-button"] {
+  @apply border-none bg-transparent p-0 text-sm text-inherit hover:bg-transparent;
+}
+
+[editext="input"] {
+  @apply w-6 border border-slate-700 bg-transparent p-0 text-center font-text text-lg text-inherit outline-none dark:border-slate-300;
+}
+
+:has(> [editext="save-button"]) {
+  @apply hidden;
+}
+
+div[editext="validation-container"] {
+  @apply translate-x-3 lowercase text-slate-600 dark:text-slate-400;
 }
