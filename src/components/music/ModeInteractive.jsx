@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Pitch from "../../classes/Pitch";
 import EdiText from "react-editext";
 import {
@@ -79,7 +79,7 @@ export default function ModeInteractive({
     <>
       <div className="grid grid-cols-[repeat(3,auto)] grid-rows-[repeat(7,1.5rem)] items-center justify-center justify-items-start gap-x-8 gap-y-2">
         {displayedPitches.map((displayedPitch, i) => (
-          <>
+          <React.Fragment key={crypto.randomUUID()}>
             {i === 0 ? (
               <div
                 className={`${
@@ -112,7 +112,6 @@ export default function ModeInteractive({
               </div>
             ) : (
               <div
-                key={crypto.randomUUID()}
                 className={`${
                   constantKeySignature && iActiveNote === i
                     ? "-active-note "
@@ -124,14 +123,13 @@ export default function ModeInteractive({
             )}
             <div>{DIATONIC_MODES[i]}</div>
             <PianoButton
-              key={crypto.randomUUID()}
               onClick={() => startActiveNoteCycle(i)}
               pitches={displayedPitches[i]
                 .scale(i)
                 .map(pitch => pitch.toString())}
               spacing={playbackSpacing}
             />
-          </>
+          </React.Fragment>
         ))}
       </div>
     </>
