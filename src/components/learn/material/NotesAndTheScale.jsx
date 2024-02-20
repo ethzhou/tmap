@@ -36,11 +36,14 @@ export default function NotesAndTheScale() {
               above the first note. <strong>The first note may be any;</strong>{" "}
               the rest follow from the dictated layout.
             </p>
-            <PianoButton
-              label={"a major scale"}
-              pitches={["A4", "B4", "C#5", "D5", "E5", "F#5", "G#5", "A5"]}
-              spacing={0.5}
-            />
+            <div className="flex items-center justify-center gap-4">
+              <PianoButton
+                pitches={["A4", "B4", "C#5", "D5", "E5", "F#5", "G#5", "A5"]}
+                spacing={0.5}
+              >
+                major scale
+              </PianoButton>
+            </div>
             <p>
               The pattern usually described sequentially: Between sequential
               notes are a whole step, whole step, half step, whole step, whole
@@ -54,11 +57,14 @@ export default function NotesAndTheScale() {
               whole step, half step, whole step, whole step, half step, whole
               step, and whole step.
             </p>
-            <PianoButton
-              label={"a minor scale"}
-              pitches={["A4", "B4", "C5", "D5", "E5", "F5", "G5", "A5"]}
-              spacing={0.5}
-            />
+            <div className="flex items-center justify-center gap-4">
+              <PianoButton
+                pitches={["A4", "B4", "C5", "D5", "E5", "F5", "G5", "A5"]}
+                spacing={0.5}
+              >
+                minor scale
+              </PianoButton>
+            </div>
           </section>
           <section>
             <h2 className="font-text text-4xl">Letters</h2>

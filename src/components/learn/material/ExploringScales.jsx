@@ -59,7 +59,7 @@ export default function ExploringScales() {
                 whole step, whole step, half step, whole step, whole step, whole
                 step, and half step.
               </p>
-              <div className="grid grid-cols-[repeat(2,auto)] items-end justify-center justify-items-start gap-x-8 gap-y-1 text-slate-800 dark:text-slate-200">
+              <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
                 <PianoButton
                   label={"hear"}
                   pitches={["A4", "B4", "C#5", "D5", "E5", "F#5", "G#5", "A5"]}
@@ -117,7 +117,7 @@ export default function ExploringScales() {
                 whole step, half step, whole step, whole step, half step, whole
                 step, and whole step.
               </p>
-              <div className="grid grid-cols-[repeat(2,auto)] items-end justify-center justify-items-start gap-x-8 gap-y-1 text-slate-800 dark:text-slate-200">
+              <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
                 <PianoButton
                   label={"hear"}
                   pitches={["F#3", "G#3", "A3", "B3", "C#4", "D4", "E4", "F#4"]}
@@ -514,7 +514,7 @@ export default function ExploringScales() {
               <p>
                 The <dfn>harmonic minor scale</dfn> raises the seventh tone.
               </p>
-              <div className="grid grid-cols-[repeat(2,auto)] items-end justify-center justify-items-start gap-x-8 gap-y-1 text-slate-800 dark:text-slate-200">
+              <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -625,7 +625,7 @@ export default function ExploringScales() {
                   on the ascending scale but lowers them back on descent.
                 </strong>
               </p>
-              <div className="grid grid-cols-[repeat(2,auto)] items-end justify-center justify-items-start gap-x-8 gap-y-1 text-slate-800 dark:text-slate-200">
+              <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -874,7 +874,7 @@ export default function ExploringScales() {
               The <dfn>pentatonic scale</dfn> takes the first, second, third,
               fifth, and sixth tones of the major scale.
             </p>
-            <div className="grid grid-cols-[repeat(2,auto)] items-end justify-center justify-items-start gap-x-8 gap-y-1 text-slate-800 dark:text-slate-200">
+            <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
               <PianoButton
                 label={"hear"}
                 pitches={[
@@ -904,7 +904,7 @@ export default function ExploringScales() {
             <p>
               The <dfn>whole-tone scale</dfn> is entirely of whole steps.
             </p>
-            <div className="grid grid-cols-[repeat(2,auto)] items-end justify-center justify-items-start gap-x-8 gap-y-1 text-slate-800 dark:text-slate-200">
+            <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
               <PianoButton
                 label={"hear"}
                 pitches={[
@@ -945,7 +945,7 @@ export default function ExploringScales() {
               The <dfn>chromatic scale</dfn> is entirely of half steps. It
               covers every note in 12-TET.
             </p>
-            <div className="grid grid-cols-[repeat(2,auto)] items-end justify-center justify-items-start gap-x-8 gap-y-1 text-slate-800 dark:text-slate-200">
+            <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
               <PianoButton
                 label={"hear"}
                 pitches={[

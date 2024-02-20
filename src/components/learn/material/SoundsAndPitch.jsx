@@ -30,10 +30,16 @@ export default function SoundAndPitch() {
               between the first and second is perceived to be the same as the
               distance between the second and third.
             </p>
-            <div className="flex justify-center gap-2">
-              <PianoButton label={"440 Hz"} pitches={["A4"]} />
-              <PianoButton label={"550 Hz"} pitches={["C#5"]} />
-              <PianoButton label={"687.5 Hz"} pitches={["F5"]} />
+            <div className="flex justify-center gap-12">
+              <PianoButton title={"440 Hz"} pitches={["A4"]}>
+                440 Hz
+              </PianoButton>
+              <PianoButton title={"550 Hz"} pitches={["C#5"]}>
+                550 Hz
+              </PianoButton>
+              <PianoButton title={"687.5 Hz"} pitches={["F5"]}>
+                687.5 Hz
+              </PianoButton>
             </div>
           </section>
           <section>
@@ -57,32 +63,55 @@ export default function SoundAndPitch() {
                 are by octaves apart and considered the &ldquo;same&rdquo;, but
                 notes of different rows should feel different.
               </p>
-              <div className="flex flex-col justify-center gap-4">
-                <div className="flex justify-center gap-2">
-                  <PianoButton label={"440 Hz"} pitches={["A4"]} />
-                  <PianoButton label={"880 Hz"} pitches={["A5"]} />
-                  <PianoButton label={"1760 Hz"} pitches={["A6"]} />
+              <div className="grid grid-cols-[repeat(2,auto)] items-start justify-center gap-x-8 gap-y-14">
+                <PianoButton title={"440 Hz"} pitches={["A4"]}>
+                  440 Hz
+                </PianoButton>
+                <PianoButton title={"880 Hz"} pitches={["A5"]}>
+                  880 Hz
+                </PianoButton>
+                <PianoButton title={"1760 Hz"} pitches={["A6"]}>
+                  1760 Hz
+                </PianoButton>
+                <PianoButton
+                  title={"more"}
+                  pitches={["A2", "A5", "A3", "A1", "A6", "A4"]}
+                  spacing={0.3}
+                >
+                  more
+                </PianoButton>
+                <PianoButton title={"275 Hz"} pitches={["C#4"]}>
+                  275 Hz
+                </PianoButton>
+                <PianoButton title={"550 Hz"} pitches={["C#5"]}>
+                  550 Hz
+                </PianoButton>
+                <PianoButton title={"1100 Hz"} pitches={["C#6"]}>
+                  1100 Hz
+                </PianoButton>
+                <div className="col-start-4">
                   <PianoButton
-                    label={"more"}
-                    pitches={["A2", "A5", "A3", "A1", "A6", "A4"]}
-                    spacing={0.3}
-                  />
-                </div>
-                <div className="flex justify-center gap-2">
-                  <PianoButton label={"550 Hz"} pitches={["C#5"]} />
-                  <PianoButton
-                    label={"more"}
+                    title={"more"}
                     pitches={["C#3", "C#4", "C#7", "C#1", "C#5", "C#2"]}
                     spacing={0.3}
-                  />
+                  >
+                    more
+                  </PianoButton>
                 </div>
-                <div className="flex justify-center gap-2">
-                  <PianoButton label={"687.5 Hz"} pitches={["F5"]} />
+                <PianoButton title={"687.5 Hz"} pitches={["F5"]}>
+                  687.5 Hz
+                </PianoButton>
+                <PianoButton title={"1375 Hz"} pitches={["F6"]}>
+                  1375 Hz
+                </PianoButton>
+                <div className="col-start-4">
                   <PianoButton
-                    label={"more"}
+                    title={"more"}
                     pitches={["F3", "F7", "F1", "F2", "F4", "F6"]}
                     spacing={0.3}
-                  />
+                  >
+                    more
+                  </PianoButton>
                 </div>
               </div>
             </section>
@@ -110,10 +139,12 @@ export default function SoundAndPitch() {
                 <strong>One octave comprises twelve semitones.</strong> Two half
                 steps total a <dfn>whole step</dfn>, a concept left for scales.
               </p>
-              <div className="flex items-baseline justify-center gap-4">
-                A4
+              <div className="flex items-center justify-center gap-4">
+                <span className="after:ml-2 after:select-none after:content-['–']">
+                  A4
+                </span>
                 <PianoButton
-                  label={"halfsteps in an octave"}
+                  title={"halfsteps in an octave"}
                   pitches={[
                     "A4",
                     "A#4",
@@ -131,7 +162,9 @@ export default function SoundAndPitch() {
                   ]}
                   spacing={0.12}
                 />
-                A5
+                <span className="before:mr-2 before:select-none before:content-['–']">
+                  A5
+                </span>
               </div>
             </section>
           </section>

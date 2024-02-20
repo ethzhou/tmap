@@ -76,8 +76,7 @@ export default function ModeInteractive({
 
   return (
     <>
-      <div className="grid grid-flow-col grid-rows-[repeat(7,1.5rem)] items-baseline justify-center justify-items-start gap-x-8 gap-y-2">
-        <div className="absolute left-0 top-0 border-none bg-transparent p-0 text-lg text-inherit hover:bg-transparent"></div>
+      <div className="grid grid-flow-col grid-rows-[repeat(7,1.5rem)] items-center justify-center justify-items-start gap-x-8 gap-y-2">
         <div
           className={`${
             constantKeySignature && iActiveNote === 0 ? "-active-note" : ""
