@@ -3,6 +3,16 @@ import Pitch from "../classes/Pitch";
 export const A_OCTAVE = "ABCDEFG";
 export const C_OCTAVE = "CDEFGAB";
 
+export const DIATONIC_MODES = [
+  "Ionian",
+  "Dorian",
+  "Phrygian",
+  "Lydian",
+  "Mixolydian",
+  "Aeolian",
+  "Locrian",
+];
+
 // This loops from F to F, including F twice
 export const F_CIRCLE_OF_FIFTHS = "FCGDAEBF";
 
