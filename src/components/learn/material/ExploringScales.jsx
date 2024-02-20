@@ -59,23 +59,25 @@ export default function ExploringScales() {
                 whole step, whole step, half step, whole step, whole step, whole
                 step, and half step.
               </p>
-              <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
+              <div className="flex flex-col items-center justify-center justify-items-start gap-1 text-slate-800 dark:text-slate-200">
                 <PianoButton
                   label={"hear"}
                   pitches={["A4", "B4", "C#5", "D5", "E5", "F#5", "G#5", "A5"]}
                   spacing={0.2}
-                />
-                <ScaleDisplay
-                  notes={["A", "B", "C♯", "D", "E", "F♯", "G♯", "A"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["A", "B", "C♯", "D", "E", "F♯", "G♯", "A"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={["E4", "F#4", "G#4", "A4", "B4", "C#5", "D#5", "E5"]}
                   spacing={0.2}
-                />
-                <ScaleDisplay
-                  notes={["E", "F♯", "G♯", "A", "B", "C♯", "D♯", "E"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["E", "F♯", "G♯", "A", "B", "C♯", "D♯", "E"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -89,10 +91,11 @@ export default function ExploringScales() {
                     "Gb5",
                   ]}
                   spacing={0.2}
-                />
-                <ScaleDisplay
-                  notes={["G♭", "A♭", "B♭", "C♭", "D♭", "E♭", "F", "G♭"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["G♭", "A♭", "B♭", "C♭", "D♭", "E♭", "F", "G♭"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -106,10 +109,11 @@ export default function ExploringScales() {
                     "Db5",
                   ]}
                   spacing={0.2}
-                />
-                <ScaleDisplay
-                  notes={["D♭", "E♭", "F", "G♭", "A♭", "B♭", "C", "D♭"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["D♭", "E♭", "F", "G♭", "A♭", "B♭", "C", "D♭"]}
+                  />
+                </PianoButton>
               </div>
               <h3>The Minor Scale</h3>
               <p>
@@ -117,15 +121,16 @@ export default function ExploringScales() {
                 whole step, half step, whole step, whole step, half step, whole
                 step, and whole step.
               </p>
-              <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
+              <div className="flex flex-col items-center justify-center justify-items-start gap-1 text-slate-800 dark:text-slate-200">
                 <PianoButton
                   label={"hear"}
                   pitches={["F#3", "G#3", "A3", "B3", "C#4", "D4", "E4", "F#4"]}
                   spacing={0.2}
-                />
-                <ScaleDisplay
-                  notes={["F♯", "G♯", "A", "B", "C♯", "D", "E", "F♯"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["F♯", "G♯", "A", "B", "C♯", "D", "E", "F♯"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -139,10 +144,11 @@ export default function ExploringScales() {
                     "C#5",
                   ]}
                   spacing={0.2}
-                />
-                <ScaleDisplay
-                  notes={["C♯", "D♯", "E", "F♯", "G♯", "A", "B", "C♯"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["C♯", "D♯", "E", "F♯", "G♯", "A", "B", "C♯"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -156,10 +162,11 @@ export default function ExploringScales() {
                     "Eb5",
                   ]}
                   spacing={0.2}
-                />
-                <ScaleDisplay
-                  notes={["E♭", "F", "G♭", "A♭", "B♭", "C♭", "D♭", "E♭"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["E♭", "F", "G♭", "A♭", "B♭", "C♭", "D♭", "E♭"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -173,10 +180,11 @@ export default function ExploringScales() {
                     "Bb4",
                   ]}
                   spacing={0.2}
-                />
-                <ScaleDisplay
-                  notes={["B♭", "C", "D♭", "E♭", "F", "G♭", "A♭", "B♭"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["B♭", "C", "D♭", "E♭", "F", "G♭", "A♭", "B♭"]}
+                  />
+                </PianoButton>
               </div>
               <p>
                 <strong>
@@ -514,7 +522,7 @@ export default function ExploringScales() {
               <p>
                 The <dfn>harmonic minor scale</dfn> raises the seventh tone.
               </p>
-              <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
+              <div className="flex flex-col items-center justify-center justify-items-start gap-1 text-slate-800 dark:text-slate-200">
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -535,10 +543,11 @@ export default function ExploringScales() {
                     "F#3",
                   ]}
                   spacing={0.4}
-                />
-                <ScaleDisplay
-                  notes={["F♯", "G♯", "A", "B", "C♯", "D", "E♯", "F♯"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["F♯", "G♯", "A", "B", "C♯", "D", "E♯", "F♯"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -559,10 +568,11 @@ export default function ExploringScales() {
                     "C#4",
                   ]}
                   spacing={0.4}
-                />
-                <ScaleDisplay
-                  notes={["C♯", "D♯", "E", "F♯", "G♯", "A", "B♯", "C♯"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["C♯", "D♯", "E", "F♯", "G♯", "A", "B♯", "C♯"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -583,10 +593,11 @@ export default function ExploringScales() {
                     "Eb4",
                   ]}
                   spacing={0.4}
-                />
-                <ScaleDisplay
-                  notes={["E♭", "F", "G♭", "A♭", "B♭", "C♭", "D", "E♭"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["E♭", "F", "G♭", "A♭", "B♭", "C♭", "D", "E♭"]}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -607,10 +618,11 @@ export default function ExploringScales() {
                     "Bb3",
                   ]}
                   spacing={0.4}
-                />
-                <ScaleDisplay
-                  notes={["B♭", "C", "D♭", "E♭", "F", "G♭", "A", "B♭"]}
-                />
+                >
+                  <ScaleDisplay
+                    notes={["B♭", "C", "D♭", "E♭", "F", "G♭", "A", "B♭"]}
+                  />
+                </PianoButton>
               </div>
               <p>
                 This reintroduces the semitone distance between the seventh and
@@ -625,7 +637,7 @@ export default function ExploringScales() {
                   on the ascending scale but lowers them back on descent.
                 </strong>
               </p>
-              <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
+              <div className="flex flex-col items-center justify-center justify-items-start gap-1 text-slate-800 dark:text-slate-200">
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -646,29 +658,30 @@ export default function ExploringScales() {
                     "F#3",
                   ]}
                   spacing={0.4}
-                />
-                <ScaleDisplay
-                  notes={[
-                    "F♯",
-                    "G♯",
-                    "A",
-                    "B",
-                    "C♯",
-                    "D♯",
-                    "E♯",
-                    "F♯",
-                    "E",
-                    "D",
-                    "C♯",
-                    "B",
-                    "A",
-                    "G♯",
-                    "F♯",
-                  ]}
-                  highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
-                  selections={[8, 9]}
-                  gap={0}
-                />
+                >
+                  <ScaleDisplay
+                    notes={[
+                      "F♯",
+                      "G♯",
+                      "A",
+                      "B",
+                      "C♯",
+                      "D♯",
+                      "E♯",
+                      "F♯",
+                      "E",
+                      "D",
+                      "C♯",
+                      "B",
+                      "A",
+                      "G♯",
+                      "F♯",
+                    ]}
+                    highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
+                    selections={[8, 9]}
+                    gap={0}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -689,29 +702,30 @@ export default function ExploringScales() {
                     "C#4",
                   ]}
                   spacing={0.4}
-                />
-                <ScaleDisplay
-                  notes={[
-                    "C♯",
-                    "D♯",
-                    "E",
-                    "F♯",
-                    "G♯",
-                    "A♯",
-                    "B♯",
-                    "C♯",
-                    "B",
-                    "A",
-                    "G♯",
-                    "F♯",
-                    "E",
-                    "D♯",
-                    "C♯",
-                  ]}
-                  highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
-                  selections={[8, 9]}
-                  gap={0}
-                />
+                >
+                  <ScaleDisplay
+                    notes={[
+                      "C♯",
+                      "D♯",
+                      "E",
+                      "F♯",
+                      "G♯",
+                      "A♯",
+                      "B♯",
+                      "C♯",
+                      "B",
+                      "A",
+                      "G♯",
+                      "F♯",
+                      "E",
+                      "D♯",
+                      "C♯",
+                    ]}
+                    highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
+                    selections={[8, 9]}
+                    gap={0}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -732,29 +746,30 @@ export default function ExploringScales() {
                     "Eb4",
                   ]}
                   spacing={0.4}
-                />
-                <ScaleDisplay
-                  notes={[
-                    "E♭",
-                    "F",
-                    "G♭",
-                    "A♭",
-                    "B♭",
-                    "C",
-                    "D",
-                    "E♭",
-                    "D♭",
-                    "C♭",
-                    "B♭",
-                    "A♭",
-                    "G♭",
-                    "F",
-                    "E♭",
-                  ]}
-                  highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
-                  selections={[8, 9]}
-                  gap={0}
-                />
+                >
+                  <ScaleDisplay
+                    notes={[
+                      "E♭",
+                      "F",
+                      "G♭",
+                      "A♭",
+                      "B♭",
+                      "C",
+                      "D",
+                      "E♭",
+                      "D♭",
+                      "C♭",
+                      "B♭",
+                      "A♭",
+                      "G♭",
+                      "F",
+                      "E♭",
+                    ]}
+                    highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
+                    selections={[8, 9]}
+                    gap={0}
+                  />
+                </PianoButton>
                 <PianoButton
                   label={"hear"}
                   pitches={[
@@ -775,29 +790,30 @@ export default function ExploringScales() {
                     "Bb3",
                   ]}
                   spacing={0.4}
-                />
-                <ScaleDisplay
-                  gap={0}
-                  highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
-                  selections={[8, 9]}
-                  notes={[
-                    "B♭",
-                    "C",
-                    "D♭",
-                    "E♭",
-                    "F",
-                    "G",
-                    "A",
-                    "B♭",
-                    "A♭",
-                    "G♭",
-                    "F",
-                    "E♭",
-                    "D♭",
-                    "C",
-                    "B♭",
-                  ]}
-                />
+                >
+                  <ScaleDisplay
+                    gap={0}
+                    highlights={[0, 1, 2, 3, 4, 5, 6, 7]}
+                    selections={[8, 9]}
+                    notes={[
+                      "B♭",
+                      "C",
+                      "D♭",
+                      "E♭",
+                      "F",
+                      "G",
+                      "A",
+                      "B♭",
+                      "A♭",
+                      "G♭",
+                      "F",
+                      "E♭",
+                      "D♭",
+                      "C",
+                      "B♭",
+                    ]}
+                  />
+                </PianoButton>
               </div>
               <p>
                 Thus, the natural minor matches the major scale on the way up
@@ -874,7 +890,7 @@ export default function ExploringScales() {
               The <dfn>pentatonic scale</dfn> takes the first, second, third,
               fifth, and sixth tones of the major scale.
             </p>
-            <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
+            <div className="flex flex-col items-center justify-center justify-items-start gap-1 text-slate-800 dark:text-slate-200">
               <PianoButton
                 label={"hear"}
                 pitches={[
@@ -891,8 +907,9 @@ export default function ExploringScales() {
                   "F4",
                 ]}
                 spacing={0.35}
-              />
-              <ScaleDisplay notes={["F", "G", "A", "C", "D", "F"]} />
+              >
+                <ScaleDisplay notes={["F", "G", "A", "C", "D", "F"]} />
+              </PianoButton>
             </div>
             <p>
               It focuses on consonance, removing dissonance caused by half
@@ -904,7 +921,7 @@ export default function ExploringScales() {
             <p>
               The <dfn>whole-tone scale</dfn> is entirely of whole steps.
             </p>
-            <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
+            <div className="flex flex-col items-center justify-center justify-items-start gap-1 text-slate-800 dark:text-slate-200">
               <PianoButton
                 label={"hear"}
                 pitches={[
@@ -935,8 +952,11 @@ export default function ExploringScales() {
                   "B2",
                 ]}
                 spacing={0.15}
-              />
-              <ScaleDisplay notes={["B", "C♯", "D♯", "E♯", "F𝄪", "G𝄪", "B"]} />
+              >
+                <ScaleDisplay
+                  notes={["B", "C♯", "D♯", "E♯", "F𝄪", "G𝄪", "B"]}
+                />
+              </PianoButton>
             </div>
           </section>
           <section>
@@ -945,7 +965,7 @@ export default function ExploringScales() {
               The <dfn>chromatic scale</dfn> is entirely of half steps. It
               covers every note in 12-TET.
             </p>
-            <div className="grid grid-cols-[repeat(2,auto)] items-center justify-center justify-items-start gap-x-4 gap-y-1 text-slate-800 dark:text-slate-200">
+            <div className="flex flex-col items-center justify-center justify-items-start gap-1 text-slate-800 dark:text-slate-200">
               <PianoButton
                 label={"hear"}
                 pitches={[
@@ -964,24 +984,25 @@ export default function ExploringScales() {
                   "G5",
                 ]}
                 spacing={0.12}
-              />
-              <ScaleDisplay
-                notes={[
-                  "G",
-                  "G♯",
-                  "A",
-                  "A♯",
-                  "B",
-                  "C",
-                  "C♯",
-                  "D",
-                  "D♯",
-                  "E",
-                  "F",
-                  "F♯",
-                  "G",
-                ]}
-              />
+              >
+                <ScaleDisplay
+                  notes={[
+                    "G",
+                    "G♯",
+                    "A",
+                    "A♯",
+                    "B",
+                    "C",
+                    "C♯",
+                    "D",
+                    "D♯",
+                    "E",
+                    "F",
+                    "F♯",
+                    "G",
+                  ]}
+                />
+              </PianoButton>
             </div>
             <p>
               It is notated with sharps on the way up and flats on the way down.
