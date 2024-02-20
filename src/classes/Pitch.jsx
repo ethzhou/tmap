@@ -1,6 +1,7 @@
 import {
   A_OCTAVE,
   C_OCTAVE,
+  MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS,
   accidentalToString,
   accidentalToText,
 } from "../utils/musicUtils";
@@ -64,6 +65,52 @@ export default class Pitch {
   }
 
   /**
+   * Constructs a pitch from displayed text. Returns `undefined` if invalid.
+   *
+   * @param {string} strRepresentation For example, "C#4" or "D5".
+   * @returns {Pitch | undefined}
+   */
+  static fromText(strRepresentation) {
+    const letter = strRepresentation[0]?.toUpperCase();
+    const accidental =
+      strRepresentation[1] === "𝄫"
+        ? -2
+        : strRepresentation[1] === "♭"
+        ? -1
+        : strRepresentation[1] === "♮"
+        ? 0
+        : strRepresentation[1] === "♯"
+        ? 1
+        : strRepresentation[1] === "𝄪"
+        ? 2
+        : 0;
+    console.log(
+      "dfdfdafsdf",
+      strRepresentation,
+      new String(strRepresentation),
+      strRepresentation.slice(1)[0],
+      new String(strRepresentation)[1],
+      1 + (accidental !== 0 || strRepresentation[1] === "♮"),
+      strRepresentation.slice(
+        1 + (accidental !== 0 || strRepresentation[1] === "♮"),
+      ),
+    );
+    const octave = Number(
+      strRepresentation.slice(
+        1 + (accidental !== 0 || strRepresentation[1] === "♮"),
+      ),
+    );
+
+    // Check validity
+    if (!C_OCTAVE.includes(letter)) return;
+    if (Number.isNaN(octave))
+      // octave is NaN: either the accidental was invalid or octave was invalid
+      return;
+
+    return new Pitch(letter, accidental, octave);
+  }
+
+  /**
    * Constructs a pitch from a pitch and interval.
    *
    * @param {Pitch} pitch From this pitch.
@@ -99,6 +146,15 @@ export default class Pitch {
     return `${this.letter}${accidentalToText(this.accidental) ?? ""}${
       this.octave
     }`;
+  }
+
+  /**
+   * Represents the pitch in displayed text without the octave.
+   *
+   * @returns {string}
+   */
+  toTextName() {
+    return `${this.letter}${accidentalToText(this.accidental) ?? ""}`;
   }
 
   /**
@@ -346,6 +402,33 @@ export default class Pitch {
       this.letterIsAfterInOctave(newLetter);
 
     return new Pitch(newLetter, newAccidental, newOctave);
+  }
+
+  /**
+   * Generates the diatonic scale spanning an octave from the current pitch.
+   *
+   * @param {number} modeNumber 0-based ordinal of the mode.
+   * @returns {Array<Pitch>}
+   */
+  scale(modeNumber = 0) {
+    const pitches = [];
+    pitches.push(this);
+
+    let l = A_OCTAVE.indexOf(this.letter);
+    for (let i = 1; i < 8; i++) {
+      const newPitch = new Pitch(A_OCTAVE[(l + i) % 7], 0, this.octave);
+
+      newPitch.octave += !this.letterIsBeforeInOctave(newPitch);
+
+      newPitch.accidental +=
+        MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS[(modeNumber + i - 1) % 7] -
+        pitches.at(-1).halfstepsTo(newPitch);
+
+      pitches.push(newPitch);
+    }
+
+    // console.log(pitches);
+    return pitches;
   }
 
   /**

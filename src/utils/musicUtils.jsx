@@ -9,7 +9,10 @@ export const F_CIRCLE_OF_FIFTHS = "FCGDAEBF";
 export const FOUR_VOICES = ["bass", "tenor", "alto", "soprano"];
 export const GRAND_STAFF_STAVES = ["bass", "treble"];
 
-export const MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS = [0, 2, 4, 5, 7, 9, 11, 12];
+export const MAJOR_SIMPLE_INTERVAL_HALFSTEP_COUNTS = [2, 2, 1, 2, 2, 2, 1];
+export const MAJOR_SIMPLE_INTERVAL_CUMMULATIVE_HALFSTEP_COUNTS = [
+  0, 2, 4, 5, 7, 9, 11, 12,
+];
 
 export function accidentalToString(accidental) {
   // Returns "" for naturals
@@ -19,6 +22,21 @@ export function accidentalToString(accidental) {
 export function accidentalToText(accidental) {
   // Returns "" for naturals
   return ["𝄫", "♭", "", "♯", "𝄪"][accidental + 2];
+}
+
+/**
+ * Converts a pitch's string representation into displayed text.
+ *
+ * @param {string} string
+ * @returns
+ */
+export function pitchTextToString(string) {
+  return string
+    .replace("𝄫", "bb")
+    .replace("♭", "b")
+    .replace("♮", "")
+    .replace("♯", "#")
+    .replace("𝄪", "x");
 }
 
 /**
@@ -88,10 +106,20 @@ export function isValidNoteDuration(noteDuration) {
 }
 
 const patternAccidental = "[b#]";
+const patternTextAccidental = "[𝄫♭♮♯𝄪]";
+const patternArabicNumberals = "\\d+";
+
+const patternPitchName = `(?<letter>[A-Ga-g])(?<accidental>${patternAccidental}*)`;
+const patternPitch = `^${patternPitchName}(?<octave>${patternArabicNumberals})*$`;
+export const REGEXP_Pitch = new RegExp(patternPitch);
+
+const patternTextPitchName = `(?<letter>[A-Ga-g])(?<accidental>${patternTextAccidental}*)`;
+const patternTextPitch = `^${patternTextPitchName}(?<octave>${patternArabicNumberals})*$`;
+export const REGEXP_TextPitch = new RegExp(patternTextPitch);
+
 const patternRomanNumeralMajor = "I{1,3}|IV|VI{0,2}"; // From https://stackoverflow.com/questions/267399/how-do-you-match-only-valid-roman-numerals-with-a-regular-expression
 const patternRomanNumeralMinor = patternRomanNumeralMajor.toLowerCase();
 const patternRomanNumeral = `${patternRomanNumeralMajor}|${patternRomanNumeralMinor}`;
-const patternArabicNumberals = "\\d+";
 const patternSecondaryDominant = `/(${patternRomanNumeral})`;
 
 const patternChordAnalysis = `^\
