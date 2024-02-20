@@ -8,7 +8,7 @@
  * @returns {import("react").ReactElement}
  */
 export default function ScaleDisplay({
-  gap = 6,
+  gap = 2,
   notes,
   selections,
   highlights,
@@ -25,7 +25,7 @@ export default function ScaleDisplay({
         {notes.map((note, i) => (
           <span
             /* TODO: Think about centering the text only if the item is selected. */
-            className={`w-6 text-center${
+            className={`w-10 text-center${
               highlights && highlights.includes(i) !== invert
                 ? " text-slate-800 dark:text-slate-200"
                 : ""
