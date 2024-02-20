@@ -951,7 +951,7 @@ export default function ExploringScales() {
                   "C#3",
                   "B2",
                 ]}
-                spacing={0.15}
+                spacing={0.16}
               >
                 <ScaleDisplay
                   notes={["B", "C♯", "D♯", "E♯", "F𝄪", "G𝄪", "B"]}
