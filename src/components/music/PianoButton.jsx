@@ -3,6 +3,7 @@ import PianoPlayer from "../../classes/PianoPlayer";
 const pianoPlayer = new PianoPlayer();
 
 export default function PianoButton({
+  onClick,
   label,
   pitches,
   notePlayDuration,
@@ -13,7 +14,9 @@ export default function PianoButton({
     <>
       <button
         className="border-0 px-6 py-2 font-straight text-lg"
-        onClick={() => {
+        onClick={event => {
+          if (onClick) onClick(event);
+
           pianoPlayer.playNotes(
             pitches,
             notePlayDuration ?? 1,
