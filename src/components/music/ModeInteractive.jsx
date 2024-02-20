@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Pitch from "../../classes/Pitch";
 import EdiText from "react-editext";
 import {
+  DIATONIC_MODES,
   REGEXP_Pitch,
   REGEXP_TextPitch,
   pitchTextToString,
@@ -26,7 +27,7 @@ export default function ModeInteractive({
   const scale = basePitch?.scale();
 
   const displayedPitches = constantKeySignature
-    ? scale
+    ? scale.slice(0, 7)
     : Array(7).fill(basePitch);
 
   function validateInput(value) {
@@ -76,62 +77,61 @@ export default function ModeInteractive({
 
   return (
     <>
-      <div className="grid grid-flow-col grid-rows-[repeat(7,1.5rem)] items-center justify-center justify-items-start gap-x-8 gap-y-2">
-        <div
-          className={`${
-            constantKeySignature && iActiveNote === 0 ? "-active-note" : ""
-          }`}
-        >
-          <EdiText
-            renderValue={() => baseNoteTextName}
-            value={baseNoteName}
-            validation={validateInput}
-            validationMessage={"Try another note."}
-            onSave={handleSave}
-            inputProps={{ ref: inputRef }}
-            viewProps={{ className: "cursor-pointer" }}
-            buttonsAlign="before"
-            // editButtonContent={
-            //   <span className="font-straight text-sm lowercase text-inherit">
-            //     Change
-            //   </span>
-            // }
-            startEditingOnEnter
-            editOnViewClick
-            submitOnEnter
-            submitOnUnfocus
-            cancelOnEscape
-            tabIndex={0}
-          />
-        </div>
-        {displayedPitches.slice(1, 7).map((displayedPitch, i) => (
-          <div
-            key={crypto.randomUUID()}
-            className={`${
-              constantKeySignature && iActiveNote === i + 1
-                ? "-active-note "
-                : ""
-            }w-6`}
-          >
-            {displayedPitch.toTextName()}
-          </div>
-        ))}
-        <div>Ionian</div>
-        <div>Dorian</div>
-        <div>Phrygian</div>
-        <div>Lydian</div>
-        <div>Mixolydian</div>
-        <div>Aeolian</div>
-        <div>Locrian</div>
-        {scale.slice(0, 7).map((_, i) => (
-          <PianoButton
-            key={crypto.randomUUID()}
-            onClick={() => startActiveNoteCycle(i)}
-            pitches={displayedPitches[i]
-              .scale(i)
-              .map(pitch => pitch.toString())}
-            spacing={playbackSpacing}
-          />
+      <div className="grid grid-cols-[repeat(3,auto)] grid-rows-[repeat(7,1.5rem)] items-center justify-center justify-items-start gap-x-8 gap-y-2">
+        {displayedPitches.map((displayedPitch, i) => (
+          <>
+            {i === 0 ? (
+              <div
+                className={`${
+                  constantKeySignature && iActiveNote === 0
+                    ? "-active-note"
+                    : ""
+                }`}
+              >
+                <EdiText
+                  renderValue={() => baseNoteTextName}
+                  value={baseNoteName}
+                  validation={validateInput}
+                  validationMessage={"Try another note."}
+                  onSave={handleSave}
+                  inputProps={{ ref: inputRef }}
+                  viewProps={{ className: "cursor-pointer" }}
+                  buttonsAlign="before"
+                  // editButtonContent={
+                  //   <span className="font-straight text-sm lowercase text-inherit">
+                  //     Change
+                  //   </span>
+                  // }
+                  startEditingOnEnter
+                  editOnViewClick
+                  submitOnEnter
+                  submitOnUnfocus
+                  cancelOnEscape
+                  tabIndex={0}
+                />
+              </div>
+            ) : (
+              <div
+                key={crypto.randomUUID()}
+                className={`${
+                  constantKeySignature && iActiveNote === i
+                    ? "-active-note "
+                    : ""
+                }w-6`}
+              >
+                {displayedPitch.toTextName()}
+              </div>
+            )}
+            <div>{DIATONIC_MODES[i]}</div>
+            <PianoButton
+              key={crypto.randomUUID()}
+              onClick={() => startActiveNoteCycle(i)}
+              pitches={displayedPitches[i]
+                .scale(i)
+                .map(pitch => pitch.toString())}
+              spacing={playbackSpacing}
+            />
+          </>
         ))}
       </div>
     </>
