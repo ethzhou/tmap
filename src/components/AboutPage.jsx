@@ -34,13 +34,9 @@ export default function AboutPage() {
             </h2>
             <p>
               Presently, the four-part harmony practice page is almost
-              completely dependent on keyboard input. This is arguably terrible—
-            </p>
-            <p>
-              I believe, though, in the optional only-keyboard approach, because
-              the alternation between mouse and keyboard within a page is too
-              inconvenient. It is that it is not so optional right now. It is
-              planned to make it so optional in coming times.
+              completely dependent on keyboard input. I like the appeal of
+              keyboard-driven interface, but unfortunately there's no mouse
+              alternative at the moment.
             </p>
           </section>
           <section>
