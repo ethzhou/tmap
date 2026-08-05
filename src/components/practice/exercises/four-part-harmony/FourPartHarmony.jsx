@@ -22,6 +22,7 @@ import BaguetteTip from "./BaguetteTip";
 import Baguette from "./Baguette";
 import FourPartProgressionDisplay from "./FourPartProgressionDisplay";
 import NavUp from "../../../general/NavUp";
+import ExerciseButton from "../../../general/ExerciseButton";
 
 // #region Test parts
 
@@ -672,15 +673,17 @@ export default function FourPartHarmony() {
             <div className="col-start-2 col-end-3 flex flex-col gap-1">
               <FourPartProgressionDisplay {...parameters} />
               <Baguette defaultPlaceholder={"Voici votre baguette magique."} />
-              <button type="button" onClick={playAudio}>
-                <div>play audio</div>
-              </button>
-              <button type="button" onClick={save}>
-                <div>save</div>
-              </button>
-              <button type="button" onClick={toggleCheck}>
-                <div>toggle check</div>
-              </button>
+              <div className="flex flex-row gap-4 self-center">
+                <ExerciseButton buttonPurpose={"play"} onClick={playAudio}>
+                  <span>play audio</span>
+                </ExerciseButton>
+                <ExerciseButton buttonPurpose={"save"} onClick={save}>
+                  <span>save</span>
+                </ExerciseButton>
+                <ExerciseButton buttonPurpose={"option"} onClick={toggleCheck}>
+                  <span>toggle check</span>
+                </ExerciseButton>
+              </div>
               <div ref={fphEvalDivRef} className="mt-4 flex flex-col gap-2">
                 <div className="flex items-baseline">
                   <div className="font-comic text-2xl text-red-500 dark:text-red-500">

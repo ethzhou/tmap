@@ -6,6 +6,7 @@ import Interval from "../../../../classes/Interval";
 import { randInt } from "../../../../utils/utils";
 import CharByCharField from "../../../general/CharByCharField";
 import IntervalExercise from "./IntervalExercise";
+import ExerciseButton from "../../../general/ExerciseButton";
 
 const pianoPlayer = new PianoPlayer();
 
@@ -97,12 +98,17 @@ export default function IntervalDictation() {
         parameters && (
           <>
             {/* {`${parameters.interval?.toString()} ${parameters.pitches[0]?.toString()} ${parameters.pitches[1]?.toString()}`}<br /> */}
-            <button type="button" onClick={playAudio}>
-              play audio
-            </button>
-            <button type="button" onClick={() => setPlayType(nextPlayType)}>
-              use {playType === "harmonic" ? "melodic" : "harmonic"} intervals
-            </button>
+            <div className="flex flex-none flex-row gap-4">
+              <ExerciseButton buttonPurpose={"play"} onClick={playAudio}>
+                <span>play audio</span>
+              </ExerciseButton>
+              <ExerciseButton
+                buttonPurpose={"option"}
+                onClick={() => setPlayType(nextPlayType)}
+              >
+                <span>{playType === "harmonic" ? "harmonic" : "melodic"}</span>
+              </ExerciseButton>
+            </div>
             <CharByCharField
               length={2}
               doClearOnSubmit={true}
